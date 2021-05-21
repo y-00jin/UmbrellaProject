@@ -87,7 +87,7 @@ public class UmbrellaMain extends JFrame {
 		btn3.setContentAreaFilled(false);
 		btn3.setBorderPainted(false);
 	
-		
+		// 정보
 		panelBtn.add(btn1);
 		panelBtn.add(btn2);
 		panelBtn.add(btn3);
