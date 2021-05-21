@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -38,7 +39,6 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	private String[] strs = { "학생", "우산", "차단목록" };
 	private JComboBox<String> cbStr;
 	private DefaultTableModel model;
-	private Vector<String> strTable;
 	private Vector<String> con;
 	private JTable table;
 	private String blockID;
@@ -52,11 +52,17 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	private String studentName;
 	private String studentGrade;
 	private String studentPhone;
+	private String id;
 	private JButton btnModify;
 	private JButton btnDelect;
 	private JButton btnAdd;
-	private JButton btnCancle;
+	private JButton btnCancel;
+	private AdminModify modify;
 
+	public String getId() {
+		return id;
+	}
+	
 	public Admin(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
@@ -103,7 +109,6 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 			p2.removeAll();
 
 			int index = cbStr.getSelectedIndex();
-			System.out.println(index);
 			if (index == 0) {
 				studentPanel();
 			} else if (index == 1) {
@@ -160,7 +165,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		sc.setPreferredSize(new Dimension(850, 535));
 
-		btnCancle = new JButton("차단 취소");
+		btnCancel = new JButton("차단 취소");
 
 		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 
@@ -173,7 +178,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		}
 
 		p2.add(sc);
-		p2.add(btnCancle);
+		p2.add(btnCancel);
 
 		add(p2, new BorderLayout().CENTER);
 	}
@@ -306,19 +311,18 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		
 		TableModel data = table.getModel(); //테이블의 모델 객체 얻어오기
 		
-//		studentID = rs.getString(1);
-//		studentMajor = rs.getString(3);
-//		studentGrade = rs.getString(4);
-//		studentName = rs.getString(2);
-//		studentPhone = rs.getString(5);
-		
-		String id = (String)data.getValueAt(row, 0);
+		id = (String)data.getValueAt(row, 0);
 		String major = (String)data.getValueAt(row, 1);
 		String grade = (String)data.getValueAt(row, 2);
 		String name = (String)data.getValueAt(row, 3);
 		String phone = (String)data.getValueAt(row, 4);
 		
+		modify = new AdminModify("수정", 250, 300, this);
 		
+		modify.getTfMajor().setText(major);
+		modify.getTfGrade().setText(grade);
+		modify.getTfName().setText(name);
+		modify.getTfPhone().setText(phone);
 	}
 
 	@Override
