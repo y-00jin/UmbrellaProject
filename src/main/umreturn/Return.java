@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -12,6 +14,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -31,7 +35,7 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 
-public class Return extends JFrame {
+public class Return extends JFrame implements ActionListener {
 
 	private JPanel panelSearch;
 	private JLabel lblDate1;
@@ -51,6 +55,8 @@ public class Return extends JFrame {
 	private UtilDateModel model2;
 	private JDatePanelImpl datePanel2;
 	private JDatePickerImpl datePicker2;
+	private Date SelectedDate1;
+	private Date SelectedDate2;
 
 	public Return(String title, int width, int height) {
 		setTitle(title);
@@ -79,13 +85,10 @@ public class Return extends JFrame {
 		
 		model1 = new UtilDateModel();
 		datePanel1 = new JDatePanelImpl(model1);
-		datePicker1 = new JDatePickerImpl(datePanel1);
-		JDatePickerImpl datePicker1 = new JDatePickerImpl(datePanel1, new DateLabelFormatter());
-		
+		//datePicker1 = new JDatePickerImpl(datePanel1);
+		datePicker1 = new JDatePickerImpl(datePanel1, new DateLabelFormatter());
 		panelSearch.add(datePicker1);
 		
-		//tfDate1 = new JTextField(15);
-		//panelSearch.add(tfDate1);
 
 		lblHyphen = new JLabel(" - ");
 		panelSearch.add(lblHyphen);
@@ -93,11 +96,12 @@ public class Return extends JFrame {
 		
 		model2 = new UtilDateModel();
 		datePanel2 = new JDatePanelImpl(model2);
-		datePicker2 = new JDatePickerImpl(datePanel2);
-		JDatePickerImpl datePicker2 = new JDatePickerImpl(datePanel2, new DateLabelFormatter());
+		//datePicker2 = new JDatePickerImpl(datePanel2);
+		datePicker2 = new JDatePickerImpl(datePanel2, new DateLabelFormatter());
 		panelSearch.add(datePicker2);
 
 		btnSearch = new JButton("검색");
+		btnSearch.addActionListener(this);
 		panelSearch.add(btnSearch);
 
 		btnReset = new JButton("초기화");
@@ -179,6 +183,22 @@ public class Return extends JFrame {
 	public static void main(String[] args) {
 		DB.init();
 		new Return("반납", 900, 600);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object obj = e.getSource();
+		if(obj == btnSearch) {
+			String datePattern = "yyyy-MM-dd";
+			SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+			
+			SelectedDate1 = (Date) datePicker1.getModel().getValue();
+			SelectedDate2 = (Date) datePicker2.getModel().getValue();
+			
+			System.out.println((dateFormatter.format(SelectedDate1)));
+			System.out.println((dateFormatter.format(SelectedDate2)));
+		}
+		
 	}
 
 }

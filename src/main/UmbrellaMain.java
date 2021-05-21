@@ -9,23 +9,19 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
-import com.sun.tools.javac.Main;
 
 public class UmbrellaMain extends JFrame {
 
-	private JPanel panelBack;
-	private ImageIcon icon;
-	private JLabel lblImg;
-	private Image img;
-	private Image changeImg;
-	private ImageIcon changeIcon;
+	private JPanel panelInfo;
 	private JPanel panelBtn;
 	private ImageIcon drop1;
 	private JButton btn1;
@@ -33,68 +29,71 @@ public class UmbrellaMain extends JFrame {
 	private JButton btn2;
 	private ImageIcon drop2;
 	private ImageIcon drop3;
+	private JLabel lblTitle;
 
+
+	
 	public UmbrellaMain(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this);	//현재 클래스에 대해서 상대적인 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		//레이아웃
-		setLayout(new BorderLayout());
-		
-		panelBack = new JPanel();
-		
-		
-		panelBack.setBackground(Color.white);
-		icon = new ImageIcon("libs/back.gif");
-		img = icon.getImage();
-		changeImg = img.getScaledInstance(880, 580, Image.SCALE_SMOOTH);
-		changeIcon = new ImageIcon(changeImg);
-		
-		lblImg = new JLabel(changeIcon);
-		panelBack.add(lblImg, BorderLayout.CENTER);
-		
-		Font font = new Font("맑은 고딕", Font.BOLD, 40);
-		JLabel lbl = new JLabel("우산 대여 프로그램");
-		lbl.setForeground(new Color(0xFF1291));;
-		lbl.setFont(font);
-		
-		lbl.setBounds(270, 50, 350, 50);
-		lblImg.add(lbl);
+
+		// 정보 패널 생성
+		panelInfo = new JPanel();
+		panelInfo.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 30));	// 레이아웃 센터, hgap, vgap 설정
+		panelInfo.setBackground(new Color(0xD4F4FA));	//Color rgb 값 가져와 배경색 설정
+		panelInfo.setBorder(BorderFactory.createEmptyBorder(130, 0, 0, 0));	//마진 설정
 		
 		
+		Font fontTitle = new Font("휴먼둥근헤드라인", Font.PLAIN, 50);	// [ 우산 대여 프로그램 ] 타이틀에 들어갈 폰트 설정
+		lblTitle = new JLabel("[ 우산 대여 프로그램 ]");	// label 생성
+		lblTitle.setForeground(new Color(0x353535));	//label 색상 설정
+		lblTitle.setFont(fontTitle);	// 설정한 font 적용
 		
+		panelInfo.add(lblTitle);
+		
+		
+		Font font2 = new Font("휴먼둥근헤드라인", Font.PLAIN, 30);	// [ 컴퓨터시스템과_도담도담 ] 에 들어갈 폰트 설정
+		JLabel lbl2 = new JLabel("컴퓨터시스템과_도담도담");	//label 생성
+		lbl2.setForeground(new Color(0x595959));	//label 색상 설정	
+		lbl2.setFont(font2);	//설정한 font 적용
+		
+		panelInfo.add(lbl2);
+		
+		
+		
+		
+		// 버튼 생성
 		panelBtn = new JPanel();
-		panelBtn.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 0));
-		panelBtn.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		panelBtn.setBackground(Color.white);
+		panelBtn.setBackground(new Color(0xD4F4FA));	//패널 배경색 설정
 		
-		
-		
-		drop1 = new ImageIcon("libs/dropC.png");
-		btn1 = new JButton("대여", drop1);
+		drop1 = new ImageIcon("libs/umbrella1.png");
+		btn1 = new JButton(drop1);
 		btn1.setVerticalTextPosition(JButton.BOTTOM);
 		btn1.setContentAreaFilled(false);	//투명한 배경색
 		btn1.setBorderPainted(false);		// 테두리 없애기
 		
-		drop2 = new ImageIcon("libs/dropB.png");
-		btn2 = new JButton("반납", drop2);
+		drop2 = new ImageIcon("libs/umbrella2.png");
+		btn2 = new JButton( drop2);
 		btn2.setVerticalTextPosition(JButton.BOTTOM);
 		btn2.setContentAreaFilled(false);	
 		btn2.setBorderPainted(false);		
 		
-		drop3 = new ImageIcon("libs/dropP.png");
-		btn3 = new JButton("관리자", drop3);
+		drop3 = new ImageIcon("libs/umbrella3.png");
+		btn3 = new JButton(drop3);
 		btn3.setVerticalTextPosition(JButton.BOTTOM);
 		btn3.setContentAreaFilled(false);
 		btn3.setBorderPainted(false);
+	
 		
 		panelBtn.add(btn1);
 		panelBtn.add(btn2);
 		panelBtn.add(btn3);
+	
 		
-		add(panelBack, BorderLayout.CENTER);
+		add(panelInfo, BorderLayout.CENTER);
 		add(panelBtn, BorderLayout.SOUTH);
 		setVisible(true);
 	}
