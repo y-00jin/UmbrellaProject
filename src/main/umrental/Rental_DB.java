@@ -24,9 +24,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import main.umrental.Rental_ModifyBtn;
-import main.umrental.Rentalform;
-
 public class Rental_DB extends JFrame implements ActionListener {
    private JPanel pCenter, pBottom;
    private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnOut;
@@ -95,6 +92,7 @@ public class Rental_DB extends JFrame implements ActionListener {
             rentalID = rs.getString(1); 
             umbreallaID = rs.getString(2);             
             studentID = rs.getString(3);   
+            
             rentalDATE = rs.getString(4); 
             returndueDATE = rs.getString(5);
             
