@@ -24,6 +24,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+import main.umrental.Rental_ModifyBtn;
+import main.umrental.Rentalform;
+
 public class Rental_DB extends JFrame implements ActionListener {
    private JPanel pCenter, pBottom;
    private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnOut;
@@ -32,7 +35,7 @@ public class Rental_DB extends JFrame implements ActionListener {
    private Vector<String> data;
    private String[] tmp;
    private JTable table;
-   private String UMB_Code, class_Code, name, rentalDay, returnDay;
+   private String rentalID, umbreallaID, studentID, rentalDATE, returndueDATE;
 
    public Rental_DB(String title, int width, int height) {
       this.setTitle(title);
@@ -58,6 +61,7 @@ public class Rental_DB extends JFrame implements ActionListener {
 
       vectorTitle = new Vector<String>();
 
+      vectorTitle.addElement("대여번호");
       vectorTitle.addElement("우산코드");
       vectorTitle.addElement("학번");
       vectorTitle.addElement("이름");
@@ -77,29 +81,29 @@ public class Rental_DB extends JFrame implements ActionListener {
          Class.forName("oracle.jdbc.driver.OracleDriver"); //오라클 드라이버
          
          Connection conn = DriverManager.getConnection(
-               "jdbc:oracle:thin:@localhost:1521:XE", 
+               "jdbc:oracle:thin:@114.71.137.174:53994:XE", 
                "dodam", "inhatc4"); //오라클
                //1521: 포트번호
          
          Statement stmt = conn.createStatement(); //데이터베이스와 연동
          
-         ResultSet rs = stmt.executeQuery("SELECT *FROM RENTRL"); //쿼리 넘기기
+         ResultSet rs = stmt.executeQuery("SELECT *FROM RENTAL"); //쿼리 넘기기
          
          while(rs.next()) { 
             data = new Vector<String>();
             
-            UMB_Code = rs.getString("UMBCODE"); 
-            class_Code = rs.getString("CLASS");             
-            name = rs.getString(3);   
-            rentalDay = rs.getString(4); 
-            returnDay = rs.getString(5);
+            rentalID = rs.getString(1); 
+            umbreallaID = rs.getString(2);             
+            studentID = rs.getString(3);   
+            rentalDATE = rs.getString(4); 
+            returndueDATE = rs.getString(5);
             
-            System.out.println(UMB_Code + "\t" + class_Code + "\t" + name + "\t" + rentalDay +"\t"+ returnDay);
-            data.add(0, UMB_Code);
-            data.add(1, class_Code);
-            data.add(2, name);
-            data.add(3, rentalDay);
-            data.add(4, returnDay);
+            System.out.println(rentalID + "\t" + umbreallaID + "\t" + studentID + "\t" + rentalDATE +"\t"+ returndueDATE);
+            data.add(0, rentalID);
+            data.add(1, umbreallaID);
+            data.add(2, studentID);
+            data.add(3, rentalDATE);
+            data.add(4, returndueDATE);
             model.addRow(data);
          }
          
@@ -173,9 +177,9 @@ public class Rental_DB extends JFrame implements ActionListener {
    public void actionPerformed(ActionEvent e) {
       Object obj = e.getSource();
       if (obj == btnRental) {
-        // new Rentalform("대여", 250, 200);
+         new Rentalform("대여", 250, 200);
       } else if (obj == btnModify) {
-        // new Rental_ModifyBtn("수정", 250, 200);
+         new Rental_ModifyBtn("수정", 250, 200);
       } else if (obj == btnReturn) {
          JOptionPane.showMessageDialog( // 메시지창 출력
                this, "000님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);

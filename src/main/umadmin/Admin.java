@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,6 +15,7 @@ import java.sql.Statement;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,15 +23,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 import main.DB;
 
-public class Admin extends JFrame implements ActionListener {
+public class Admin extends JFrame implements ActionListener, MouseListener {
 
 	private JPanel p1, p2;
 	private String result;
-	private String[] strs = { "학생", "우산", "차단리스트" };
+	private String[] strs = { "학생", "우산", "차단목록" };
 	private JComboBox<String> cbStr;
 	private DefaultTableModel model;
 	private Vector<String> strTable;
@@ -45,6 +52,10 @@ public class Admin extends JFrame implements ActionListener {
 	private String studentName;
 	private String studentGrade;
 	private String studentPhone;
+	private JButton btnModify;
+	private JButton btnDelect;
+	private JButton btnAdd;
+	private JButton btnCancle;
 
 	public Admin(String title, int width, int height) {
 		setTitle(title);
@@ -61,10 +72,12 @@ public class Admin extends JFrame implements ActionListener {
 
 		p1 = new JPanel();
 		p2 = new JPanel();
-		
-		p1.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		p1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		p1.setLayout(new FlowLayout(FlowLayout.LEFT));
+		p1.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 10));
+
+		p2.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
+		p2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
 		cbStr = new JComboBox<String>(strs);
 		cbStr.addActionListener(this);
@@ -73,54 +86,8 @@ public class Admin extends JFrame implements ActionListener {
 
 		add(p1, new BorderLayout().NORTH);
 
-		Vector<String> column = new Vector<String>();
-		column.addElement("학번");
-		column.addElement("학과");
-		column.addElement("학년");
-		column.addElement("이름");
-		column.addElement("전화번호");
+		studentPanel();
 
-		model = new DefaultTableModel(column, 0) {
-			public boolean isCellEditable(int r, int c) {
-				return false;
-			}
-		};
-
-		String sql = "SELECT * FROM STUDENT";
-		ResultSet rs = DB.getResultSet(sql);
-
-		try {
-			while (rs.next()) {
-				con = new Vector<String>();
-				studentID = rs.getString(1);
-				studentMajor = rs.getString(3);
-				studentGrade = rs.getString(4);
-				studentName = rs.getString(2);
-				studentPhone = rs.getString(5);
-
-				con.add(studentID);
-				con.add(studentMajor);
-				con.add(studentGrade);
-				con.add(studentName);
-				con.add(studentPhone);
-				model.addRow(con);
-			}
-		} catch (SQLException e) {
-			System.out.println("접속 오류 / SQL 오류");
-			e.printStackTrace();
-		}
-
-		table = new JTable(model);
-		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
-
-		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-		sc.setPreferredSize(new Dimension(850, 500));
-
-		p2.add(sc);
-		add(p2, new BorderLayout().CENTER);
-		
 		setVisible(true);
 	}
 
@@ -133,6 +100,8 @@ public class Admin extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		if (obj == cbStr) {
+			p2.removeAll();
+
 			int index = cbStr.getSelectedIndex();
 			System.out.println(index);
 			if (index == 0) {
@@ -142,6 +111,8 @@ public class Admin extends JFrame implements ActionListener {
 			} else if (index == 2) {
 				blockPanel();
 			}
+			p2.revalidate();
+			p2.repaint();
 		}
 
 	}
@@ -187,9 +158,23 @@ public class Admin extends JFrame implements ActionListener {
 		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		sc.setPreferredSize(new Dimension(850, 500));
+		sc.setPreferredSize(new Dimension(850, 535));
+
+		btnCancle = new JButton("차단 취소");
+
+		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+
+		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+		TableColumnModel tcmSchedule = table.getColumnModel();
+
+		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
+			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
+		}
 
 		p2.add(sc);
+		p2.add(btnCancle);
+
 		add(p2, new BorderLayout().CENTER);
 	}
 
@@ -228,10 +213,26 @@ public class Admin extends JFrame implements ActionListener {
 		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		sc.setPreferredSize(new Dimension(850, 500));
+		sc.setPreferredSize(new Dimension(850, 535));
 
+		btnAdd = new JButton("추가");
+		btnDelect = new JButton("삭제");
+
+		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+
+		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+		TableColumnModel tcmSchedule = table.getColumnModel();
+
+		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
+			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
+		}
 		p2.add(sc);
+		p2.add(btnAdd);
+		p2.add(btnDelect);
+
 		add(p2, new BorderLayout().CENTER);
+
 	}
 
 	private void studentPanel() {
@@ -274,13 +275,73 @@ public class Admin extends JFrame implements ActionListener {
 
 		table = new JTable(model);
 		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+		table.addMouseListener(this);
 
 		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		sc.setPreferredSize(new Dimension(850, 500));
+		sc.setPreferredSize(new Dimension(850, 535));
 
+		btnModify = new JButton("수정");
+
+		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+
+		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+		TableColumnModel tcmSchedule = table.getColumnModel();
+
+		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
+			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
+		}
 		p2.add(sc);
+		p2.add(btnModify);
+
 		add(p2, new BorderLayout().CENTER);
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int row = table.getSelectedRow(); //선택한 셀의 행 번호 계산
+		
+		TableModel data = table.getModel(); //테이블의 모델 객체 얻어오기
+		
+//		studentID = rs.getString(1);
+//		studentMajor = rs.getString(3);
+//		studentGrade = rs.getString(4);
+//		studentName = rs.getString(2);
+//		studentPhone = rs.getString(5);
+		
+		String id = (String)data.getValueAt(row, 0);
+		String major = (String)data.getValueAt(row, 1);
+		String grade = (String)data.getValueAt(row, 2);
+		String name = (String)data.getValueAt(row, 3);
+		String phone = (String)data.getValueAt(row, 4);
+		
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
