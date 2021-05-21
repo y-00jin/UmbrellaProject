@@ -1,4 +1,4 @@
-package main.admin;
+package main.umadmin;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 
 import main.DB;
 
-public class AdminTest2 extends JFrame implements ActionListener {
+public class Admin extends JFrame implements ActionListener {
 
 	private JPanel p1, p2;
 	private String result;
@@ -46,7 +46,7 @@ public class AdminTest2 extends JFrame implements ActionListener {
 	private String studentGrade;
 	private String studentPhone;
 
-	public AdminTest2(String title, int width, int height) {
+	public Admin(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this);
@@ -73,12 +73,60 @@ public class AdminTest2 extends JFrame implements ActionListener {
 
 		add(p1, new BorderLayout().NORTH);
 
+		Vector<String> column = new Vector<String>();
+		column.addElement("학번");
+		column.addElement("학과");
+		column.addElement("학년");
+		column.addElement("이름");
+		column.addElement("전화번호");
+
+		model = new DefaultTableModel(column, 0) {
+			public boolean isCellEditable(int r, int c) {
+				return false;
+			}
+		};
+
+		String sql = "SELECT * FROM STUDENT";
+		ResultSet rs = DB.getResultSet(sql);
+
+		try {
+			while (rs.next()) {
+				con = new Vector<String>();
+				studentID = rs.getString(1);
+				studentMajor = rs.getString(3);
+				studentGrade = rs.getString(4);
+				studentName = rs.getString(2);
+				studentPhone = rs.getString(5);
+
+				con.add(studentID);
+				con.add(studentMajor);
+				con.add(studentGrade);
+				con.add(studentName);
+				con.add(studentPhone);
+				model.addRow(con);
+			}
+		} catch (SQLException e) {
+			System.out.println("접속 오류 / SQL 오류");
+			e.printStackTrace();
+		}
+
+		table = new JTable(model);
+		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+
+		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		sc.setPreferredSize(new Dimension(850, 500));
+
+		p2.add(sc);
+		add(p2, new BorderLayout().CENTER);
+		
 		setVisible(true);
 	}
 
 	public static void main(String[] args) {
 		DB.init();
-		new AdminTest2("My 프레임", 900, 700);
+		new Admin("관리자", 900, 700);
 	}
 
 	@Override
