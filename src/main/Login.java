@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import main.rental.Rental_DB;
+import main.umrental.Rental_DB;
 
 public class Login extends JFrame implements ActionListener {
 
