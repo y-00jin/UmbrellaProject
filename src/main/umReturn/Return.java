@@ -75,6 +75,7 @@ public class Return extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 
+	// 검색
 	private void addSearch() {
 		panelSearch = new JPanel();
 		panelSearch.setLayout(new FlowLayout(FlowLayout.LEFT));
