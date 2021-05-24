@@ -63,8 +63,10 @@ public class Return extends JFrame implements ActionListener {
 		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		// 검색 프레임 생성
 		addSearch();
 		
+		// 테이블 생성
 		addTable();
 		
 		
