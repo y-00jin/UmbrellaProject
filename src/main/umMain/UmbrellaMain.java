@@ -1,4 +1,4 @@
-package main;
+package main.umMain;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

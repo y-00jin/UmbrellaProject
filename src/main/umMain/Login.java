@@ -1,4 +1,4 @@
-package main;
+package main.umMain;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Image;
@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import main.umrental.Rental_DB;
+import main.umRental.Rental_DB;
 
 public class Login extends JFrame implements ActionListener {
 
