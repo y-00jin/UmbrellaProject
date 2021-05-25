@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import main.DB;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -130,12 +131,35 @@ public class Return extends JFrame implements ActionListener {
             return false;
          }
       };
-
+      
+      String returnSelect = "select return.RETURNID, um.UMBRELLAID, st.STUDENTID, st.NAME, TO_CHAR(rental.rentaldate, \'YYYY-MM-DD\'), TO_CHAR(return.returndate, \'YYYY-MM-DD\') "
+            + " from RETURN return, RENTAL rental, STUDENT st, UMBRELLA um where return.rentalid = rental.rentalid"
+            + "  and rental.studentid = st.studentid and rental.umbrellaid = um.umbrellaid";
+      
+      ResultSet rs = DB.getResultSet(returnSelect);
+      String[] rsArr = new String[6];
+      try {
+      while(rs.next()) {
+         
+         for (int i = 0; i < rsArr.length; i++) {
+            rsArr[i] = rs.getString(i+1);
+         }
+           
+         model.addRow(rsArr);
+           
+        }
+   } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+   }
       
       
-
       table = new JTable(model);
       table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+      table.setFillsViewportHeight(true);
+      JTableHeader tableHeader = table.getTableHeader();
+      tableHeader.setBackground(new Color(0xB2CCFF));
+   
       JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
       sc.setPreferredSize(new Dimension(860,480));
       panelInfo.add(sc);
