@@ -1,6 +1,7 @@
 package main.umAdmin;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -25,8 +26,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
@@ -62,7 +66,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	public String getId() {
 		return id;
 	}
-	
+
 	public Admin(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
@@ -84,9 +88,17 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		p2.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
 		p2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		
+		p1.setBackground(Color.WHITE);
+		p2.setBackground(Color.WHITE);
 
 		cbStr = new JComboBox<String>(strs);
 		cbStr.addActionListener(this);
+		
+		UIManager.put("ComboBox.background", new ColorUIResource(Color.yellow));
+        UIManager.put("JTextField.background", new ColorUIResource(Color.yellow));
+        UIManager.put("ComboBox.selectionBackground", new ColorUIResource(Color.magenta));
+        UIManager.put("ComboBox.selectionForeground", new ColorUIResource(Color.blue));
 
 		p1.add(cbStr);
 
@@ -159,10 +171,15 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		table = new JTable(model);
 		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
-
+		
+		table.setFillsViewportHeight(true);
+		
+		JTableHeader tableHeader = table.getTableHeader();
+		tableHeader.setBackground(new Color(0xB2CCFF));
+		
 		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
+		
 		sc.setPreferredSize(new Dimension(850, 535));
 
 		btnCancel = new JButton("차단 취소");
@@ -214,7 +231,12 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		table = new JTable(model);
 		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
-
+		
+		table.setFillsViewportHeight(true);
+		
+		JTableHeader tableHeader = table.getTableHeader();
+		tableHeader.setBackground(new Color(0xB2CCFF));
+		
 		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -282,6 +304,11 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
 		table.addMouseListener(this);
 
+		table.setFillsViewportHeight(true);
+		
+		JTableHeader tableHeader = table.getTableHeader();
+		tableHeader.setBackground(new Color(0xB2CCFF));
+		
 		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -307,45 +334,49 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int row = table.getSelectedRow(); //선택한 셀의 행 번호 계산
-		
-		TableModel data = table.getModel(); //테이블의 모델 객체 얻어오기
-		
-		id = (String)data.getValueAt(row, 0);
-		String major = (String)data.getValueAt(row, 1);
-		String grade = (String)data.getValueAt(row, 2);
-		String name = (String)data.getValueAt(row, 3);
-		String phone = (String)data.getValueAt(row, 4);
-		
-		modify = new AdminModify("수정", 250, 300, this);
-		
-		modify.getTfMajor().setText(major);
-		modify.getTfGrade().setText(grade);
-		modify.getTfName().setText(name);
-		modify.getTfPhone().setText(phone);
+
+		if (e.getClickCount() == 2) {
+			int row = table.getSelectedRow(); // 선택한 셀의 행 번호 계산
+
+			TableModel data = table.getModel(); // 테이블의 모델 객체 얻어오기
+
+			id = (String) data.getValueAt(row, 0);
+			String major = (String) data.getValueAt(row, 1);
+			String grade = (String) data.getValueAt(row, 2);
+			String name = (String) data.getValueAt(row, 3);
+			String phone = (String) data.getValueAt(row, 4);
+
+			modify = new AdminModify("수정", 250, 300, this);
+
+			modify.getTfMajor().setText(major);
+			modify.getTfGrade().setText(grade);
+			modify.getTfName().setText(name);
+			modify.getTfPhone().setText(phone);
+		}
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
