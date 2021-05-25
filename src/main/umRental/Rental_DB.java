@@ -1,6 +1,7 @@
 package main.umRental;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 public class Rental_DB extends JFrame implements ActionListener {
@@ -53,6 +55,7 @@ public class Rental_DB extends JFrame implements ActionListener {
    private void setCenter() {
       pCenter = new JPanel();
       pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
+      pCenter.setBackground(Color.WHITE);
       pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
       add(pCenter, BorderLayout.CENTER);
 
@@ -64,7 +67,7 @@ public class Rental_DB extends JFrame implements ActionListener {
       vectorTitle.addElement("이름");
       vectorTitle.addElement("대여일");
       vectorTitle.addElement("반납예정일");
-
+      
       model = new DefaultTableModel(vectorTitle, 0) { // 테이블의 데이터 변경하려면 모델 사용
 
          public boolean isCellEditable(int r, int c) {
@@ -117,7 +120,13 @@ public class Rental_DB extends JFrame implements ActionListener {
       }
       
       table = new JTable(model); // 테이터 변경 시 테이블에 직접 접근하지 않고 변경
-
+      
+      JTableHeader tableHeader = table.getTableHeader();  //테이블 헤더
+	  tableHeader.setBackground(new Color(0xB2CCFF)); //테이블헤더 배경색 지정
+	  
+	  table.setFillsViewportHeight(true); //스크롤 팬 안에 테이블 꽉차게 표시 -> 이거 없으면 배경색 설정 안됨
+	  table.setBackground(Color.white); //테이블 배경색 지정
+	  
       // 스크롤팬을 사용하지 않으면 컬럼명을 볼 수 없음
       JScrollPane sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -140,6 +149,7 @@ public class Rental_DB extends JFrame implements ActionListener {
    private void setBottom() {
       pBottom = new JPanel();
       pBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
+      pBottom.setBackground(Color.WHITE);
       pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0));
       add(pBottom, BorderLayout.SOUTH);
 

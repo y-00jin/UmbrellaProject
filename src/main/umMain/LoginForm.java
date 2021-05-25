@@ -1,7 +1,6 @@
 package main.umMain;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -18,14 +17,14 @@ import javax.swing.JTextField;
 
 import main.umRental.Rental_DB;
 
-public class Login2 extends JFrame implements ActionListener {
+public class LoginForm extends JFrame implements ActionListener {
 
 	private JPanel p0, p1, p3;
 	private JLabel lbl_ID, lbl_PW;
 	private JTextField tf_ID, tf_PW;
 	private JButton btn_login, btn_exit;
 
-	public Login2() { // 생성자
+	public LoginForm() { // 생성자
 		setTitle("관리자 로그인");
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		dispose();
@@ -37,20 +36,19 @@ public class Login2 extends JFrame implements ActionListener {
 		p0 = new JPanel();
 		p0.setLayout(new GridLayout(1, 1, 0, 0));
 		p0.setBackground(Color.WHITE);
-		p0.setBorder(BorderFactory.createEmptyBorder(30, 300, 0, 300));
+		p0.setBorder(BorderFactory.createEmptyBorder(50, 300, 0, 300));
 		add(p0, BorderLayout.NORTH);
 		
-		ImageIcon icon = new ImageIcon("libs/user.png");
+		ImageIcon icon = new ImageIcon("libs/loginImg.png");
 		JLabel imageLabel = new JLabel(icon);
 		imageLabel.setHorizontalAlignment(JLabel.CENTER);
 		p0.add(imageLabel);
-//		
+		
 		p1 = new JPanel();
 		p1.setBackground(Color.WHITE);
 		p1.setLayout(new GridLayout(6, 1, 0, 20));
 
-	//	p1.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
-		p1.setBorder(BorderFactory.createEmptyBorder(0, 300, 30, 300));
+		p1.setBorder(BorderFactory.createEmptyBorder(100, 300, 100, 300));
 		add(p1, BorderLayout.CENTER);
 		
 		lbl_ID = new JLabel("ID ");
@@ -66,13 +64,6 @@ public class Login2 extends JFrame implements ActionListener {
 		
 		tf_PW = new JTextField(); // 창의 열 개수 10
 		p1.add(tf_PW);
-		
-//		p3 = new JPanel();
-//		p3.setBackground(Color.WHITE);
-//		p3.setLayout(new GridLayout(2, 1, 0, 30));
-//	//	p1.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
-//		p3.setBorder(BorderFactory.createEmptyBorder(30, 300, 30, 300));
-//		add(p3, BorderLayout.SOUTH);
 		
 		btn_login = new JButton("로그인");
 		btn_login.setBackground(new Color(0xD4F4FA));
@@ -91,7 +82,7 @@ public class Login2 extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new Login2();
+		new LoginForm();
 	}
 
 	@Override
@@ -104,7 +95,7 @@ public class Login2 extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "환영합니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 				
-				new Rental_DB("대여", 900, 600); //메인 없는 관계로 이단 대여로 지정
+				new UmbrellaMain("우산 대여 프로그램", 900, 600); // 메인 프로그램 불려옴
 			}
 			
 			else{
