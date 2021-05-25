@@ -130,6 +130,5 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		if (obj == btnReturn) {
 			new Return("반납", 900, 600);
 		}
-
 	}
 }
