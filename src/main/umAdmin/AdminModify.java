@@ -57,16 +57,20 @@ public class AdminModify extends JFrame implements ActionListener {
 
 	private void setTop() {
 		pTop = new JPanel();
-		pTop.setBackground(new Color(0xffe493));
-		add(pTop, BorderLayout.NORTH);
+
+		pTop.setBackground(new Color(0xB2CCFF));
 
 		JLabel lbl1 = new JLabel("수 정");
 		lbl1.setForeground(Color.BLACK); // JLabel글자 색 변경
 		pTop.add(lbl1);
+
+		add(pTop, BorderLayout.NORTH);
+		this.setVisible(true);
 	}
 
 	private void setCenter() {
 		pCenter = new JPanel();
+
 		pCenter.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 		pCenter.setLayout(new GridLayout(4, 2, 0, 10));
 		add(pCenter, BorderLayout.CENTER);
@@ -95,26 +99,32 @@ public class AdminModify extends JFrame implements ActionListener {
 		tfPhone = new JTextField();
 		pCenter.add(tfPhone);
 
+		this.setVisible(true);
 	}
 
 	private void setBottom() {
 		pBottom = new JPanel();
+
 		pBottom.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-		add(pBottom, BorderLayout.SOUTH);
 
 		btnOk = new JButton("수정");
 		btnOk.addActionListener(this);
+
 		pBottom.add(btnOk);
 
 		btnCancel = new JButton("취소");
 		btnCancel.addActionListener(this);
+
 		pBottom.add(btnCancel);
+
+		add(pBottom, BorderLayout.SOUTH);
+
 		this.setVisible(true);
 	}
 
 	public static void main(String[] args) {
 		DB.init();
-		//new AdminModify("수정", 250, 300);
+		// new AdminModify("학생수정", 250, 300);
 	}
 
 	@Override
@@ -126,15 +136,21 @@ public class AdminModify extends JFrame implements ActionListener {
 			String phone = tfPhone.getText();
 			String id = admin.getId();
 
-			String sql = "UPDATE STUDENT SET NAME = '" + name + "'," + " DEPARTMENT = '" + major + "',"
-							+ " GRADE = '" + grade + "'," + " PHONE = '" + phone + "'" + " WHERE STUDENTID = '" + id + "'";
-			DB.executeQuery(sql);
-			System.out.println(sql);
-			
-			dispose();
+			String sql = "UPDATE STUDENT SET NAME = '" + name + "'," + " DEPARTMENT = '" + major + "'," + " GRADE = '"
+					+ grade + "'," + " PHONE = '" + phone + "'" + " WHERE STUDENTID = '" + id + "'";
+			DB.executeQuery(sql); // DB 내용 수정
 
-		} else if (e.getSource() == btnCancel) {
+			// 새로고침
+			admin.getP2().removeAll();
+			admin.studentPanel();
+			admin.getP2().revalidate(); // 레이아웃 변화 재확인
+			admin.getP2().repaint(); // 레이아웃 다시 가져오기
+
+			System.out.println(sql);
+
 			dispose();
+		} else if (e.getSource() == btnCancel) {
+			dispose(); // 취소 버튼 누르면 화면 종료
 		}
 	}
 }
