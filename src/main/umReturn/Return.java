@@ -39,12 +39,9 @@ public class Return extends JFrame implements ActionListener {
 
    private JPanel panelSearch;
    private JLabel lblDate1;
-   private JTextField tfDate1;
    private JLabel lblHyphen;
-   private JTextField tfDate2;
    private JButton btnSearch;
    private JPanel panelInfo;
-   private Vector<String> con;
    private Vector<String> returnColumn;
    private DefaultTableModel model;
    private JTable table;
@@ -62,8 +59,9 @@ public class Return extends JFrame implements ActionListener {
       setTitle(title);
       setSize(width, height);
       setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+      //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      dispose();
+      
       // 검색 프레임 생성
       addSearch();
       
