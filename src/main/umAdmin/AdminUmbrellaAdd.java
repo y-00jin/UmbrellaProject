@@ -3,6 +3,7 @@ package main.umAdmin;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import main.DB;
+import main.style.BtnFont;
 
 public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 	private JButton btnAdd, btnCancel;
@@ -42,9 +44,11 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 	private void setTop() {
 		pTop = new JPanel();
 
+		pTop.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15));
 		pTop.setBackground(new Color(0xB2CCFF));
 
 		JLabel lbl1 = new JLabel("추 가");
+		lbl1.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		lbl1.setForeground(Color.BLACK); // JLabel글자 색 변경
 
 		pTop.add(lbl1);
@@ -58,15 +62,18 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 		pCenter = new JPanel();
 
 		pCenter.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-		pCenter.setLayout(new GridLayout(2, 2, 0, 10));
-
+		pCenter.setLayout(new GridLayout(2, 2, 0, 40));
+		pCenter.setBackground(Color.WHITE);
+		
 		JLabel lblId = new JLabel("우산코드 :");
+		lblId.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		pCenter.add(lblId);
 
 		tfUmbrellaId = new JTextField();
 		pCenter.add(tfUmbrellaId);
 
 		JLabel lblState = new JLabel("대여상태 :");
+		lblState.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		pCenter.add(lblState);
 
 		tfUmbrellaState = new JTextField();
@@ -81,13 +88,16 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 		pBottom = new JPanel();
 
 		pBottom.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		pBottom.setBackground(Color.WHITE);
 
 		btnAdd = new JButton("추가");
+		BtnFont.BtnStyle(btnAdd);
 		btnAdd.addActionListener(this);
 
 		pBottom.add(btnAdd);
 
 		btnCancel = new JButton("취소");
+		BtnFont.BtnStyle(btnCancel);
 		btnCancel.addActionListener(this);
 
 		pBottom.add(btnCancel);
