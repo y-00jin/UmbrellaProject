@@ -44,7 +44,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	private JComboBox<String> cbStr;
 	private DefaultTableModel model;
 	private Vector<String> con;
-	private JTable studentTable, umbrellaTable, table;
+	private JTable studentTable, umbrellaTable, blockTable;
 	private String blockID;
 	private String blockMajor;
 	private String blockName;
@@ -62,11 +62,13 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	private JButton btnCancel;
 	private AdminModify modify;
 	private AdminUmbrellaAdd umbrellaAdd;
+	private JTable table;
+	private String umCode;
 
 	public String getId() {
 		return id;
 	}
-	
+
 	public JPanel getP2() {
 		return p2;
 	}
@@ -153,15 +155,16 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 			e.printStackTrace();
 		}
 
-		table = new JTable(model);
-		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+		blockTable = new JTable(model);
+		blockTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+		blockTable.addMouseListener(this);
 
-		table.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
+		blockTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
 
-		JTableHeader tableHeader = table.getTableHeader();
+		JTableHeader tableHeader = blockTable.getTableHeader();
 		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블 헤더 색 설정
 
-		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+		JScrollPane sc = new JScrollPane(blockTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 		sc.setPreferredSize(new Dimension(850, 535)); // 스크롤팬 크기 설정
@@ -172,7 +175,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
-		TableColumnModel tcmSchedule = table.getColumnModel();
+		TableColumnModel tcmSchedule = blockTable.getColumnModel();
 
 		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
 			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
@@ -215,6 +218,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		umbrellaTable = new JTable(model);
 		umbrellaTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+		umbrellaTable.addMouseListener(this);
 
 		umbrellaTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
 
@@ -321,7 +325,9 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
+		
 		if (obj == cbStr) {
+
 			p2.removeAll(); // 패널 지우기
 
 			int index = cbStr.getSelectedIndex(); // 콤보박스 index 받아오기
@@ -334,13 +340,25 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 			}
 			p2.revalidate(); // 레이아웃 변화 재확인
 			p2.repaint(); // 레이아웃 다시 가져오기
+
 		}
-		
+
 		if (obj == btnAdd) {
+
 			new AdminUmbrellaAdd("우산추가", 250, 200, this);
+
 		}
-		
+
 		if (obj == btnDelect) {
+			
+			String sql = "DELETE FROM UMBRELLA "
+					+ "WHERE UMBRELLAID='" + umCode + "'";
+			DB.executeQuery(sql); // DB 내용 삭제
+			
+			p2.removeAll();
+			umbrellaPanel();
+			p2.revalidate(); // 레이아웃 변화 재확인
+			p2.repaint(); // 레이아웃 다시 가져오기
 			
 		}
 
@@ -348,28 +366,38 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		table = (JTable) e.getComponent();
+		model = (DefaultTableModel) table.getModel();
 
-		if (e.getClickCount() == 2) {
-			int row = studentTable.getSelectedRow(); // 선택한 셀의 행 번호 계산
+		if (e.getSource() == studentTable) { // 학생테이블에서 적용되는 마우스 이벤트
 
-			TableModel data = studentTable.getModel(); // 테이블의 모델 객체 얻어오기
+			if (e.getClickCount() == 2) {
+				int row = studentTable.getSelectedRow(); // 선택한 셀의 행 번호 계산
 
-			id = (String) data.getValueAt(row, 0);
-			String major = (String) data.getValueAt(row, 1);
-			String grade = (String) data.getValueAt(row, 2);
-			String name = (String) data.getValueAt(row, 3);
-			String phone = (String) data.getValueAt(row, 4);
+				TableModel data = studentTable.getModel(); // 테이블의 모델 객체 얻어오기
 
-			modify = new AdminModify("학생수정", 250, 300, this);
+				id = (String) data.getValueAt(row, 0);
+				String major = (String) data.getValueAt(row, 1);
+				String grade = (String) data.getValueAt(row, 2);
+				String name = (String) data.getValueAt(row, 3);
+				String phone = (String) data.getValueAt(row, 4);
 
-			modify.getTfMajor().setText(major);
-			modify.getTfGrade().setText(grade);
-			modify.getTfName().setText(name);
-			modify.getTfPhone().setText(phone);
+				modify = new AdminModify("학생수정", 250, 300, this);
+
+				modify.getTfMajor().setText(major);
+				modify.getTfGrade().setText(grade);
+				modify.getTfName().setText(name);
+				modify.getTfPhone().setText(phone);
+			}
+
 		}
-		
-		int row = umbrellaTable.getSelectedRow(); // 선택한 셀의 행 번호 계산
-		System.out.println(row);
+
+		if (e.getSource() == umbrellaTable) { // 우산테이블에서 적용되는 마우스 이벤트
+
+			umCode = (String) model.getValueAt(table.getSelectedRow(), 0);
+			System.out.println("우산코드는 " + umCode);
+
+		}
 
 	}
 
