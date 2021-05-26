@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import main.DB;
 import main.umRental.Rental;
 
 public class LoginForm extends JFrame implements ActionListener {
@@ -85,6 +86,7 @@ public class LoginForm extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
+		DB.init();	//
 		new LoginForm();
 	}
 
