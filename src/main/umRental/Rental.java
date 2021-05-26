@@ -187,10 +187,6 @@ public class Rental extends JFrame implements ActionListener {
 		btnModify.addActionListener(this);
 		pBtn.add(btnModify);
 
-		//완료버튼
-		btnOk = new JButton("완료");
-		BtnFont.BtnStyle(btnOk);
-		pBtn.add(btnOk);
 
 		//반납버튼
 		btnReturn = new JButton("반납");

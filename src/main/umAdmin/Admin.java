@@ -84,7 +84,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
       result = "";
       result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
 
-      while (!result.equals("inhatc4")) {
+      while (!result.equals("****")) {
          result = JOptionPane.showInputDialog("비밀번호 오류!");
       } //관리자 확인 비밀번호 입력
 
@@ -103,10 +103,10 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
       cbStr = new JComboBox<String>(strs);
       cbStr.addActionListener(this);
 
-      UIManager.put("ComboBox.background", new ColorUIResource(Color.yellow));
-      UIManager.put("JTextField.background", new ColorUIResource(Color.yellow));
-      UIManager.put("ComboBox.selectionBackground", new ColorUIResource(Color.magenta));
-      UIManager.put("ComboBox.selectionForeground", new ColorUIResource(Color.blue));
+//      UIManager.put("ComboBox.background", new ColorUIResource(Color.yellow));
+//      UIManager.put("JTextField.background", new ColorUIResource(Color.yellow));
+//      UIManager.put("ComboBox.selectionBackground", new ColorUIResource(Color.magenta));
+//      UIManager.put("ComboBox.selectionForeground", new ColorUIResource(Color.blue));
 
       p1.add(cbStr);
 

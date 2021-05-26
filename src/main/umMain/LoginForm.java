@@ -100,6 +100,7 @@ public class LoginForm extends JFrame implements ActionListener {
 						this, "환영합니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 				
 				new UmbrellaMain("우산 대여 프로그램", 900, 600); // 메인 프로그램 불려옴
+				dispose();
 			}
 			
 			else{
