@@ -36,7 +36,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 
 	private void setTop() {
 		pTop = new JPanel();
-		pTop.setBackground(new Color(0xffe493));
+		pTop.setBackground(new Color(0xB2CCFF));
 		add(pTop, BorderLayout.NORTH);
 		
 		JLabel lbl1 = new JLabel("수 정");
