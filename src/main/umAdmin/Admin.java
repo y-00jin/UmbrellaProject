@@ -359,7 +359,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
          
          String sql = "DELETE FROM UMBRELLA "
                + "WHERE UMBRELLAID='" + umCode + "'";
-         DB.executeQuery(sql); // DB 내용 삭제
+         DB.executeQuery(sql); // DB 내용 삭제임
          
          p2.removeAll();
          umbrellaPanel();
