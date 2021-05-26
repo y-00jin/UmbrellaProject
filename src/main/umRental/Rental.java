@@ -25,7 +25,7 @@ import javax.swing.table.TableColumnModel;
 
 import main.DB;
 
-public class Rental_DB extends JFrame implements ActionListener {
+public class Rental extends JFrame implements ActionListener {
 	private JPanel pCenter, pBottom;
 	private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnOut;
 	private Vector<String> vectorTitle;
@@ -35,7 +35,7 @@ public class Rental_DB extends JFrame implements ActionListener {
 	private JTable table;
 	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE;
 
-	public Rental_DB(String title, int width, int height) {
+	public Rental(String title, int width, int height) {
 		this.setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this);
@@ -55,7 +55,7 @@ public class Rental_DB extends JFrame implements ActionListener {
 		pCenter = new JPanel();
 		pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pCenter.setBackground(Color.WHITE);
-		pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0)); // pCenter마진
+		pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0)); //패널마진
 		add(pCenter, BorderLayout.CENTER); // 프레임에 패널 가운데에 붙임
 
 		vectorTitle = new Vector<String>(); // 헤더 값
@@ -159,28 +159,33 @@ public class Rental_DB extends JFrame implements ActionListener {
 		pBottom = new JPanel();
 		pBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pBottom.setBackground(Color.WHITE);
-		pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0));
+		pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0)); //패널 마진
 		add(pBottom, BorderLayout.SOUTH);
 
+		//새로고침 버튼
 		btnF5 = new JButton("새로고침");
-
 		pBottom.add(btnF5);
 
+		//대여버튼
 		btnRental = new JButton("대여");
 		btnRental.addActionListener(this);
 		pBottom.add(btnRental);
 
+		//수정버튼
 		btnModify = new JButton("수정");
 		btnModify.addActionListener(this);
 		pBottom.add(btnModify);
 
+		//완료버튼
 		btnOk = new JButton("완료");
 		pBottom.add(btnOk);
 
+		//반납버튼
 		btnReturn = new JButton("반납");
 		btnReturn.addActionListener(this);
 		pBottom.add(btnReturn);
 
+		//차단버튼
 		btnOut = new JButton("차단");
 		btnOut.addActionListener(this);
 		pBottom.add(btnOut);
@@ -188,7 +193,7 @@ public class Rental_DB extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		DB.init();
-		new Rental_DB("대여", 900, 600);
+		new Rental("대여", 900, 600);
 	}
 
 	@Override
