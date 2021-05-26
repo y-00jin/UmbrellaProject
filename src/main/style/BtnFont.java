@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JButton;
-
+ 
 public class BtnFont {
 	 public static void BtnStyle(JButton btnFont){
 		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
