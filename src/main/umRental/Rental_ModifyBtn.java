@@ -2,6 +2,7 @@ package main.umRental;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,22 +42,26 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 		
 		JLabel lbl1 = new JLabel("수 정");
 		lbl1.setForeground(Color.BLACK); //JLabel글자 색 변경
+		lbl1.setFont(new Font("HY헤드라인M",Font.PLAIN, 12));
 		pTop.add(lbl1);
 	}
 
 	private void setCenter() {
 		pCenter = new JPanel();
 		pCenter.setBorder(BorderFactory.createEmptyBorder(20,10,20,10));
+		pCenter.setBackground(Color.WHITE);
 		pCenter.setLayout(new GridLayout(2, 2, 0,10));
 		add(pCenter, BorderLayout.CENTER);
 		
 		JLabel lbl_Code = new JLabel("학번 :");
+		lbl_Code.setFont(new Font("HY헤드라인M",Font.PLAIN, 12));
 		pCenter.add(lbl_Code);
 		
 		tf_Code = new JTextField();
 		pCenter.add(tf_Code);
 		
-		JLabel lbl_UmbCode = new JLabel("우산번호 :");		
+		JLabel lbl_UmbCode = new JLabel("우산번호 :");	
+		lbl_UmbCode.setFont(new Font("HY헤드라인M",Font.PLAIN, 12));
 		pCenter.add(lbl_UmbCode);
 		
 		tf_Umbcode = new JTextField();
@@ -66,6 +71,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	private void setBottom() {
 		pBottom = new JPanel();
 		pBottom.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		pBottom.setBackground(Color.WHITE);
 		add(pBottom, BorderLayout.SOUTH);
 		
 		btn_ok = new JButton("수정");

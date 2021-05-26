@@ -52,29 +52,29 @@ public class LoginForm extends JFrame implements ActionListener {
 		add(p1, BorderLayout.CENTER);
 		
 		lbl_ID = new JLabel("ID ");
-		lbl_ID.setFont(new Font("", Font.BOLD, 20));
+		lbl_ID.setFont(new Font("HY헤드라인M", Font.BOLD, 20));
 		p1.add(lbl_ID);
 		
 		tf_ID = new JTextField(); // 창의 열 개수 10
 		p1.add(tf_ID);
 		
 		lbl_PW = new JLabel("PW ");
-		lbl_PW.setFont(new Font("", Font.BOLD, 20));
+		lbl_PW.setFont(new Font("HY헤드라인M", Font.BOLD, 20));
 		p1.add(lbl_PW);
 		
 		tf_PW = new JTextField(); // 창의 열 개수 10
 		p1.add(tf_PW);
 		
 		btn_login = new JButton("로그인");
-		btn_login.setBackground(new Color(0xD4F4FA));
-		btn_login.setFont(new Font("휴먼둥근헤드라인", Font.PLAIN, 15));
+		btn_login.setBackground(new Color(0xB2CCFF));
+		btn_login.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
 		
 		btn_login.addActionListener(this);
 		p1.add(btn_login);
 		
 		btn_exit = new JButton("종료");
-		btn_exit.setBackground(new Color(0xD4F4FA));
-		btn_exit.setFont(new Font("휴먼둥근헤드라인", Font.PLAIN, 15));
+		btn_exit.setBackground(new Color(0xB2CCFF));
+		btn_exit.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
 		btn_exit.addActionListener(this);
 		p1.add(btn_exit);
 		

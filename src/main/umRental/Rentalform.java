@@ -47,6 +47,7 @@ public class Rentalform extends JFrame implements ActionListener {
 	private void setCenter() {
 		pCenter = new JPanel();
 		pCenter.setBorder(BorderFactory.createEmptyBorder(20,10,20,10));
+		pCenter.setBackground(Color.WHITE);
 		pCenter.setLayout(new GridLayout(2, 2, 0,10));
 		add(pCenter, BorderLayout.CENTER);
 		
@@ -66,6 +67,7 @@ public class Rentalform extends JFrame implements ActionListener {
 	private void setBottom() {
 		pBottom = new JPanel();
 		pBottom.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		pBottom.setBackground(Color.WHITE);
 		add(pBottom, BorderLayout.SOUTH);
 		
 		btn_ok = new JButton("대여");

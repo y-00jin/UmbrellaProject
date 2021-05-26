@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -26,8 +27,8 @@ import javax.swing.table.TableColumnModel;
 import main.DB;
 
 public class Rental extends JFrame implements ActionListener {
-	private JPanel pCenter, pBottom;
-	private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnOut;
+	private JPanel pCenter, pBottom, pBtn ,pExit;
+	private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnOut, btnExit;
 	private Vector<String> vectorTitle;
 	private DefaultTableModel model;
 	private Vector<String> data;
@@ -46,7 +47,7 @@ public class Rental extends JFrame implements ActionListener {
 		// setResizable(false); // 실행후 화면크기 변경 불가
 
 		setTable();
-		setBtn();
+		setBottom();
 
 		this.setVisible(true);
 	}
@@ -155,40 +156,58 @@ public class Rental extends JFrame implements ActionListener {
 		}
 	}
 
-	private void setBtn() {
+	private void setBottom() {
 		pBottom = new JPanel();
-		pBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
-		pBottom.setBackground(Color.WHITE);
+		pBottom.setLayout(new BorderLayout());
+		pBottom.setBackground(Color.WHITE); //배경색
 		pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0)); //패널 마진
-		add(pBottom, BorderLayout.SOUTH);
+		add(pBottom, BorderLayout.SOUTH); //남쪽 정렬
 
+		pBtn = new JPanel();
+		pBtn.setLayout(new FlowLayout(FlowLayout.LEFT));
+		pBtn.setBackground(Color.WHITE);
+		pBottom.add(pBtn, BorderLayout.WEST);
+		
 		//새로고침 버튼
 		btnF5 = new JButton("새로고침");
-		pBottom.add(btnF5);
+		pBtn.add(btnF5);
 
 		//대여버튼
 		btnRental = new JButton("대여");
 		btnRental.addActionListener(this);
-		pBottom.add(btnRental);
+		pBtn.add(btnRental);
 
 		//수정버튼
 		btnModify = new JButton("수정");
 		btnModify.addActionListener(this);
-		pBottom.add(btnModify);
+		pBtn.add(btnModify);
 
 		//완료버튼
 		btnOk = new JButton("완료");
-		pBottom.add(btnOk);
+		pBtn.add(btnOk);
 
 		//반납버튼
 		btnReturn = new JButton("반납");
 		btnReturn.addActionListener(this);
-		pBottom.add(btnReturn);
+		pBtn.add(btnReturn);
 
 		//차단버튼
 		btnOut = new JButton("차단");
 		btnOut.addActionListener(this);
-		pBottom.add(btnOut);
+		pBtn.add(btnOut);
+		
+		//오른쪽 버튼 패널
+		pExit = new JPanel();
+		pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		pExit.setBackground(Color.WHITE);
+		pExit.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+		pBottom.add(pExit, BorderLayout.EAST);
+		
+		//닫기버튼
+		btnExit = new JButton("닫기");
+		btnExit.setAlignmentX(JButton.RIGHT);
+		btnExit.addActionListener(this);
+		pExit.add(btnExit);
 	}
 
 	public static void main(String[] args) {
@@ -208,6 +227,8 @@ public class Rental extends JFrame implements ActionListener {
 					this, "000님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 		} else if (obj == btnOut) {
 
+		} else if (obj == btnExit) {
+			dispose();
 		}
 	}
 }
