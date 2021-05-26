@@ -78,7 +78,8 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
       setTitle(title);
       setSize(width, height);
       setLocationRelativeTo(this);
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      dispose();
+      //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 //      result = "";
 //      result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
