@@ -2,6 +2,7 @@ package main.umRental;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +41,7 @@ public class Rentalform extends JFrame implements ActionListener {
 		add(pTop, BorderLayout.NORTH);
 		
 		JLabel lbl1 = new JLabel("대 여");
+		lbl1.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		lbl1.setForeground(Color.BLACK); //JLabel글자 색 변경
 		pTop.add(lbl1);
 	}
@@ -81,7 +83,7 @@ public class Rentalform extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new Rentalform("대여", 250, 200);			
+		new Rentalform("대여", 300, 300);			
 	}
 
 	@Override

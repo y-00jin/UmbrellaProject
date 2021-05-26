@@ -37,31 +37,32 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 
 	private void setTop() {
 		pTop = new JPanel();
+		pTop.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15)); //패널 flowlayout, vgap 
 		pTop.setBackground(new Color(0xB2CCFF));
 		add(pTop, BorderLayout.NORTH);
 		
 		JLabel lbl1 = new JLabel("수 정");
 		lbl1.setForeground(Color.BLACK); //JLabel글자 색 변경
-		lbl1.setFont(new Font("HY헤드라인M",Font.PLAIN, 12));
+		lbl1.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		pTop.add(lbl1);
 	}
 
 	private void setCenter() {
 		pCenter = new JPanel();
-		pCenter.setBorder(BorderFactory.createEmptyBorder(20,10,20,10));
+		pCenter.setBorder(BorderFactory.createEmptyBorder(25,10,25,10));
 		pCenter.setBackground(Color.WHITE);
-		pCenter.setLayout(new GridLayout(2, 2, 0,10));
+		pCenter.setLayout(new GridLayout(2, 2, 0, 40));
 		add(pCenter, BorderLayout.CENTER);
 		
 		JLabel lbl_Code = new JLabel("학번 :");
-		lbl_Code.setFont(new Font("HY헤드라인M",Font.PLAIN, 12));
+		lbl_Code.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		pCenter.add(lbl_Code);
 		
 		tf_Code = new JTextField();
 		pCenter.add(tf_Code);
 		
 		JLabel lbl_UmbCode = new JLabel("우산번호 :");	
-		lbl_UmbCode.setFont(new Font("HY헤드라인M",Font.PLAIN, 12));
+		lbl_UmbCode.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		pCenter.add(lbl_UmbCode);
 		
 		tf_Umbcode = new JTextField();
@@ -85,7 +86,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new Rental_ModifyBtn("수정", 250, 200);			
+		new Rental_ModifyBtn("수정", 300, 300);			
 	}
 
 	@Override
