@@ -15,6 +15,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import main.style.BtnFont;
+
 public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	private JButton btn_ok, btn_cancel;
 	private JTextField tf_Umbcode, tf_Code;
@@ -77,10 +79,12 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 		
 		btn_ok = new JButton("수정");
 		btn_ok.addActionListener(this);
+		BtnFont.BtnStyle(btn_ok);
 		pBottom.add(btn_ok);
 		
 		btn_cancel = new JButton("취소");
 		btn_cancel.addActionListener(this);
+		BtnFont.BtnStyle(btn_cancel);
 		pBottom.add(btn_cancel);
 		this.setVisible(true);
 	}

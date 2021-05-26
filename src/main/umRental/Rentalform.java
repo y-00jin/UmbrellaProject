@@ -15,6 +15,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import main.style.BtnFont;
+
 public class Rentalform extends JFrame implements ActionListener {
 	private JButton btn_ok, btn_cancel;
 	private JTextField tf_Umbcode, tf_Code;
@@ -37,6 +39,7 @@ public class Rentalform extends JFrame implements ActionListener {
 
 	private void setTop() {
 		pTop = new JPanel();
+		pTop.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15)); //패널 flowlayout, vgap 
 		pTop.setBackground(new Color(0xB2CCFF));
 		add(pTop, BorderLayout.NORTH);
 		
@@ -48,18 +51,20 @@ public class Rentalform extends JFrame implements ActionListener {
 
 	private void setCenter() {
 		pCenter = new JPanel();
-		pCenter.setBorder(BorderFactory.createEmptyBorder(20,10,20,10));
+		pCenter.setBorder(BorderFactory.createEmptyBorder(20,10,25,10));
 		pCenter.setBackground(Color.WHITE);
-		pCenter.setLayout(new GridLayout(2, 2, 0,10));
+		pCenter.setLayout(new GridLayout(2, 2, 0, 40));
 		add(pCenter, BorderLayout.CENTER);
 		
 		JLabel lbl_Code = new JLabel("학번 :");
+		lbl_Code.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		pCenter.add(lbl_Code);
 		
 		tf_Code = new JTextField();
 		pCenter.add(tf_Code);
 		
-		JLabel lbl_UmbCode = new JLabel("우산번호 :");		
+		JLabel lbl_UmbCode = new JLabel("우산번호 :");	
+		lbl_UmbCode.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		pCenter.add(lbl_UmbCode);
 		
 		tf_Umbcode = new JTextField();
@@ -74,10 +79,12 @@ public class Rentalform extends JFrame implements ActionListener {
 		
 		btn_ok = new JButton("대여");
 		btn_ok.addActionListener(this);
+		BtnFont.BtnStyle(btn_ok);
 		pBottom.add(btn_ok);
 		
 		btn_cancel = new JButton("취소");
 		btn_cancel.addActionListener(this);
+		BtnFont.BtnStyle(btn_cancel);
 		pBottom.add(btn_cancel);
 		this.setVisible(true);
 	}
