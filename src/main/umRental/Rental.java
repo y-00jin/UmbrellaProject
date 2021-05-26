@@ -40,7 +40,8 @@ public class Rental extends JFrame implements ActionListener {
 		this.setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		dispose();
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// 레이아웃
 		setLayout(new BorderLayout());
