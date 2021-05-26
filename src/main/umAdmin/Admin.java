@@ -81,12 +81,12 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
       dispose();
       //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-//      result = "";
-//      result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
-//
-//      while (!result.equals("inhatc4")) {
-//         result = JOptionPane.showInputDialog("비밀번호 오류!");
-//      } //관리자 확인 비밀번호 입력
+      result = "";
+      result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
+
+      while (!result.equals("inhatc4")) {
+         result = JOptionPane.showInputDialog("비밀번호 오류!");
+      } //관리자 확인 비밀번호 입력
 
       p1 = new JPanel();
       p2 = new JPanel();
