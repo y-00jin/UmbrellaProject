@@ -6,11 +6,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -48,13 +45,13 @@ public class Rental_DB extends JFrame implements ActionListener {
 		setLayout(new BorderLayout());
 		// setResizable(false); // 실행후 화면크기 변경 불가
 
-		setCenter();
-		setBottom();
+		setTable();
+		setBtn();
 
 		this.setVisible(true);
 	}
 
-	private void setCenter() {
+	private void setTable() {
 		pCenter = new JPanel();
 		pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pCenter.setBackground(Color.WHITE);
@@ -102,9 +99,9 @@ public class Rental_DB extends JFrame implements ActionListener {
 		
 		try {
 			while (rs.next()) {
-				data = new Vector<String>();
+				data = new Vector<String>(); 
 
-				rentalID = rs.getString(1);
+				rentalID = rs.getString(1); //DB의 첫번째를 rentalID를 넣음
 				umbreallaID = rs.getString(2);
 				studentID = rs.getString(3);
 				studentName = rs.getString(4);
@@ -158,7 +155,7 @@ public class Rental_DB extends JFrame implements ActionListener {
 		}
 	}
 
-	private void setBottom() {
+	private void setBtn() {
 		pBottom = new JPanel();
 		pBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pBottom.setBackground(Color.WHITE);
