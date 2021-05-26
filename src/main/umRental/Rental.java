@@ -25,6 +25,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 import main.DB;
+import main.style.BtnFont;
 
 public class Rental extends JFrame implements ActionListener {
 	private JPanel pCenter, pBottom, pBtn ,pExit;
@@ -171,29 +172,35 @@ public class Rental extends JFrame implements ActionListener {
 		
 		//새로고침 버튼
 		btnF5 = new JButton("새로고침");
+		BtnFont.BtnStyle(btnF5);
 		pBtn.add(btnF5);
 
 		//대여버튼
 		btnRental = new JButton("대여");
+		BtnFont.BtnStyle(btnRental);
 		btnRental.addActionListener(this);
 		pBtn.add(btnRental);
 
 		//수정버튼
 		btnModify = new JButton("수정");
+		BtnFont.BtnStyle(btnModify);
 		btnModify.addActionListener(this);
 		pBtn.add(btnModify);
 
 		//완료버튼
 		btnOk = new JButton("완료");
+		BtnFont.BtnStyle(btnOk);
 		pBtn.add(btnOk);
 
 		//반납버튼
 		btnReturn = new JButton("반납");
+		BtnFont.BtnStyle(btnReturn);
 		btnReturn.addActionListener(this);
 		pBtn.add(btnReturn);
 
 		//차단버튼
 		btnOut = new JButton("차단");
+		BtnFont.BtnStyle(btnOut);
 		btnOut.addActionListener(this);
 		pBtn.add(btnOut);
 		
@@ -206,6 +213,7 @@ public class Rental extends JFrame implements ActionListener {
 		
 		//닫기버튼
 		btnExit = new JButton("닫기");
+		BtnFont.BtnStyle(btnExit);
 		btnExit.setAlignmentX(JButton.RIGHT);
 		btnExit.addActionListener(this);
 		pExit.add(btnExit);
