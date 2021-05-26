@@ -23,6 +23,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import main.DB;
+import main.umAdmin.Admin;
+import main.umRental.Rental;
 import main.umReturn.Return;
 
 public class UmbrellaMain extends JFrame implements ActionListener {
@@ -94,12 +96,14 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 
 		// 버튼 생성
 		btnRental = new JButton("대여", btnIcon);
-
+		btnRental.addActionListener(this);
+		
 		btnReturn = new JButton("반납", btnIcon);
 		btnReturn.addActionListener(this);
 
 		btnAdmin = new JButton("관리자", btnIcon);
-
+		btnAdmin.addActionListener(this);
+		
 		// 버튼에 스타일 적용
 		JButton[] btnArr = { btnRental, btnReturn, btnAdmin };
 
@@ -127,8 +131,15 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		if (obj == btnReturn) {
+		if(obj == btnRental) {
+			new Rental("대여", 900, 600);
+		}
+		else if (obj == btnReturn) {
 			new Return("반납", 900, 600);
 		}
+		else if(obj == btnAdmin) {
+			new Admin("관리자", 900, 700);
+		}
+		
 	}
 }

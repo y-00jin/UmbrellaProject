@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -46,13 +47,15 @@ public class Return extends JFrame implements ActionListener {
 	private JDatePanelImpl datePanel1, datePanel2;
 	private JDatePickerImpl datePicker1, datePicker2;
 	private Date SelectedDate1, SelectedDate2;
+	private JPanel panelClose;
+	private JButton btnClose;
 
 	public Return(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		dispose();	//닫으면 이 프레임만 종료
+		dispose(); // 닫으면 이 프레임만 종료
 
 		// 검색 프레임 생성
 		addSearch();
@@ -60,25 +63,37 @@ public class Return extends JFrame implements ActionListener {
 		// 테이블 생성
 		addTable();
 
+		
+		// 닫기 버튼
+		addClose();
+		
 		add(panelSearch, BorderLayout.NORTH);
 		add(panelInfo, BorderLayout.CENTER);
+		add(panelClose, BorderLayout.SOUTH);
 		setVisible(true);
 	}
+
 
 	// 검색
 	private void addSearch() {
 
-		panelSearch = new JPanel();	//패널 생성
-		panelSearch.setBackground(new Color(0xFFFFFF));	//패널 배경
-		panelSearch.setLayout(new FlowLayout(FlowLayout.LEFT));	//왼쪽 정렬
-		panelSearch.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));	//마진 설정
-		lblDate1 = new JLabel("날짜 검색 : ");	//라벨
+		panelSearch = new JPanel(); // 패널 생성
+		panelSearch.setBackground(new Color(0xFFFFFF)); // 패널 배경
+		panelSearch.setLayout(new FlowLayout(FlowLayout.LEFT)); // 왼쪽 정렬
+		panelSearch.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 마진 설정
+		
+		
+		Font lblFont = new Font("HY헤드라인M", Font.PLAIN, 15);
+		
+		lblDate1 = new JLabel("날짜 검색 : "); // 라벨
+		lblDate1.setFont(lblFont);
 		panelSearch.add(lblDate1);
 
-		model1 = new UtilDateModel();	//데이터모델 객체 생성
-		datePanel1 = new JDatePanelImpl(model1);	//모델 객체를 이용해 JDatePanelImpl 생성 -> 달력 생성
-		datePicker1 = new JDatePickerImpl(datePanel1, new DateLabelFormatter());	
-		// 생성된 달력을 텍스트필드와 ...버튼으로 나타냄 / DateLabelFormatter() 생성자를 이용해  YYYY-MM-DD로 텍스트필드에 출력되는 유형 바꿈
+		model1 = new UtilDateModel(); // 데이터모델 객체 생성
+		datePanel1 = new JDatePanelImpl(model1); // 모델 객체를 이용해 JDatePanelImpl 생성 -> 달력 생성
+		datePicker1 = new JDatePickerImpl(datePanel1, new DateLabelFormatter());
+		// 생성된 달력을 텍스트필드와 ...버튼으로 나타냄 / DateLabelFormatter() 생성자를 이용해 YYYY-MM-DD로 텍스트필드에
+		// 출력되는 유형 바꿈
 		panelSearch.add(datePicker1);
 
 		lblHyphen = new JLabel(" - ");
@@ -89,11 +104,13 @@ public class Return extends JFrame implements ActionListener {
 		datePicker2 = new JDatePickerImpl(datePanel2, new DateLabelFormatter());
 		panelSearch.add(datePicker2);
 
-		btnSearch = new JButton("검색");	// 검색 버튼
+		btnSearch = new JButton("검색"); // 검색 버튼
+		addFont(btnSearch);
 		btnSearch.addActionListener(this);
 		panelSearch.add(btnSearch);
 
 		btnReset = new JButton("초기화"); // 초기화 버튼
+		addFont(btnReset);
 		btnReset.addActionListener(this);
 		panelSearch.add(btnReset);
 
@@ -120,51 +137,78 @@ public class Return extends JFrame implements ActionListener {
 				return false;
 			}
 		};
+		
 
-		//테이블 생성
+		// 테이블 생성
 		returnTable();
-		
-		
-		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
-		table.setFillsViewportHeight(true);	// 테이블 배경색
-		JTableHeader tableHeader = table.getTableHeader();	//테이블 헤더 값 가져오기
-		tableHeader.setBackground(new Color(0xB2CCFF));	//가져온 테이블 헤더의 색 지정
 
-		//스크롤 팬
-		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sc.setPreferredSize(new Dimension(860, 480));
+		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+		table.setFillsViewportHeight(true); // 테이블 배경색
+		JTableHeader tableHeader = table.getTableHeader(); // 테이블 헤더 값 가져오기
+		tableHeader.setBackground(new Color(0xB2CCFF)); // 가져온 테이블 헤더의 색 지정
+
+		// 스크롤 팬
+		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		sc.setPreferredSize(new Dimension(860, 420));
 		panelInfo.add(sc);
 
 	}
 
 	private void returnTable() {
-		model.getDataVector().removeAllElements();	//테이블 요소 삭제
+		//model.getDataVector().removeAllElements(); // 테이블 요소 삭제
+
+		model.setNumRows(0);
 		
 		String returnSelect = "select return.RETURNID, um.UMBRELLAID, st.STUDENTID, st.NAME, TO_CHAR(rental.rentaldate, \'YYYY-MM-DD\'), TO_CHAR(return.returndate, \'YYYY-MM-DD\') "
 				+ " from RETURN return, RENTAL rental, STUDENT st, UMBRELLA um where return.rentalid = rental.rentalid"
 				+ "  and rental.studentid = st.studentid and rental.umbrellaid = um.umbrellaid";
 
-		ResultSet rs = DB.getResultSet(returnSelect);	
-		String[] rsArr = new String[6];	//값 받아올 배열
+		ResultSet rs = DB.getResultSet(returnSelect);
+		String[] rsArr = new String[6]; // 값 받아올 배열
 		try {
 			while (rs.next()) {
-				
+
 				for (int i = 0; i < rsArr.length; i++) {
-					rsArr[i] = rs.getString(i + 1);	// 값 저장
+					rsArr[i] = rs.getString(i + 1); // 값 저장
 				}
 
-				model.addRow(rsArr);	//모델에 추가
+				model.addRow(rsArr); // 모델에 추가
 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		table = new JTable(model);	//테이블에 추가
-		table.repaint();	//새로 그리기
-		
+		table = new JTable(model); // 테이블에 추가
+
 	}
 
+	private void addClose() {
+		panelClose = new JPanel();
+		panelClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		panelClose.setBorder(BorderFactory.createEmptyBorder(0, 10, 15, 10));
+		panelClose.setBackground(Color.white);
+		
+		
+		
+		btnClose = new JButton("닫기");
+		btnClose.addActionListener(this);
+		addFont(btnClose);
+		
+		panelClose.add(btnClose);
+		
+	}
+	
+	//폰트 스타일
+	private void addFont(JButton btnFont){
+		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
+		btnFont.setFont(fontBtn); // 폰트 스타일 적용
+		btnFont.setForeground(new Color(0x5D5D5D)); // 글자색
+		btnFont.setBackground(new Color(0xD9E5FF));
+		//btnFont.setBorderPainted(false); // 테두리 없애기
+	}
+	
 	public static void main(String[] args) {
 		DB.init();
 		new Return("반납", 900, 600);
@@ -174,24 +218,25 @@ public class Return extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		if (obj == btnSearch) {
+			model.setNumRows(0);
+			//table.repaint();
+			//model.getDataVector().removeAllElements(); // 테이블 요소 지우기
 			
-			model.getDataVector().removeAllElements();	//테이블 요소 지우기
-			
-			String datePattern = "yyyy-MM-dd";	//데이터 포맷 형식 지정
-			SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);	//데이터 포맷 형식 지정한 객체 생성
+			String datePattern = "yyyy-MM-dd"; // 데이터 포맷 형식 지정
+			SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern); // 데이터 포맷 형식 지정한 객체 생성
 
-			SelectedDate1 = (Date) datePicker1.getModel().getValue();	// 클릭된 날짜값 가져오기
-			SelectedDate2 = (Date) datePicker2.getModel().getValue();	// 클릭된 날짜값 가져오기
+			SelectedDate1 = (Date) datePicker1.getModel().getValue(); // 클릭된 날짜값 가져오기
+			SelectedDate2 = (Date) datePicker2.getModel().getValue(); // 클릭된 날짜값 가져오기
 
 			String returnSelect = "SELECT return.returnid, umbrella.UMBRELLAID ,student.STUDENTID , student.NAME , TO_CHAR(rental.RENTALDATE, \'YYYY-MM-DD\'), TO_CHAR(RETURN.RETURNDATE, \'YYYY-MM-DD\') "
 					+ "FROM \"RETURN\" return , STUDENT student , UMBRELLA umbrella, RENTAL rental "
 					+ "WHERE return.RENTALID = rental.rentalid AND rental.studentid = student.studentid AND rental.umbrellaid = umbrella.umbrellaid "
-					+ "and return.RETURNDATE BETWEEN \'" + dateFormatter.format(SelectedDate1) +"\' AND \'" + dateFormatter.format(SelectedDate2) + "\'";
+					+ "and return.RETURNDATE BETWEEN \'" + dateFormatter.format(SelectedDate1) + "\' AND \'"
+					+ dateFormatter.format(SelectedDate2) + "\'";
 
 			System.out.println(returnSelect);
-			
-			
-			ResultSet rs = DB.getResultSet(returnSelect);	//데이터 불러오기
+
+			ResultSet rs = DB.getResultSet(returnSelect); // 데이터 불러오기
 			String[] rsArr = new String[6];
 			try {
 				while (rs.next()) {
@@ -200,7 +245,7 @@ public class Return extends JFrame implements ActionListener {
 						rsArr[i] = rs.getString(i + 1);
 					}
 
-					model.addRow(rsArr);	//테이블에 추가
+					model.addRow(rsArr); // 테이블에 추가
 
 				}
 			} catch (SQLException exception) {
@@ -209,14 +254,18 @@ public class Return extends JFrame implements ActionListener {
 			}
 
 			table = new JTable(model);
-			table.repaint();	//새로 그리기
 
 			System.out.println((dateFormatter.format(SelectedDate1)));
 			System.out.println((dateFormatter.format(SelectedDate2)));
+			
+		}
+
+		else if (obj == btnReset) {
+			returnTable();
 		}
 		
-		else if(obj == btnReset) {
-			returnTable();
+		else if(obj==btnClose) {
+			dispose();
 		}
 	}
 }
