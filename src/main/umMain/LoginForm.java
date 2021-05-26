@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import main.DB;
@@ -22,7 +23,8 @@ public class LoginForm extends JFrame implements ActionListener {
 
 	private JPanel p0, p1, p3;
 	private JLabel lbl_ID, lbl_PW;
-	private JTextField tf_ID, tf_PW;
+	private JTextField tf_ID;
+	private JPasswordField tf_PW;
 	private JButton btn_login, btn_exit;
 
 	public LoginForm() { // 생성자
@@ -63,7 +65,8 @@ public class LoginForm extends JFrame implements ActionListener {
 		lbl_PW.setFont(new Font("HY헤드라인M", Font.BOLD, 20));
 		p1.add(lbl_PW);
 		
-		tf_PW = new JTextField(); // 창의 열 개수 10
+		tf_PW = new JPasswordField();	
+		tf_PW.setEchoChar('*'); //텍스트필드에 입력한 값 안보이고 *로 표시됨
 		p1.add(tf_PW);
 		
 		btn_login = new JButton("로그인");
