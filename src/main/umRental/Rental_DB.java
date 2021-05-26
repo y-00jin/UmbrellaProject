@@ -26,173 +26,186 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
+import main.DB;
+
 public class Rental_DB extends JFrame implements ActionListener {
-   private JPanel pCenter, pBottom;
-   private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnOut;
-   private Vector<String> vectorTitle;
-   private DefaultTableModel model;
-   private Vector<String> data;
-   private String[] tmp;
-   private JTable table;
-   private String rentalID, umbreallaID, studentID, rentalDATE, returndueDATE;
+	private JPanel pCenter, pBottom;
+	private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnOut;
+	private Vector<String> vectorTitle;
+	private DefaultTableModel model;
+	private Vector<String> data;
+	private String[] tmp, value;
+	private JTable table;
+	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE;
 
-   public Rental_DB(String title, int width, int height) {
-      this.setTitle(title);
-      setSize(width, height);
-      setLocationRelativeTo(this);
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public Rental_DB(String title, int width, int height) {
+		this.setTitle(title);
+		setSize(width, height);
+		setLocationRelativeTo(this);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-      // 레이아웃
-      setLayout(new BorderLayout());
-      // setResizable(false); // 실행후 화면크기 변경 불가
+		// 레이아웃
+		setLayout(new BorderLayout());
+		// setResizable(false); // 실행후 화면크기 변경 불가
 
-      setCenter();
-      setBottom();
+		setCenter();
+		setBottom();
 
-      this.setVisible(true);
-   }
+		this.setVisible(true);
+	}
 
-   private void setCenter() {
-      pCenter = new JPanel();
-      pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
-      pCenter.setBackground(Color.WHITE);
-      pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
-      add(pCenter, BorderLayout.CENTER);
+	private void setCenter() {
+		pCenter = new JPanel();
+		pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
+		pCenter.setBackground(Color.WHITE);
+		pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0)); // pCenter마진
+		add(pCenter, BorderLayout.CENTER); // 프레임에 패널 가운데에 붙임
 
-      vectorTitle = new Vector<String>();
+		vectorTitle = new Vector<String>(); // 헤더 값
 
-      vectorTitle.addElement("대여번호");
-      vectorTitle.addElement("우산코드");
-      vectorTitle.addElement("학번");
-      vectorTitle.addElement("이름");
-      vectorTitle.addElement("대여일");
-      vectorTitle.addElement("반납예정일");
-      
-      model = new DefaultTableModel(vectorTitle, 0) { // 테이블의 데이터 변경하려면 모델 사용
+		vectorTitle.addElement("대여번호");
+		vectorTitle.addElement("우산코드");
+		vectorTitle.addElement("학번");
+		vectorTitle.addElement("이름");
+		vectorTitle.addElement("대여일");
+		vectorTitle.addElement("반납예정일");
 
-         public boolean isCellEditable(int r, int c) {
-            return false;
-         }
+		model = new DefaultTableModel(vectorTitle, 0) { // 테이블의 데이터 변경하려면 모델 사용
 
-      };
-      
-      // 테이블
-      try {
-         Class.forName("oracle.jdbc.driver.OracleDriver"); //오라클 드라이버
-         
-         Connection conn = DriverManager.getConnection(
-               "jdbc:oracle:thin:@114.71.137.174:53994:XE", 
-               "dodam", "inhatc4"); //오라클
-               //1521: 포트번호
-         
-         Statement stmt = conn.createStatement(); //데이터베이스와 연동
-         
-         ResultSet rs = stmt.executeQuery("SELECT *FROM RENTAL"); //쿼리 넘기기
-         
-         while(rs.next()) { 
-            data = new Vector<String>();
-            
-            rentalID = rs.getString(1); 
-            umbreallaID = rs.getString(2);             
-            studentID = rs.getString(3);   
-            
-            rentalDATE = rs.getString(4); 
-            returndueDATE = rs.getString(5);
-            
-            System.out.println(rentalID + "\t" + umbreallaID + "\t" + studentID + "\t" + rentalDATE +"\t"+ returndueDATE);
-            data.add(0, rentalID);
-            data.add(1, umbreallaID);
-            data.add(2, studentID);
-            data.add(3, rentalDATE);
-            data.add(4, returndueDATE);
-            model.addRow(data);
-         }
-         
-         System.out.println("성공");
-         
-      } catch (ClassNotFoundException e) {
-         System.out.println("해당 드라이버가 없습니다.");
-         e.printStackTrace(); //어디서 오류가 발생했는지 알려줌
-         
-      } catch (SQLException e) {
-         System.out.println("접속오류 / SQL 오류");
-         e.printStackTrace();
-      }
-      
-      table = new JTable(model); // 테이터 변경 시 테이블에 직접 접근하지 않고 변경
-      
-      JTableHeader tableHeader = table.getTableHeader();  //테이블 헤더
-	  tableHeader.setBackground(new Color(0xB2CCFF)); //테이블헤더 배경색 지정
-	  
-	  table.setFillsViewportHeight(true); //스크롤 팬 안에 테이블 꽉차게 표시 -> 이거 없으면 배경색 설정 안됨
-	  table.setBackground(Color.white); //테이블 배경색 지정
-	  
-      // 스크롤팬을 사용하지 않으면 컬럼명을 볼 수 없음
-      JScrollPane sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-      sp.setPreferredSize(new Dimension(850, 480)); //테이블 크기를 줄려면 JScroollPane의 크기를 변경
+			public boolean isCellEditable(int r, int c) {
+				return false;
+			}
 
-      pCenter.add(sp);
-      
-       //테이블 내용 가운데정렬
-      DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+		};
 
-      tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		// 테이블
 
-      TableColumnModel tcmSchedule = table.getColumnModel();
+		String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , r.RENTALDATE , r.RETURNDUEDATE "
+				+ "FROM RENTAL r, UMBRELLA um, STUDENT st "
+				+ "WHERE r.UMBRELLAID = um.UMBRELLAID AND st.STUDENTID = r.STUDENTID "
+				+ "ORDER BY r.RENTALID";
+		// 대여의 대여아이디, 우산의 우산 아이디, 학생의 학생아이디, 학생의 이름, 대여의 대여일, 대여의 반납예정일을 출력
+		// 대여의 우산아이디와 우산의 우산아이디 && 학생의 학생아이디와 대여의 학생아이디가 같을때
+		// 대여아이디로 정렬
+		ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
 
-      for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
-      tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
-      }
-   }
+//         for(int i = 0; i < 7; i++) {
+//        	 value = new String[6];
+//        	 value[0] = rs.getString(1);
+//        	 value[1] = rs.getString(2);
+//        	 value[2] = rs.getString(3);
+//        	 value[3] = rs.getString(4);
+//        	 value[4] = rs.getString(5);
+//        	 value[5] = rs.getString(6);
+//        	 model.addRow(value);
+//         }
+		
+		try {
+			while (rs.next()) {
+				data = new Vector<String>();
 
-   private void setBottom() {
-      pBottom = new JPanel();
-      pBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
-      pBottom.setBackground(Color.WHITE);
-      pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0));
-      add(pBottom, BorderLayout.SOUTH);
+				rentalID = rs.getString(1);
+				umbreallaID = rs.getString(2);
+				studentID = rs.getString(3);
+				studentName = rs.getString(4);
 
-      btnF5 = new JButton("새로고침");
+				rentalDATE = rs.getString(5);
+				returndueDATE = rs.getString(6);
 
-      pBottom.add(btnF5);
+				// System.out.println(rentalID + "\t" + umbreallaID + "\t" + studentID + "\t" +
+				// rentalDATE +"\t"+ returndueDATE);
+				data.add(0, rentalID);
+				data.add(1, umbreallaID);
+				data.add(2, studentID);
+				data.add(3, studentName);
+				data.add(4, rentalDATE);
+				data.add(5, returndueDATE);
+				
+				model.addRow(data);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-      btnRental = new JButton("대여");
-      btnRental.addActionListener(this);
-      pBottom.add(btnRental);
+		System.out.println("성공");
 
-      btnModify = new JButton("수정");
-      btnModify.addActionListener(this);
-      pBottom.add(btnModify);
+		table = new JTable(model); // 테이터 변경 시 테이블에 직접 접근하지 않고 변경
 
-      btnOk = new JButton("완료");
-      pBottom.add(btnOk);
+		JTableHeader tableHeader = table.getTableHeader(); // 테이블 헤더
+		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블헤더 배경색 지정
 
-      btnReturn = new JButton("반납");
-      btnReturn.addActionListener(this);
-      pBottom.add(btnReturn);
+		table.setFillsViewportHeight(true); // 스크롤 팬 안에 테이블 꽉차게 표시 -> 이거 없으면 배경색 설정 안됨
+		table.setBackground(Color.white); // 테이블 배경색 지정
 
-      btnOut = new JButton("차단");
-      btnOut.addActionListener(this);
-      pBottom.add(btnOut);
-   }
+		// 스크롤팬을 사용하지 않으면 컬럼명을 볼 수 없음
+		JScrollPane sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		sp.setPreferredSize(new Dimension(850, 480)); // 테이블 크기를 줄려면
+														// JScroollPane의
+														// 크기를 변경
 
-   public static void main(String[] args) {
-      new Rental_DB("대여", 900, 600);
-   }
+		pCenter.add(sp);
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      Object obj = e.getSource();
-      if (obj == btnRental) {
-         new Rentalform("대여", 250, 200);
-      } else if (obj == btnModify) {
-         new Rental_ModifyBtn("수정", 250, 200);
-      } else if (obj == btnReturn) {
-         JOptionPane.showMessageDialog( // 메시지창 출력
-               this, "000님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
-      } else if (obj == btnOut) {
-         
-      }
-   }
+		// 테이블 내용 가운데정렬
+		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+
+		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+		TableColumnModel tcmSchedule = table.getColumnModel();
+
+		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
+			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
+		}
+	}
+
+	private void setBottom() {
+		pBottom = new JPanel();
+		pBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
+		pBottom.setBackground(Color.WHITE);
+		pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0));
+		add(pBottom, BorderLayout.SOUTH);
+
+		btnF5 = new JButton("새로고침");
+
+		pBottom.add(btnF5);
+
+		btnRental = new JButton("대여");
+		btnRental.addActionListener(this);
+		pBottom.add(btnRental);
+
+		btnModify = new JButton("수정");
+		btnModify.addActionListener(this);
+		pBottom.add(btnModify);
+
+		btnOk = new JButton("완료");
+		pBottom.add(btnOk);
+
+		btnReturn = new JButton("반납");
+		btnReturn.addActionListener(this);
+		pBottom.add(btnReturn);
+
+		btnOut = new JButton("차단");
+		btnOut.addActionListener(this);
+		pBottom.add(btnOut);
+	}
+
+	public static void main(String[] args) {
+		DB.init();
+		new Rental_DB("대여", 900, 600);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object obj = e.getSource();
+		if (obj == btnRental) {
+			new Rentalform("대여", 250, 200);
+		} else if (obj == btnModify) {
+			new Rental_ModifyBtn("수정", 250, 200);
+		} else if (obj == btnReturn) {
+			JOptionPane.showMessageDialog( // 메시지창 출력
+					this, "000님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+		} else if (obj == btnOut) {
+
+		}
+	}
 }
