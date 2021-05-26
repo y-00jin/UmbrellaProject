@@ -201,15 +201,6 @@ public class Return extends JFrame implements ActionListener {
 		
 	}
 	
-//	//폰트 스타일
-//	private void addFont(JButton btnFont){
-//		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
-//		btnFont.setFont(fontBtn); // 폰트 스타일 적용
-//		btnFont.setForeground(new Color(0x5D5D5D)); // 글자색
-//		btnFont.setBackground(new Color(0xD9E5FF));
-//		//btnFont.setBorderPainted(false); // 테두리 없애기
-//	}
-	
 	public static void main(String[] args) {
 		DB.init();
 		new Return("반납", 900, 600);
@@ -235,8 +226,6 @@ public class Return extends JFrame implements ActionListener {
 					+ "and return.RETURNDATE BETWEEN \'" + dateFormatter.format(SelectedDate1) + "\' AND \'"
 					+ dateFormatter.format(SelectedDate2) + "\'";
 
-			System.out.println(returnSelect);
-
 			ResultSet rs = DB.getResultSet(returnSelect); // 데이터 불러오기
 			String[] rsArr = new String[6];
 			try {
@@ -255,10 +244,6 @@ public class Return extends JFrame implements ActionListener {
 			}
 
 			table = new JTable(model);
-
-			System.out.println((dateFormatter.format(SelectedDate1)));
-			System.out.println((dateFormatter.format(SelectedDate2)));
-			
 		}
 
 		else if (obj == btnReset) {
