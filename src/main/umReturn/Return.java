@@ -31,6 +31,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import main.DB;
+import main.style.BtnFont;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -105,12 +106,12 @@ public class Return extends JFrame implements ActionListener {
 		panelSearch.add(datePicker2);
 
 		btnSearch = new JButton("검색"); // 검색 버튼
-		addFont(btnSearch);
+		BtnFont.BtnStyle(btnSearch);
 		btnSearch.addActionListener(this);
 		panelSearch.add(btnSearch);
 
 		btnReset = new JButton("초기화"); // 초기화 버튼
-		addFont(btnReset);
+		BtnFont.BtnStyle(btnReset);
 		btnReset.addActionListener(this);
 		panelSearch.add(btnReset);
 
@@ -184,30 +185,30 @@ public class Return extends JFrame implements ActionListener {
 
 	}
 
+	// 버튼 스타일 
 	private void addClose() {
 		panelClose = new JPanel();
 		panelClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		panelClose.setBorder(BorderFactory.createEmptyBorder(0, 10, 15, 10));
 		panelClose.setBackground(Color.white);
 		
-		
-		
 		btnClose = new JButton("닫기");
 		btnClose.addActionListener(this);
-		addFont(btnClose);
+		
+		BtnFont.BtnStyle(btnClose);
 		
 		panelClose.add(btnClose);
 		
 	}
 	
-	//폰트 스타일
-	private void addFont(JButton btnFont){
-		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
-		btnFont.setFont(fontBtn); // 폰트 스타일 적용
-		btnFont.setForeground(new Color(0x5D5D5D)); // 글자색
-		btnFont.setBackground(new Color(0xD9E5FF));
-		//btnFont.setBorderPainted(false); // 테두리 없애기
-	}
+//	//폰트 스타일
+//	private void addFont(JButton btnFont){
+//		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
+//		btnFont.setFont(fontBtn); // 폰트 스타일 적용
+//		btnFont.setForeground(new Color(0x5D5D5D)); // 글자색
+//		btnFont.setBackground(new Color(0xD9E5FF));
+//		//btnFont.setBorderPainted(false); // 테두리 없애기
+//	}
 	
 	public static void main(String[] args) {
 		DB.init();
