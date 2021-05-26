@@ -27,13 +27,9 @@ import main.umReturn.Return;
 
 public class UmbrellaMain extends JFrame implements ActionListener {
 
-	private JPanel panelTitle;
-	private JPanel panelBtn;
-	private JButton btnRental;
-	private JButton btnAdmin;
-	private JButton btnReturn;
-	private JLabel lblTitle;
-	private JLabel lblSubTitle;
+	private JPanel panelTitle, panelBtn;
+	private JButton btnRental, btnAdmin, btnReturn;
+	private JLabel lblTitle, lblSubTitle;
 
 	public UmbrellaMain(String title, int width, int height) {
 		setTitle(title);
@@ -52,6 +48,8 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 
+	
+	// 타이틀 생성
 	private void addTitle() {
 
 		panelTitle = new JPanel();
@@ -77,6 +75,8 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 
 	}
 
+	
+	//버튼 생성
 	private void addBtn() {
 
 		panelBtn = new JPanel();
