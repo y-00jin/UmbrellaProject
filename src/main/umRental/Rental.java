@@ -219,9 +219,9 @@ public class Rental extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		if (obj == btnRental) {
-			new Rentalform("대여", 250, 200);
+			new Rentalform("대여", 300, 300);
 		} else if (obj == btnModify) {
-			new Rental_ModifyBtn("수정", 250, 200);
+			new Rental_ModifyBtn("수정", 300, 300);
 		} else if (obj == btnReturn) {
 			JOptionPane.showMessageDialog( // 메시지창 출력
 					this, "000님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
