@@ -200,7 +200,7 @@ public class Rental extends JFrame implements ActionListener {
 		//pBottom.add(pExit, BorderLayout.EAST);
 
 		// 닫기버튼
-		ImageIcon icon = new ImageIcon("libs/KakaoTalk_20210528_191417857.png");
+		ImageIcon icon = new ImageIcon("libs/icons8-cancel-120.png");
 		Image changeIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		ImageIcon btnIcon = new ImageIcon(changeIcon);
 		
