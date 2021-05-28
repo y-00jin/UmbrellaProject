@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -19,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -39,6 +40,7 @@ public class Rental extends JFrame implements ActionListener {
 	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE;
 
 	public Rental(String title, int width, int height) {
+		setUndecorated(true); //타일트바 없애기
 		this.setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this);
@@ -60,7 +62,7 @@ public class Rental extends JFrame implements ActionListener {
 		pCenter = new JPanel();
 		pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pCenter.setBackground(Color.WHITE);
-		pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0)); // 패널마진
+		pCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0)); // 패널마진
 		add(pCenter, BorderLayout.CENTER); // 프레임에 패널 가운데에 붙임
 
 		vectorTitle = new Vector<String>(); // 헤더 값
@@ -194,19 +196,27 @@ public class Rental extends JFrame implements ActionListener {
 		pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		pExit.setBackground(Color.WHITE);
 		pExit.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
-		pBottom.add(pExit, BorderLayout.EAST);
+		add(pExit, BorderLayout.NORTH);
+		//pBottom.add(pExit, BorderLayout.EAST);
 
 		// 닫기버튼
-		btnExit = new JButton("닫기");
-		BtnFont.BtnStyle(btnExit);
-		btnExit.setAlignmentX(JButton.RIGHT);
+		ImageIcon icon = new ImageIcon("libs/KakaoTalk_20210528_191417857.png");
+		Image changeIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		ImageIcon btnIcon = new ImageIcon(changeIcon);
+		
+		btnExit = new JButton(btnIcon);
+		btnExit.setAlignmentX(JButton.RIGHT); //오른쪽 정렬
+		btnExit.setContentAreaFilled(false); //버튼 내용영역 채우기 x
+		btnExit.setFocusPainted(false); 
+		btnExit.setBorderPainted(false); // 버튼 테두리 없애기
+		
 		btnExit.addActionListener(this);
 		pExit.add(btnExit);
 	}
 
 	public static void main(String[] args) {
 		DB.init(); //DB클래스의 init()메소드 사용
-		new Rental("대여", 900, 600);
+		new Rental("대여", 900, 700);
 	}
 
 	@Override
