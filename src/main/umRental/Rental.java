@@ -105,7 +105,6 @@ public class Rental extends JFrame implements ActionListener {
 			public boolean isCellEditable(int r, int c) {
 				return false;
 			}
-
 		};
 
 		// DB

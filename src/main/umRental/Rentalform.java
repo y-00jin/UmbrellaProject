@@ -7,6 +7,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -110,16 +113,29 @@ public class Rentalform extends JFrame implements ActionListener {
 		String umbCode = new String();
 		umbCode = tf_Umbcode.getText();
 		
+//		String rentalDate = new String();
+//		rentalDate = "SELECT SYSDATE FROM dual ";
+//		ResultSet rs = DB.getResultSet(rentalDate); // 쿼리 넘기기
+		
+		SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd");
+		Date time = new Date();
+		String timeDate = format.format(time);
+		
+		System.out.println(timeDate);
+		
 		Object obj = e.getSource();
 		if (obj == btn_ok) {
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
 				// 모든 항목 입력시 확인 버튼 클릭하면 저장되게
 				if (tf_Code.getText().equals("1") /* 사실 1은 아니고 만약 중복된다면 */) {
 					JOptionPane.showMessageDialog( // 메시지창 출력
-							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);					
+							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);	
+					
 				} else {
+					        
 					String sql = "INSERT INTO RENTAL "
-							+ "VALUES('014', '" + umbCode + "', " + "'" + code + "', '21-04-23', '21-03-23')";
+							+ "VALUES('015', '" + umbCode + "', " + "'" + code + "', " + "TO_DATE('" + timeDate + "', 'YYYY-MM-DD'), '21-03-23')";
+							
 					DB.executeQuery(sql); // DB에 sql 추가
 					System.out.println(sql);
 					JOptionPane.showMessageDialog( // 메시지창 출력
@@ -130,6 +146,5 @@ public class Rentalform extends JFrame implements ActionListener {
 		} else if (obj == btn_cancel) {
 			dispose(); // 취소 버튼 누르면 화면 종료
 		}
-
 	}
 }
