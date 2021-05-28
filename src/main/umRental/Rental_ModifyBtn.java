@@ -23,6 +23,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	private JPanel pTop, pCenter, pBottom;
 
 	public Rental_ModifyBtn(String title, int width, int height) {
+		setUndecorated(true); // 타일트바 없애기
 		this.setTitle(title);
 		setSize(width, height);	
 		setLocationRelativeTo(this);	

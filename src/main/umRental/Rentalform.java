@@ -25,6 +25,7 @@ public class Rentalform extends JFrame implements ActionListener {
 	private JPanel pTop, pCenter, pBottom;
 
 	public Rentalform(String title, int width, int height) {
+		setUndecorated(true); // 타일트바 없애기
 		this.setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this);
@@ -103,6 +104,12 @@ public class Rentalform extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		String code = new String();
+		code = tf_Code.getText();
+		
+		String umbCode = new String();
+		umbCode = tf_Umbcode.getText();
+		
 		Object obj = e.getSource();
 		if (obj == btn_ok) {
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
@@ -111,10 +118,10 @@ public class Rentalform extends JFrame implements ActionListener {
 					JOptionPane.showMessageDialog( // 메시지창 출력
 							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);					
 				} else {
-				//	String
 					String sql = "INSERT INTO RENTAL "
-							+ "VALUES('013', 'U004', '202045038', '21-04-23', '21-03-23')";
+							+ "VALUES('014', '" + umbCode + "', " + "'" + code + "', '21-04-23', '21-03-23')";
 					DB.executeQuery(sql); // DB에 sql 추가
+					System.out.println(sql);
 					JOptionPane.showMessageDialog( // 메시지창 출력
 							this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 					dispose();

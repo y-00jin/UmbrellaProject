@@ -40,7 +40,7 @@ public class Rental extends JFrame implements ActionListener {
 	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE;
 
 	public Rental(String title, int width, int height) {
-		setUndecorated(true); //타일트바 없애기
+		setUndecorated(true); // 타일트바 없애기
 		this.setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this);
@@ -51,10 +51,36 @@ public class Rental extends JFrame implements ActionListener {
 		setLayout(new BorderLayout());
 		// setResizable(false); // 실행후 화면크기 변경 불가
 
+		setTop();
 		setTable();
 		setBottom();
 
 		this.setVisible(true);
+	}
+
+	private void setTop() {
+		// 상단 패널
+		pExit = new JPanel();
+		pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		pExit.setBackground(Color.WHITE);
+		//pExit.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+		add(pExit, BorderLayout.NORTH);
+		// pBottom.add(pExit, BorderLayout.EAST);
+
+		// 닫기버튼
+		ImageIcon icon = new ImageIcon("libs/exit.png");
+		Image changeIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		ImageIcon btnIcon = new ImageIcon(changeIcon);
+
+		btnExit = new JButton(btnIcon);
+		btnExit.setAlignmentX(JButton.RIGHT); // 오른쪽 정렬
+		btnExit.setContentAreaFilled(false); // 버튼 내용영역 채우기 x
+		btnExit.setFocusPainted(false);
+		btnExit.setBorderPainted(false); // 버튼 테두리 없애기
+
+		btnExit.addActionListener(this);
+		pExit.add(btnExit);
+
 	}
 
 	private void setTable() {
@@ -135,7 +161,7 @@ public class Rental extends JFrame implements ActionListener {
 		// 스크롤팬을 사용하지 않으면 컬럼명을 볼 수 없음
 		JScrollPane sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		sp.setPreferredSize(new Dimension(850, 480)); // 테이블 크기를 줄려면 JScroollPane의 크기를 변경
+		sp.setPreferredSize(new Dimension(860, 480)); // 테이블 크기를 줄려면 JScroollPane의 크기를 변경
 		pCenter.add(sp);
 
 		// 테이블 내용 가운데정렬
@@ -151,72 +177,45 @@ public class Rental extends JFrame implements ActionListener {
 	private void setBottom() {
 		// Bottom 전체 패널
 		pBottom = new JPanel();
-		pBottom.setLayout(new BorderLayout());
+		pBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pBottom.setBackground(Color.WHITE); // 배경색
 		pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0)); // 패널 마진
 		add(pBottom, BorderLayout.SOUTH); // 남쪽 정렬
 
-		// Bottom의 WEST패널
-		pBtn = new JPanel();
-		pBtn.setLayout(new FlowLayout(FlowLayout.LEFT));
-		pBtn.setBackground(Color.WHITE);
-		pBottom.add(pBtn, BorderLayout.WEST);
-
 		// 새로고침 버튼
 		btnF5 = new JButton("새로고침");
 		BtnFont.BtnStyle(btnF5);
-		pBtn.add(btnF5);
+		pBottom.add(btnF5);
 
 		// 대여버튼
 		btnRental = new JButton("대여");
 		BtnFont.BtnStyle(btnRental);
 		btnRental.addActionListener(this);
-		pBtn.add(btnRental);
+		pBottom.add(btnRental);
 
 		// 수정버튼
 		btnModify = new JButton("수정");
 		BtnFont.BtnStyle(btnModify);
 		btnModify.addActionListener(this);
-		pBtn.add(btnModify);
+		pBottom.add(btnModify);
 
 		// 반납버튼
 		btnReturn = new JButton("반납");
 		BtnFont.BtnStyle(btnReturn);
 		btnReturn.addActionListener(this);
-		pBtn.add(btnReturn);
+		pBottom.add(btnReturn);
 
 		// 차단버튼
 		btnOut = new JButton("차단");
 		BtnFont.BtnStyle(btnOut);
 		btnOut.addActionListener(this);
-		pBtn.add(btnOut);
+		pBottom.add(btnOut);
 
-		// Bottom의 EAST 패널
-		pExit = new JPanel();
-		pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		pExit.setBackground(Color.WHITE);
-		pExit.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
-		add(pExit, BorderLayout.NORTH);
-		//pBottom.add(pExit, BorderLayout.EAST);
-
-		// 닫기버튼
-		ImageIcon icon = new ImageIcon("libs/icons8-cancel-120.png");
-		Image changeIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		ImageIcon btnIcon = new ImageIcon(changeIcon);
-		
-		btnExit = new JButton(btnIcon);
-		btnExit.setAlignmentX(JButton.RIGHT); //오른쪽 정렬
-		btnExit.setContentAreaFilled(false); //버튼 내용영역 채우기 x
-		btnExit.setFocusPainted(false); 
-		btnExit.setBorderPainted(false); // 버튼 테두리 없애기
-		
-		btnExit.addActionListener(this);
-		pExit.add(btnExit);
 	}
 
 	public static void main(String[] args) {
-		DB.init(); //DB클래스의 init()메소드 사용
-		new Rental("대여", 900, 700);
+		DB.init(); // DB클래스의 init()메소드 사용
+		new Rental("대여", 900, 600);
 	}
 
 	@Override
