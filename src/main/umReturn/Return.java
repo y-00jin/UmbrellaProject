@@ -52,30 +52,36 @@ public class Return extends JFrame implements ActionListener {
 	private Date SelectedDate1, SelectedDate2;
 	private JPanel panelClose;
 	private JButton btnClose;
+	private JPanel panelTop;
 
 	public Return(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		dispose(); // 닫으면 이 프레임만 종료
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//dispose(); // 닫으면 이 프레임만 종료
 
+		
+		panelTop = new JPanel();
+		panelTop.setLayout(new BorderLayout());
+		panelTop.setBackground(Color.white);
+		
 		// 검색 프레임 생성
 		addSearch();
-
+		// 닫기 버튼
+		addClose();
+		panelTop.add(panelSearch, BorderLayout.WEST);
+		panelTop.add(panelClose, BorderLayout.EAST);
+		
+		
+		
 		// 테이블 생성
 		addTable();
 
-		
-		// 닫기 버튼
-		addClose();
-		
-		add(panelSearch, BorderLayout.NORTH);
+		add(panelTop, BorderLayout.NORTH);
 		add(panelInfo, BorderLayout.CENTER);
-		add(panelClose, BorderLayout.SOUTH);
 		setVisible(true);
 	}
-
 
 	// 검색
 	private void addSearch() {
@@ -83,11 +89,10 @@ public class Return extends JFrame implements ActionListener {
 		panelSearch = new JPanel(); // 패널 생성
 		panelSearch.setBackground(new Color(0xFFFFFF)); // 패널 배경
 		panelSearch.setLayout(new FlowLayout(FlowLayout.LEFT)); // 왼쪽 정렬
-		panelSearch.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 마진 설정
-		
-		
+		panelSearch.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10)); // 마진 설정
+
 		Font lblFont = new Font("HY헤드라인M", Font.PLAIN, 15);
-		
+
 		lblDate1 = new JLabel("날짜 검색 : "); // 라벨
 		lblDate1.setFont(lblFont);
 		panelSearch.add(lblDate1);
@@ -124,7 +129,7 @@ public class Return extends JFrame implements ActionListener {
 		panelInfo = new JPanel();
 		panelInfo.setBackground(new Color(0xFFFFFF));
 		panelInfo.setLayout(new FlowLayout(FlowLayout.LEFT));
-		panelInfo.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		panelInfo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 
 		// 테이블 헤더 생성
 		returnColumn = new Vector<String>();
@@ -140,7 +145,6 @@ public class Return extends JFrame implements ActionListener {
 				return false;
 			}
 		};
-		
 
 		// 테이블 생성
 		returnTable();
@@ -153,16 +157,16 @@ public class Return extends JFrame implements ActionListener {
 		// 스크롤 팬
 		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sc.setPreferredSize(new Dimension(860, 420));
+		sc.setPreferredSize(new Dimension(860, 480));
 		panelInfo.add(sc);
 
 	}
 
 	private void returnTable() {
-		//model.getDataVector().removeAllElements(); // 테이블 요소 삭제
+		// model.getDataVector().removeAllElements(); // 테이블 요소 삭제
 
 		model.setNumRows(0);
-		
+
 		String returnSelect = "select return.RETURNID, um.UMBRELLAID, st.STUDENTID, st.NAME, TO_CHAR(rental.rentaldate, \'YYYY-MM-DD\'), TO_CHAR(return.returndate, \'YYYY-MM-DD\') "
 				+ " from RETURN return, RENTAL rental, STUDENT st, UMBRELLA um where return.rentalid = rental.rentalid"
 				+ "  and rental.studentid = st.studentid and rental.umbrellaid = um.umbrellaid";
@@ -187,30 +191,27 @@ public class Return extends JFrame implements ActionListener {
 
 	}
 
-	// 버튼 스타일 
+	// 버튼 스타일
 	private void addClose() {
 		panelClose = new JPanel();
 		panelClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		panelClose.setBorder(BorderFactory.createEmptyBorder(0, 10, 15, 10));
+		panelClose.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		panelClose.setBackground(Color.white);
-		
-		ImageIcon iconExit = new ImageIcon("libs/cancel.png");
-		Image changeIcon = iconExit.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+
+		ImageIcon iconExit = new ImageIcon("libs/exit.png");
+		Image changeIcon = iconExit.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		ImageIcon btnIcon = new ImageIcon(changeIcon);
-		
-		
+
 		btnClose = new JButton(btnIcon);
 		btnClose.addActionListener(this);
 		btnClose.setBackground(Color.WHITE);
-		
-		
-		
-		//BtnFont.BtnStyle(btnClose);
+
+		// BtnFont.BtnStyle(btnClose);
 		btnClose.setBorderPainted(false);
 		panelClose.add(btnClose);
-		
+
 	}
-	
+
 	public static void main(String[] args) {
 		DB.init();
 		new Return("반납", 900, 600);
@@ -221,9 +222,9 @@ public class Return extends JFrame implements ActionListener {
 		Object obj = e.getSource();
 		if (obj == btnSearch) {
 			model.setNumRows(0);
-			//table.repaint();
-			//model.getDataVector().removeAllElements(); // 테이블 요소 지우기
-			
+			// table.repaint();
+			// model.getDataVector().removeAllElements(); // 테이블 요소 지우기
+
 			String datePattern = "yyyy-MM-dd"; // 데이터 포맷 형식 지정
 			SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern); // 데이터 포맷 형식 지정한 객체 생성
 
@@ -259,8 +260,8 @@ public class Return extends JFrame implements ActionListener {
 		else if (obj == btnReset) {
 			returnTable();
 		}
-		
-		else if(obj==btnClose) {
+
+		else if (obj == btnClose) {
 			dispose();
 		}
 	}
