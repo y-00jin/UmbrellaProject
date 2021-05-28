@@ -109,13 +109,12 @@ public class Rentalform extends JFrame implements ActionListener {
 				// 모든 항목 입력시 확인 버튼 클릭하면 저장되게
 				if (tf_Code.getText().equals("1") /* 사실 1은 아니고 만약 중복된다면 */) {
 					JOptionPane.showMessageDialog( // 메시지창 출력
-							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
-					
-					String sql = "INSERT INTO RENTAL "
-							+ "VALUES('0013', 'U003', '202045038', '21-04-23', '21-03-23 ')";
-					DB.executeQuery(sql); // DB에 sql 추가
-					
+							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);					
 				} else {
+				//	String
+					String sql = "INSERT INTO RENTAL "
+							+ "VALUES('013', 'U004', '202045038', '21-04-23', '21-03-23')";
+					DB.executeQuery(sql); // DB에 sql 추가
 					JOptionPane.showMessageDialog( // 메시지창 출력
 							this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 					dispose();
