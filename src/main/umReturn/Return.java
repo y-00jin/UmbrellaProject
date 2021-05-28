@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -192,11 +194,19 @@ public class Return extends JFrame implements ActionListener {
 		panelClose.setBorder(BorderFactory.createEmptyBorder(0, 10, 15, 10));
 		panelClose.setBackground(Color.white);
 		
-		btnClose = new JButton("닫기");
+		ImageIcon iconExit = new ImageIcon("libs/cancel.png");
+		Image changeIcon = iconExit.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		ImageIcon btnIcon = new ImageIcon(changeIcon);
+		
+		
+		btnClose = new JButton(btnIcon);
 		btnClose.addActionListener(this);
+		btnClose.setBackground(Color.WHITE);
 		
-		BtnFont.BtnStyle(btnClose);
 		
+		
+		//BtnFont.BtnStyle(btnClose);
+		btnClose.setBorderPainted(false);
 		panelClose.add(btnClose);
 		
 	}

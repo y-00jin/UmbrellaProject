@@ -47,6 +47,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 
 		add(panelTitle, BorderLayout.NORTH);
 		add(panelBtn, BorderLayout.CENTER);
+		//setUndecorated(true);	//타이틀 없애기
 		setVisible(true);
 	}
 
@@ -103,6 +104,8 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 
 		btnAdmin = new JButton("관리자", btnIcon);
 		btnAdmin.addActionListener(this);
+		
+		
 		
 		// 버튼에 스타일 적용
 		JButton[] btnArr = { btnRental, btnReturn, btnAdmin };
