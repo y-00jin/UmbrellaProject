@@ -40,6 +40,7 @@ public class DB {
    
       }catch(Exception e){
          System.out.println(e);   //오류 메시지
+         
          return null;
       }
    }

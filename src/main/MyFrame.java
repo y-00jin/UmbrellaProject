@@ -2,6 +2,7 @@ package main;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class MyFrame extends JFrame {
@@ -15,7 +16,6 @@ public class MyFrame extends JFrame {
 		
 		//레이아웃
 		setLayout(new BorderLayout());
-		
 		
 		setVisible(true);
 	}

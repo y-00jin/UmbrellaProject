@@ -154,10 +154,10 @@ public class AdminModify extends JFrame implements ActionListener {
 			DB.executeQuery(sql); // DB 내용 수정
 
 			// 새로고침
-			admin.getP2().removeAll();
+			admin.getPanelCenter().removeAll();
 			admin.studentPanel();
-			admin.getP2().revalidate(); // 레이아웃 변화 재확인
-			admin.getP2().repaint(); // 레이아웃 다시 가져오기
+			admin.getPanelCenter().revalidate(); // 레이아웃 변화 재확인
+			admin.getPanelCenter().repaint(); // 레이아웃 다시 가져오기
 
 			System.out.println(sql);
 
