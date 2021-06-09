@@ -86,7 +86,7 @@ public class LoginForm extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		DB.init();	//웅
+		DB.init();	
 		new LoginForm();
 	}
 
