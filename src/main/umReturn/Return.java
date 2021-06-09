@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -53,34 +54,49 @@ public class Return extends JFrame implements ActionListener {
 	private JPanel panelClose;
 	private JButton btnClose;
 	private JPanel panelTop;
+	private JPanel panelAll;
 
 	public Return(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치DD
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//dispose(); // 닫으면 이 프레임만 종료
+		// dispose(); // 닫으면 이 프레임만 종료
 
+		// 전체 패널(테두리를 주기 위함)
+		panelAll = new JPanel();
+		panelAll.setLayout(new BorderLayout());
+		panelAll.setBorder(new LineBorder(Color.GRAY, 2)); // 테두리
+
+		// 검색 패널 생성
+		addTop();
+
+		// 테이블 생성
+		addTable();
+
+		panelAll.add(panelTop, BorderLayout.NORTH);
+		panelAll.add(panelInfo, BorderLayout.CENTER);
+		add(panelAll);
 		
+		setUndecorated(true);
+		setVisible(true);
+	}
+
+	// 탑
+	private void addTop() {
+
 		panelTop = new JPanel();
 		panelTop.setLayout(new BorderLayout());
 		panelTop.setBackground(Color.white);
-		
+
 		// 검색 프레임 생성
 		addSearch();
 		// 닫기 버튼
 		addClose();
+		
 		panelTop.add(panelSearch, BorderLayout.WEST);
 		panelTop.add(panelClose, BorderLayout.EAST);
-		
-		
-		
-		// 테이블 생성
-		addTable();
 
-		add(panelTop, BorderLayout.NORTH);
-		add(panelInfo, BorderLayout.CENTER);
-		setVisible(true);
 	}
 
 	// 검색
@@ -123,7 +139,28 @@ public class Return extends JFrame implements ActionListener {
 		panelSearch.add(btnReset);
 
 	}
+	
+	// 닫기 버튼
+	private void addClose() {
+		panelClose = new JPanel();
+		panelClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		panelClose.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		panelClose.setBackground(Color.white);
 
+		ImageIcon iconExit = new ImageIcon("libs/exit.png");
+		Image changeIcon = iconExit.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		ImageIcon btnIcon = new ImageIcon(changeIcon);
+
+		btnClose = new JButton(btnIcon);
+		btnClose.addActionListener(this);
+		btnClose.setBackground(Color.WHITE);
+
+		// BtnFont.BtnStyle(btnClose);
+		btnClose.setBorderPainted(false);
+		panelClose.add(btnClose);
+
+	}
+	
 	// 테이블 생성
 	private void addTable() {
 		panelInfo = new JPanel();
@@ -188,27 +225,6 @@ public class Return extends JFrame implements ActionListener {
 		}
 
 		table = new JTable(model); // 테이블에 추가
-
-	}
-
-	// 버튼 스타일
-	private void addClose() {
-		panelClose = new JPanel();
-		panelClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		panelClose.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-		panelClose.setBackground(Color.white);
-
-		ImageIcon iconExit = new ImageIcon("libs/exit.png");
-		Image changeIcon = iconExit.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		ImageIcon btnIcon = new ImageIcon(changeIcon);
-
-		btnClose = new JButton(btnIcon);
-		btnClose.addActionListener(this);
-		btnClose.setBackground(Color.WHITE);
-
-		// BtnFont.BtnStyle(btnClose);
-		btnClose.setBorderPainted(false);
-		panelClose.add(btnClose);
 
 	}
 
