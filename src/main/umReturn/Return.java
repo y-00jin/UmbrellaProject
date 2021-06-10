@@ -237,10 +237,10 @@ public class Return extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		if (obj == btnSearch) {
-			model.setNumRows(0);
 			// table.repaint();
-			// model.getDataVector().removeAllElements(); // 테이블 요소 지우기
-
+			//model.getDataVector().removeAllElements(); // 테이블 요소 지우기
+			model.setNumRows(0);
+			
 			String datePattern = "yyyy-MM-dd"; // 데이터 포맷 형식 지정
 			SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern); // 데이터 포맷 형식 지정한 객체 생성
 
