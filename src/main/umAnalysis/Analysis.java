@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.NumberFormat.Style;
 
 import javax.swing.BorderFactory;
@@ -15,14 +17,16 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import main.style.BtnFont;
+import main.test.DrawingPieActionListener;
 import main.umReturn.DateLabelFormatter;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
-public class Analysis extends JFrame {
+public class Analysis extends JFrame implements ActionListener {
 
 	private JPanel panelTop;
 	private JPanel panelWest;
@@ -35,6 +39,16 @@ public class Analysis extends JFrame {
 	private JButton btnSearch;
 	private JButton btnClose;
 	private JPanel panelCenter;
+	private JPanel panelInfo;
+	private JPanel panelGraph;
+	private JLabel lblRental;
+	private JTextField TfRental;
+	private JLabel lblReturn;
+	private JTextField TfReturn;
+	private JLabel lblNoReturn;
+	private JTextField TfNoReturn;
+	private JButton btnDraw;
+	private DrawingPiePanel drawingPanel;
 
 	public Analysis(String title, int width, int height) {
 		setTitle(title);
@@ -100,6 +114,7 @@ public class Analysis extends JFrame {
 		btnClose.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 10));
 		// BtnFont.BtnStyle(btnClose);
 		btnClose.setBorderPainted(false);
+		btnClose.addActionListener(this);
 		panelClose.add(btnClose);
 		
 		
@@ -110,14 +125,61 @@ public class Analysis extends JFrame {
 		
 		// 센터 그래프
 		panelCenter = new JPanel();
+		panelCenter.setLayout(new BorderLayout());
 		
 		
+		panelGraph = new JPanel();
+		drawingPanel = new DrawingPiePanel();
+		panelGraph.add(drawingPanel,BorderLayout.CENTER);
+		
+		
+		panelInfo = new JPanel();
+		lblRental = new JLabel("대여 : ");
+		panelInfo.add(lblRental);
+		
+		TfRental = new JTextField(5);
+		panelInfo.add(TfRental);
+		
+		lblReturn = new JLabel("반납 : ");
+		panelInfo.add(lblReturn);
+		
+		TfReturn = new JTextField(5);
+		panelInfo.add(TfReturn);
+		
+		lblNoReturn = new JLabel("미반납 : ");
+		panelInfo.add(lblNoReturn);
+		
+		TfNoReturn = new JTextField(5);
+		panelInfo.add(TfNoReturn);
+		
+		btnDraw = new JButton("그래프 그리기");
+		btnDraw.addActionListener(this);
+		panelInfo.add(btnDraw);
+		
+		panelCenter.add(panelGraph, BorderLayout.CENTER);
+		panelCenter.add(panelInfo, BorderLayout.SOUTH);
+		
+
 		add(panelCenter, BorderLayout.CENTER);
+		
 		setVisible(true);
 	}
 
 	public static void main(String[] args) {
 		new Analysis("통계", 900, 600);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object obj = e.getSource();
+		if(obj == btnClose) {
+			dispose();
+		}
+		else if(obj==btnDraw) {
+			main.umAnalysis.DrawingPieActionListener listner = new main.umAnalysis.DrawingPieActionListener(TfReturn, TfRental, TfNoReturn, drawingPanel);
+			
+		}
+		
 	}
 
 }
