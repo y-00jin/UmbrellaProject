@@ -37,7 +37,7 @@ public class Rental extends JFrame implements ActionListener {
 	private Vector<String> data;
 	private String[] tmp, value;
 	private JTable table;
-	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE;
+	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE, rentalState;
 
 	public Rental(String title, int width, int height) {
 		setUndecorated(true); // 타일트바 없애기
@@ -99,6 +99,7 @@ public class Rental extends JFrame implements ActionListener {
 		vectorTitle.addElement("이름");
 		vectorTitle.addElement("대여일");
 		vectorTitle.addElement("반납예정일");
+		vectorTitle.addElement("반납상태");
 
 		model = new DefaultTableModel(vectorTitle, 0) { // 테이블의 데이터 변경하려면 모델 사용
 
@@ -108,10 +109,10 @@ public class Rental extends JFrame implements ActionListener {
 		};
 
 		// DB
-		String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , r.RENTALDATE , r.RETURNDUEDATE "
+		String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , r.RENTALDATE , r.RETURNDUEDATE, r.RENTALSTATE "
 				+ "FROM RENTAL r, UMBRELLA um, STUDENT st "
 				+ "WHERE r.UMBRELLAID = um.UMBRELLAID AND st.STUDENTID = r.STUDENTID " + "ORDER BY r.RENTALID";
-		// 대여의 대여아이디, 우산의 우산 아이디, 학생의 학생아이디, 학생의 이름, 대여의 대여일, 대여의 반납예정일을 출력
+		// 대여의 대여아이디, 우산의 우산 아이디, 학생의 학생아이디, 학생의 이름, 대여의 대여일, 대여의 반납예정일, 반납상태를 출력
 		// 대여의 우산아이디와 우산의 우산아이디 && 학생의 학생아이디와 대여의 학생아이디가 같을때
 		// 대여아이디로 정렬
 
@@ -128,6 +129,7 @@ public class Rental extends JFrame implements ActionListener {
 
 				rentalDATE = rs.getString(5);
 				returndueDATE = rs.getString(6);
+				rentalState = rs.getString(7);
 
 				// System.out.println(rentalID + "\t" + umbreallaID + "\t" + studentID + "\t" +
 				// rentalDATE +"\t"+ returndueDATE);
@@ -137,6 +139,7 @@ public class Rental extends JFrame implements ActionListener {
 				data.add(3, studentName);
 				data.add(4, rentalDATE);
 				data.add(5, returndueDATE);
+				data.add(6, rentalState);
 
 				model.addRow(data);
 			}
@@ -184,6 +187,7 @@ public class Rental extends JFrame implements ActionListener {
 		// 새로고침 버튼
 		btnF5 = new JButton("새로고침");
 		BtnFont.BtnStyle(btnF5);
+		btnF5.addActionListener(this);
 		pBottom.add(btnF5);
 
 		// 대여버튼
@@ -231,6 +235,36 @@ public class Rental extends JFrame implements ActionListener {
 
 		} else if (obj == btnExit) {
 			dispose();
+		} else if (obj == btnF5) {
+			rentalTable();
 		}
+	}
+
+	private void rentalTable() {
+		model.setNumRows(0);
+
+		String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , r.RENTALDATE , r.RETURNDUEDATE, r.RENTALSTATE "
+				+ "FROM RENTAL r, UMBRELLA um, STUDENT st "
+				+ "WHERE r.UMBRELLAID = um.UMBRELLAID AND st.STUDENTID = r.STUDENTID " + "ORDER BY r.RENTALID";
+		
+		ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
+		
+		String[] rsArr = new String[7]; // 값 받아올 배열
+		try {
+			while (rs.next()) {
+
+				for (int i = 0; i < rsArr.length; i++) {
+					rsArr[i] = rs.getString(i + 1); // 값 저장
+				}
+
+				model.addRow(rsArr); // 모델에 추가
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		table = new JTable(model); // 테이블에 추가
+		
 	}
 }

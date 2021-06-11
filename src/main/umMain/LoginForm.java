@@ -67,6 +67,7 @@ public class LoginForm extends JFrame implements ActionListener {
 		
 		tf_PW = new JPasswordField();	
 		tf_PW.setEchoChar('*'); //텍스트필드에 입력한 값 안보이고 *로 표시됨
+		tf_PW.addActionListener(this);
 		p1.add(tf_PW);
 		
 		btn_login = new JButton("로그인");
@@ -95,7 +96,7 @@ public class LoginForm extends JFrame implements ActionListener {
 		Object obj = e.getSource();
 		if(obj == btn_exit) {
 			dispose();
-		} else if(obj == btn_login) {
+		} else if(obj == btn_login || obj == tf_PW) {
 			if(tf_ID.getText().equals("admin") && tf_PW.getText().equals("1234")) {
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "환영합니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
