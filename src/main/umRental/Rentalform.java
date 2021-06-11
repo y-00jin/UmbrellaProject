@@ -107,11 +107,8 @@ public class Rentalform extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String code = new String();
-		code = tf_Code.getText();
-		
-		String umbCode = new String();
-		umbCode = tf_Umbcode.getText();
+		String code = tf_Code.getText();		
+		String umbCode = tf_Umbcode.getText();
 		
 //		String rentalDate = new String();
 //		rentalDate = "SELECT SYSDATE FROM dual ";
