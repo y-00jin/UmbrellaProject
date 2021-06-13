@@ -34,7 +34,7 @@ import main.style.BtnFont;
 
 public class Rental extends JFrame implements ActionListener {
 	private JPanel pBase, pCenter, pBottom, pBtn, pExit;
-	private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnOut, btnExit;
+	private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnExit;
 	private Vector<String> vectorTitle;
 	private DefaultTableModel model;
 	private Vector<String> data;
@@ -43,7 +43,7 @@ public class Rental extends JFrame implements ActionListener {
 	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE, rentalState;
 
 	public Rental(String title, int width, int height) {
-		setUndecorated(true); // 타일트바 없애기
+		setUndecorated(true); // 타이트바 없애기
 		this.setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this);
@@ -77,7 +77,7 @@ public class Rental extends JFrame implements ActionListener {
 
 		// 대여 글자
 		JLabel lbl = new JLabel("대여");
-		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
+		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 20);
 		lbl.setFont(fontBtn); // 폰트 스타일 적용
 		// lbl.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
 		pExit.add(lbl, BorderLayout.WEST);
@@ -220,13 +220,6 @@ public class Rental extends JFrame implements ActionListener {
 		BtnFont.BtnStyle(btnReturn);
 		btnReturn.addActionListener(this);
 		pBottom.add(btnReturn);
-
-		// 차단버튼
-		btnOut = new JButton("차단");
-		BtnFont.BtnStyle(btnOut);
-		btnOut.addActionListener(this);
-		pBottom.add(btnOut);
-
 	}
 
 	public static void main(String[] args) {
@@ -244,8 +237,6 @@ public class Rental extends JFrame implements ActionListener {
 		} else if (obj == btnReturn) {
 			JOptionPane.showMessageDialog( // 메시지창 출력
 					this, "000님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
-		} else if (obj == btnOut) {
-
 		} else if (obj == btnExit) {
 			dispose();
 		} else if (obj == btnF5) {
