@@ -1,4 +1,4 @@
-package main.test;
+package main.umAnalysis;
 
 import java.awt.BorderLayout;
 import java.awt.Container;

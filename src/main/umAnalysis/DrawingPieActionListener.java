@@ -1,4 +1,4 @@
-package main.test;
+package main.umAnalysis;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 public class DrawingPieActionListener implements ActionListener {
 	// 처리해야할 컴포넌트 필드로 선언
-	JTextField text1, text2, text3,text4;
+	JTextField text1, text2, text3;
 	DrawingPiePanel drawingPanel;
 
 	// 생성자

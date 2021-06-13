@@ -1,4 +1,4 @@
-package main.test;
+package main.umAnalysis;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -9,7 +9,6 @@ class DrawingPiePanel extends JPanel {
 	int num1; // O형의 수
 	int num2; // A형의 수
 	int num3; // B형의 수
-
 
 public void paint(Graphics g) {
 		g.clearRect(0, 0, getWidth(), getHeight());

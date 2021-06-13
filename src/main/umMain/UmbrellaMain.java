@@ -49,7 +49,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		panelAll.setLayout(new BorderLayout());
 		panelAll.setBorder(new LineBorder(Color.GRAY, 2));	//테두리
 		
-		// 탑 패널 생성
+		// 탑 패널 생성dd
 		addPanelTop();
 
 		// 버튼 생성
