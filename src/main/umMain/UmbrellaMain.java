@@ -24,6 +24,7 @@ import javax.swing.border.LineBorder;
 
 import main.DB;
 import main.umAdmin.Admin;
+import main.umAnalysis.Analysis;
 import main.umRental.Rental;
 import main.umReturn.Return;
 
@@ -190,9 +191,11 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 			new Return("반납", 900, 600);
 		} else if (obj == btnAdmin) {
 			new Admin("관리자", 900, 700);
+		} else if(obj == btnStats) {
+			new Analysis("통계", 600, 500);
 		} else if(obj == btnExit) {
 			System.exit(0);
-		}
+		} 
 
 	}
 }
