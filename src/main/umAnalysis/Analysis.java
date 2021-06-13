@@ -19,8 +19,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import main.style.BtnFont;
-import main.test.DrawingPieActionListener;
+import main.test.DrawAction;
+import main.test.DrawingPanel;
 import main.umReturn.DateLabelFormatter;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -48,39 +48,37 @@ public class Analysis extends JFrame implements ActionListener {
 	private JLabel lblNoReturn;
 	private JTextField TfNoReturn;
 	private JButton btnDraw;
-	private DrawingPiePanel drawingPanel;
+	private DrawingPanel drawpanel;
 
 	public Analysis(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
-		//setLocation(800, 300);	직접 자리 배치
-		setLocationRelativeTo(this);	//현재 클래스에 대해서 상대적인 위치
+		// setLocation(800, 300); 직접 자리 배치
+		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
-		
+
 		// 탑
 		panelTop = new JPanel();
 		panelTop.setBackground(Color.WHITE);
 		panelTop.setLayout(new BorderLayout());
-		
+
 		// 왼쪽
 		panelWest = new JPanel();
 		panelWest.setBackground(Color.WHITE);
 		panelWest.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		panelWest.setLayout(new GridLayout(2,1));
-		
-		//왼쪽_제목
+		panelWest.setLayout(new GridLayout(2, 1));
+
+		// 왼쪽_제목
 		Font lblFont = new Font("HY헤드라인M", Font.PLAIN, 15);
 		lblTitle = new JLabel("분석");
 		lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 		lblTitle.setFont(lblFont);
 		panelWest.add(lblTitle);
-		
+
 		// 왼쪽_검색
 		panelSearch = new JPanel();
 		panelSearch.setBackground(Color.WHITE);
-		
+
 		// 날짜 데이터피커
 		model = new UtilDateModel(); // 데이터모델 객체 생성
 		datePanel = new JDatePanelImpl(model); // 모델 객체를 이용해 JDatePanelImpl 생성 -> 달력 생성
@@ -88,19 +86,16 @@ public class Analysis extends JFrame implements ActionListener {
 		// 생성된 달력을 텍스트필드와 ...버튼으로 나타냄 / DateLabelFormatter() 생성자를 이용해 YYYY-MM-DD로 텍스트필드에
 		// 출력되는 유형 바꿈
 		panelSearch.add(datePicker);
-		
+
 		// 검색 버튼
 		btnSearch = new JButton("검색");
-		BtnFont.BtnStyle(btnSearch);
-		
 		panelSearch.add(btnSearch);
-		
+
 		panelWest.add(panelSearch);
-		
-		
+
 		// 닫기
 		panelClose = new JPanel();
-		
+
 		panelClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		panelClose.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		panelClose.setBackground(Color.white);
@@ -116,70 +111,66 @@ public class Analysis extends JFrame implements ActionListener {
 		btnClose.setBorderPainted(false);
 		btnClose.addActionListener(this);
 		panelClose.add(btnClose);
-		
-		
+
 		panelTop.add(panelWest, BorderLayout.WEST);
 		panelTop.add(panelClose, BorderLayout.EAST);
 		add(panelTop, BorderLayout.NORTH);
-		
-		
+
 		// 센터 그래프
 		panelCenter = new JPanel();
 		panelCenter.setLayout(new BorderLayout());
+
+
+		// 그래프를 그릴 패널을 만든다.
+		drawpanel = new DrawingPanel();
 		
-		
-		panelGraph = new JPanel();
-		drawingPanel = new DrawingPiePanel();
-		panelGraph.add(drawingPanel,BorderLayout.CENTER);
-		
-		
+		// 정보 입력 패널 만든다.
 		panelInfo = new JPanel();
 		lblRental = new JLabel("대여 : ");
 		panelInfo.add(lblRental);
-		
+
 		TfRental = new JTextField(5);
 		panelInfo.add(TfRental);
-		
+
 		lblReturn = new JLabel("반납 : ");
 		panelInfo.add(lblReturn);
-		
+
 		TfReturn = new JTextField(5);
 		panelInfo.add(TfReturn);
-		
+
 		lblNoReturn = new JLabel("미반납 : ");
 		panelInfo.add(lblNoReturn);
-		
+
 		TfNoReturn = new JTextField(5);
 		panelInfo.add(TfNoReturn);
-		
+
 		btnDraw = new JButton("그래프 그리기");
-		btnDraw.addActionListener(this);
+		btnDraw.addActionListener(new DrawAction(TfRental, TfReturn, TfNoReturn, drawpanel));
 		panelInfo.add(btnDraw);
-		
-		panelCenter.add(panelGraph, BorderLayout.CENTER);
+
+		panelCenter.add(drawpanel, BorderLayout.CENTER);
 		panelCenter.add(panelInfo, BorderLayout.SOUTH);
 		
-
+		
+		
 		add(panelCenter, BorderLayout.CENTER);
 		
 		setVisible(true);
 	}
 
 	public static void main(String[] args) {
-		new Analysis("통계", 900, 600);
+		new Analysis("통계", 600, 500);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		if(obj == btnClose) {
+		if (obj == btnClose) {
 			dispose();
+		} else if (obj == btnDraw) {
+			System.out.println("실행");
 		}
-		else if(obj==btnDraw) {
-			main.umAnalysis.DrawingPieActionListener listner = new main.umAnalysis.DrawingPieActionListener(TfReturn, TfRental, TfNoReturn, drawingPanel);
-			
-		}
-		
+
 	}
 
 }
