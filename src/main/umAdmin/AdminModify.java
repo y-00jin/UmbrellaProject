@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import main.DB;
 import main.style.BtnFont;
@@ -22,7 +23,7 @@ import main.style.BtnFont;
 public class AdminModify extends JFrame implements ActionListener {
 	private JButton btnOk, btnCancel;
 	private JTextField tfMajor, tfGrade, tfName, tfPhone;
-	private JPanel pTop, pCenter, pBottom;
+	private JPanel pTop, pCenter, pBottom, panelContainer;
 	private Admin admin;
 
 	public JTextField getTfMajor() {
@@ -49,12 +50,19 @@ public class AdminModify extends JFrame implements ActionListener {
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		dispose();
 
+		panelContainer = new JPanel();
+		
+		panelContainer.setLayout(new BorderLayout());
+		panelContainer.setBorder(new LineBorder(Color.GRAY, 2)); // 패널 테두리 설정
+		
+		setUndecorated(true); // 패널 타이틀바 삭제
+		
 		setTop();
 		setCenter();
 		setBottom();
-
 		// 레이아웃
-		setLayout(new BorderLayout());
+		
+		add(panelContainer);
 	}
 
 	private void setTop() {
@@ -67,7 +75,7 @@ public class AdminModify extends JFrame implements ActionListener {
 		lbl1.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
 		pTop.add(lbl1);
 
-		add(pTop, BorderLayout.NORTH);
+		panelContainer.add(pTop, BorderLayout.NORTH);
 		this.setVisible(true);
 	}
 
@@ -106,7 +114,7 @@ public class AdminModify extends JFrame implements ActionListener {
 		tfPhone = new JTextField();
 		pCenter.add(tfPhone);
 
-		add(pCenter, BorderLayout.CENTER);
+		panelContainer.add(pCenter, BorderLayout.CENTER);
 		
 		this.setVisible(true);
 	}
@@ -130,7 +138,7 @@ public class AdminModify extends JFrame implements ActionListener {
 
 		pBottom.add(btnCancel);
 
-		add(pBottom, BorderLayout.SOUTH);
+		panelContainer.add(pBottom, BorderLayout.SOUTH);
 
 		this.setVisible(true);
 	}

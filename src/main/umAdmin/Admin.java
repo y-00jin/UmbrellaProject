@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,9 +47,9 @@ import main.style.BtnFont;
 
 public class Admin extends JFrame implements ActionListener, MouseListener {
 
-	private JPanel panelContainer, panelTop, panelWest, panelEast, panelCenter;
+	private JPanel panelContainer, panelTopTop, panelTopBottom, panelTop, panelWest, panelEast, panelCenter;
 	private String result;
-	private String[] strs = { "학생", "우산", "차단목록" };
+	private String[] strs = { "학생", "우산", "미반납자" };
 	private JComboBox<String> cbStr;
 	private DefaultTableModel model;
 	private Vector<String> con;
@@ -91,12 +92,12 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		dispose();
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		result = "";
-		result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
-
-		while (!result.equals("****")) {
-			result = JOptionPane.showInputDialog("비밀번호 오류!");
-		} // 관리자 확인 비밀번호 입력
+//		result = "";
+//		result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
+//
+//		while (!result.equals("****")) {
+//			result = JOptionPane.showInputDialog("비밀번호 오류!");
+//		} // 관리자 확인 비밀번호 입력
 
 		setUndecorated(true); // 타이블바 삭제
 
@@ -106,24 +107,41 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		panelTop = new JPanel();
 		panelTop.setLayout(new BorderLayout());
 
+		panelTopTop = new JPanel();
+		panelTopTop.setLayout(new BorderLayout());
+		panelTopTop.setPreferredSize(new Dimension(900, 50)); //패널 사이즈 조정
+		
+		panelTopBottom = new JPanel();
+		
 		panelWest = new JPanel();
 		panelEast = new JPanel();
 
 		panelCenter = new JPanel();
 
+		panelTopBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
+		panelTopBottom.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 10)); // 마진
+		
 		panelWest.setLayout(new FlowLayout(FlowLayout.LEFT));
-		panelWest.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 10)); // 마진
+		panelWest.setBorder(BorderFactory.createEmptyBorder(13, 20, 0, 10)); // 마진
 
 		panelEast.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		panelEast.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 10));
+		panelEast.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 10)); // 마진
 
 		panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
 		panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10)); // 마진
 
-		panelTop.setBackground(Color.WHITE);
-		panelWest.setBackground(Color.WHITE);
-		panelEast.setBackground(Color.WHITE);
+		panelTopTop.setBackground(new Color(0xDEE5F3));
+		panelTopBottom.setBackground(Color.WHITE);
+		panelWest.setBackground(new Color(0xDEE5F3));
+		panelEast.setBackground(new Color(0xDEE5F3));
 		panelCenter.setBackground(Color.WHITE); // 패널 배경색 설정
+
+		Font lblFont = new Font("HY헤드라인M", Font.PLAIN, 15);
+
+		JLabel lblTitle = new JLabel("관리자");
+		lblTitle.setFont(lblFont);
+
+		panelTopTop.add(lblTitle);
 
 		cbStr = new JComboBox<String>(strs);
 		cbStr.addActionListener(this);
@@ -138,24 +156,24 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		btnClose.addActionListener(this);
 
-		UIManager.put("ComboBox.background", new ColorUIResource(Color.yellow));
-		UIManager.put("JTextField.background", new ColorUIResource(Color.yellow));
-		UIManager.put("ComboBox.selectionBackground", new ColorUIResource(Color.magenta));
-		UIManager.put("ComboBox.selectionForeground", new ColorUIResource(Color.blue));
-
-		panelWest.add(cbStr);
+		panelWest.add(lblTitle);
 		panelEast.add(btnClose);
 
-		panelTop.add(panelWest, new BorderLayout().WEST);
-		panelTop.add(panelEast, new BorderLayout().EAST);
+		panelTopTop.add(panelWest, new BorderLayout().WEST);
+		panelTopTop.add(panelEast, new BorderLayout().EAST);
 
+		panelTopBottom.add(cbStr);
+		 
+		panelTop.add(panelTopTop, new BorderLayout().NORTH);
+		panelTop.add(panelTopBottom, new BorderLayout().SOUTH);
+		
 		panelContainer.add(panelTop, new BorderLayout().NORTH);
 
 		add(panelContainer);
 
 		studentPanel();
 
-		panelContainer.setBorder(new LineBorder(Color.GRAY, 2));
+		panelContainer.setBorder(new LineBorder(Color.GRAY, 2)); // 패널 테두리 설정
 
 		setVisible(true);
 	}
@@ -167,10 +185,12 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 	private void blockPanel() { // 블록테이블 생성
 		Vector<String> column = new Vector<String>();
-		column.addElement("차단코드");
 		column.addElement("학과");
+		column.addElement("학번");
 		column.addElement("이름");
-		column.addElement("반납여부");
+		column.addElement("폰번호");
+		column.addElement("대여날짜");
+		column.addElement("반납예정일");
 
 		model = new DefaultTableModel(column, 0) {
 			public boolean isCellEditable(int r, int c) {
@@ -178,27 +198,27 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 			}
 		};
 
-		String sql = "SELECT * FROM BLOCKLIST"; // 차단목록 전부 조회
-		ResultSet rs = DB.getResultSet(sql);
-
-		try {
-			while (rs.next()) {
-				con = new Vector<String>();
-				blockID = rs.getString(1);
-				blockMajor = rs.getString(2);
-				blockName = rs.getString(2);
-				returnState = rs.getString(2);
-
-				con.add(blockID);
-				con.add(blockMajor);
-				con.add(blockName);
-				con.add(returnState);
-				model.addRow(con); // 테이블에 내용 추가
-			}
-		} catch (SQLException e) {
-			System.out.println("접속 오류 / SQL 오류");
-			e.printStackTrace();
-		}
+//		String sql = "SELECT * FROM BLOCKLIST"; // 차단목록 전부 조회
+//		ResultSet rs = DB.getResultSet(sql);
+//
+//		try {
+//			while (rs.next()) {
+//				con = new Vector<String>();
+//				blockID = rs.getString(1);
+//				blockMajor = rs.getString(2);
+//				blockName = rs.getString(2);
+//				returnState = rs.getString(2);
+//
+//				con.add(blockID);
+//				con.add(blockMajor);
+//				con.add(blockName);
+//				con.add(returnState);
+//				model.addRow(con); // 테이블에 내용 추가
+//			}
+//		} catch (SQLException e) {
+//			System.out.println("접속 오류 / SQL 오류");
+//			e.printStackTrace();
+//		}
 
 		blockTable = new JTable(model);
 		blockTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
@@ -212,7 +232,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		JScrollPane sc = new JScrollPane(blockTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		sc.setPreferredSize(new Dimension(850, 535)); // 스크롤팬 크기 설정
+		sc.setPreferredSize(new Dimension(850, 520)); // 스크롤팬 크기 설정
 
 		btnCancel = new JButton("차단 취소");
 		BtnFont.BtnStyle(btnCancel);
@@ -274,7 +294,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		JScrollPane sc = new JScrollPane(umbrellaTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		sc.setPreferredSize(new Dimension(850, 535)); // 스크롤팬 크기 설정
+		sc.setPreferredSize(new Dimension(850, 520)); // 스크롤팬 크기 설정
 
 		btnAdd = new JButton("추가");
 		BtnFont.BtnStyle(btnAdd);
@@ -352,7 +372,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		JScrollPane sc = new JScrollPane(studentTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		sc.setPreferredSize(new Dimension(850, 535)); // 스크롤팬 크기 설정
+		sc.setPreferredSize(new Dimension(850, 520)); // 스크롤팬 크기 설정
 
 		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 
