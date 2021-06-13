@@ -55,6 +55,11 @@ public class Return extends JFrame implements ActionListener {
 	private JButton btnClose;
 	private JPanel panelTop;
 	private JPanel panelAll;
+	private JPanel panelTitle;
+	private Font lblFont = new Font("HY헤드라인M", Font.PLAIN, 15);
+	private JLabel lblTitle;
+	private JPanel pTitleReturn;
+	private JPanel pTitleClose;
 
 	public Return(String title, int width, int height) {
 		setTitle(title);
@@ -68,7 +73,7 @@ public class Return extends JFrame implements ActionListener {
 		panelAll.setLayout(new BorderLayout());
 		panelAll.setBorder(new LineBorder(Color.GRAY, 2)); // 테두리
 
-		// 검색 패널 생성
+		// 탑 패널 생성 (타이틀 & 검색)
 		addTop();
 
 		// 테이블 생성
@@ -82,24 +87,76 @@ public class Return extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 
-	// 탑
+	// 탑 패널
 	private void addTop() {
 
 		panelTop = new JPanel();
 		panelTop.setLayout(new BorderLayout());
 		panelTop.setBackground(Color.white);
 
-		// 검색 프레임 생성
-		addSearch();
-		// 닫기 버튼
-		addClose();
+		// 타이틀 & 닫기 패널 생성
+		addTitle();
 		
+		// 검색 패널 생성
+		addSearch();
+		
+		panelTop.add(panelTitle, BorderLayout.NORTH);
 		panelTop.add(panelSearch, BorderLayout.WEST);
-		panelTop.add(panelClose, BorderLayout.EAST);
 
 	}
 
-	// 검색
+	private void addTitle() {
+		
+		panelTitle = new JPanel();
+		panelTitle.setLayout(new BorderLayout());
+		panelTitle.setBackground(new Color(0xDEE5F3));	//배경색
+		
+		// 반납 타이틀 생성
+		addTitleReturn();
+		
+		// 닫기 버튼
+		addTitleClose();
+		
+		
+		panelTitle.add(pTitleReturn, BorderLayout.WEST);
+		panelTitle.add(pTitleClose, BorderLayout.EAST);
+		
+	}
+
+	// 반납 타이틀
+	private void addTitleReturn() {
+		
+		pTitleReturn = new JPanel();
+		pTitleReturn.setBorder(BorderFactory.createEmptyBorder(9, 10, 0, 0));
+		pTitleReturn.setBackground(new Color(0xDEE5F3));	// 패널 배경 설정
+		
+		lblTitle = new JLabel("반납 ");
+		Font lbltitleFont = new Font("HY헤드라인M", Font.PLAIN, 20);	//라벨 폰트
+		lblTitle.setFont(lbltitleFont);	//폰트 적용
+		pTitleReturn.add(lblTitle);
+	}
+
+	// 닫기 버튼
+	private void addTitleClose() {
+		
+		pTitleClose = new JPanel();
+		pTitleClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		pTitleClose.setBackground(new Color(0xDEE5F3));	//패널 배경색
+
+		ImageIcon iconExit = new ImageIcon("libs/exit.png");	//이미지
+		Image changeIcon = iconExit.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);	//이미지 크기 설정
+		ImageIcon btnIcon = new ImageIcon(changeIcon);
+
+		btnClose = new JButton(btnIcon);	//닫기 버튼 생성
+		btnClose.addActionListener(this);
+		btnClose.setBackground(new Color(0xDEE5F3));	//버튼 배경색
+
+		btnClose.setBorderPainted(false);	//버튼 테두리 없애기
+		pTitleClose.add(btnClose);
+		
+	}
+
+	// 검색 패널
 	private void addSearch() {
 
 		panelSearch = new JPanel(); // 패널 생성
@@ -107,7 +164,6 @@ public class Return extends JFrame implements ActionListener {
 		panelSearch.setLayout(new FlowLayout(FlowLayout.LEFT)); // 왼쪽 정렬
 		panelSearch.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10)); // 마진 설정
 
-		Font lblFont = new Font("HY헤드라인M", Font.PLAIN, 15);
 
 		lblDate1 = new JLabel("날짜 검색 : "); // 라벨
 		lblDate1.setFont(lblFont);
@@ -137,27 +193,6 @@ public class Return extends JFrame implements ActionListener {
 		BtnFont.BtnStyle(btnReset);
 		btnReset.addActionListener(this);
 		panelSearch.add(btnReset);
-
-	}
-	
-	// 닫기 버튼
-	private void addClose() {
-		panelClose = new JPanel();
-		panelClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		panelClose.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-		panelClose.setBackground(Color.white);
-
-		ImageIcon iconExit = new ImageIcon("libs/exit.png");
-		Image changeIcon = iconExit.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		ImageIcon btnIcon = new ImageIcon(changeIcon);
-
-		btnClose = new JButton(btnIcon);
-		btnClose.addActionListener(this);
-		btnClose.setBackground(Color.WHITE);
-
-		// BtnFont.BtnStyle(btnClose);
-		btnClose.setBorderPainted(false);
-		panelClose.add(btnClose);
 
 	}
 	
@@ -192,9 +227,8 @@ public class Return extends JFrame implements ActionListener {
 		tableHeader.setBackground(new Color(0xB2CCFF)); // 가져온 테이블 헤더의 색 지정
 
 		// 스크롤 팬
-		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sc.setPreferredSize(new Dimension(860, 480));
+		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		sc.setPreferredSize(new Dimension(860, 470));
 		panelInfo.add(sc);
 
 	}
@@ -247,11 +281,11 @@ public class Return extends JFrame implements ActionListener {
 			SelectedDate1 = (Date) datePicker1.getModel().getValue(); // 클릭된 날짜값 가져오기
 			SelectedDate2 = (Date) datePicker2.getModel().getValue(); // 클릭된 날짜값 가져오기
 
-			String returnSelect = "SELECT return.returnid, umbrella.UMBRELLAID ,student.STUDENTID , student.NAME , TO_CHAR(rental.RENTALDATE, \'YYYY-MM-DD\'), TO_CHAR(RETURN.RETURNDATE, \'YYYY-MM-DD\') "
+			String returnSelect = "SELECT return.returnid, umbrella.UMBRELLAID ,student.STUDENTID , student.NAME , TO_CHAR(rental.RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURN.RETURNDATE, 'YYYY-MM-DD') "
 					+ "FROM \"RETURN\" return , STUDENT student , UMBRELLA umbrella, RENTAL rental "
 					+ "WHERE return.RENTALID = rental.rentalid AND rental.studentid = student.studentid AND rental.umbrellaid = umbrella.umbrellaid "
-					+ "and return.RETURNDATE BETWEEN \'" + dateFormatter.format(SelectedDate1) + "\' AND \'"
-					+ dateFormatter.format(SelectedDate2) + "\'";
+					+ "and return.RETURNDATE BETWEEN '" + dateFormatter.format(SelectedDate1) + "' AND '"
+					+ dateFormatter.format(SelectedDate2) + "'";
 
 			ResultSet rs = DB.getResultSet(returnSelect); // 데이터 불러오기
 			String[] rsArr = new String[6];
