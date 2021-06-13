@@ -121,7 +121,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 			String umcode = tf_Umbcode.getText();
 			String getId = rental.getRentalId();
 			
-			//미안하다,,, 미래의 김민솔 중복 힘내라	
+			//미안하다,,, 미래의 김민솔 중복 힘내라,,	
 			// 미반납자에 있는 학번, 현재 대여중인 학번, 이미 대여중인 우산아이디
 			// 대여를 하면 반납 상태가 N, 반납을 하면 Y
 			// 이미 반납한 학생은 반납상태가 Y,
