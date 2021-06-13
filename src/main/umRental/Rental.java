@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -61,12 +63,19 @@ public class Rental extends JFrame implements ActionListener {
 	private void setTop() {
 		// 상단 패널
 		pExit = new JPanel();
-		pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		//pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		pExit.setLayout(new BorderLayout());
 		pExit.setBackground(Color.WHITE);
-		//pExit.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+		pExit.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 10));
 		add(pExit, BorderLayout.NORTH);
 		// pBottom.add(pExit, BorderLayout.EAST);
 
+		// 대여 글자
+		JLabel lbl = new JLabel("대여");
+		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
+		lbl.setFont(fontBtn); // 폰트 스타일 적용
+		//lbl.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+		pExit.add(lbl, BorderLayout.WEST);
 		// 닫기버튼
 		ImageIcon icon = new ImageIcon("libs/exit.png");
 		Image changeIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
@@ -77,9 +86,8 @@ public class Rental extends JFrame implements ActionListener {
 		btnExit.setContentAreaFilled(false); // 버튼 내용영역 채우기 x
 		btnExit.setFocusPainted(false);
 		btnExit.setBorderPainted(false); // 버튼 테두리 없애기
-
 		btnExit.addActionListener(this);
-		pExit.add(btnExit);
+		pExit.add(btnExit, BorderLayout.EAST);
 
 	}
 
