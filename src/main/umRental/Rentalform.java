@@ -28,7 +28,7 @@ public class Rentalform extends JFrame implements ActionListener {
    private JPanel pBase, pTop, pCenter, pBottom;
 
    public Rentalform(String title, int width, int height) {
-      setUndecorated(true); // 타이트바 없애기
+      setUndecorated(true); // 타이틀바 없애기
       this.setTitle(title);
       setSize(width, height);
       setLocationRelativeTo(this);

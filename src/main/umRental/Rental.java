@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -28,11 +30,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 import main.DB;
 import main.style.BtnFont;
 
-public class Rental extends JFrame implements ActionListener {
+public class Rental extends JFrame implements ActionListener, MouseListener {
 	private JPanel pBase, pCenter, pBottom, pBtn, pExit;
 	private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnExit;
 	private Vector<String> vectorTitle;
@@ -41,6 +44,9 @@ public class Rental extends JFrame implements ActionListener {
 	private String[] tmp, value;
 	private JTable table;
 	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE, rentalState;
+	private String rentalId, umbcode, code;
+	private int row = -1;
+	private Rental_ModifyBtn modify;
 
 	public Rental(String title, int width, int height) {
 		setUndecorated(true); // 타이트바 없애기
@@ -52,10 +58,10 @@ public class Rental extends JFrame implements ActionListener {
 
 		// 레이아웃
 		pBase = new JPanel();
-	    pBase.setLayout(new BorderLayout());
-	    pBase.setBorder(new LineBorder(Color.GRAY, 2)); // 패널 테두리
-	    add(pBase);
-	    
+		pBase.setLayout(new BorderLayout());
+		pBase.setBorder(new LineBorder(Color.GRAY, 2)); // 패널 테두리
+		add(pBase);
+
 		// setResizable(false); // 실행후 화면크기 변경 불가
 
 		setTop();
@@ -96,7 +102,7 @@ public class Rental extends JFrame implements ActionListener {
 
 	}
 
-	private void setTable() {
+	public void setTable() {
 		// 패널설정
 		pCenter = new JPanel();
 		pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -124,7 +130,8 @@ public class Rental extends JFrame implements ActionListener {
 		// DB
 		String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , r.RENTALDATE , r.RETURNDUEDATE, r.RENTALSTATE "
 				+ "FROM RENTAL r, UMBRELLA um, STUDENT st "
-				+ "WHERE r.UMBRELLAID = um.UMBRELLAID AND st.STUDENTID = r.STUDENTID " + "ORDER BY r.RENTALID";
+				+ "WHERE r.UMBRELLAID = um.UMBRELLAID AND st.STUDENTID = r.STUDENTID AND r.RENTALSTATE LIKE 'N' "
+				+ "ORDER BY r.RENTALID DESC";
 		// 대여의 대여아이디, 우산의 우산 아이디, 학생의 학생아이디, 학생의 이름, 대여의 대여일, 대여의 반납예정일, 반납상태를 출력
 		// 대여의 우산아이디와 우산의 우산아이디 && 학생의 학생아이디와 대여의 학생아이디가 같을때
 		// 대여아이디로 정렬
@@ -170,6 +177,8 @@ public class Rental extends JFrame implements ActionListener {
 		table.setFillsViewportHeight(true); // 스크롤 팬 안에 테이블 꽉차게 표시 -> 이거 없으면 배경색 설정 안됨
 		table.setBackground(Color.white); // 테이블 배경색 지정
 
+		table.addMouseListener(this);
+
 		JTableHeader tableHeader = table.getTableHeader(); // 테이블 헤더 값 가져오기
 		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블헤더 배경색 지정
 
@@ -187,6 +196,10 @@ public class Rental extends JFrame implements ActionListener {
 		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
 			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
 		}
+	}
+
+	public JPanel getpCenter() {
+		return pCenter;
 	}
 
 	private void setBottom() {
@@ -233,7 +246,15 @@ public class Rental extends JFrame implements ActionListener {
 		if (obj == btnRental) {
 			new Rentalform("대여", 300, 300);
 		} else if (obj == btnModify) {
-			new Rental_ModifyBtn("수정", 300, 300);
+			if (row == -1) {
+				JOptionPane.showMessageDialog(null, "수정할 목록을 선택해주세요.", "경고 메시지", JOptionPane.WARNING_MESSAGE);
+			} else {
+				modify = new Rental_ModifyBtn("수정", 300, 300);
+				// 수정 텍스트박스에 입력한 값들 넣어주기
+				modify.getTf_Umbcode().setText(umbcode);
+				modify.getTf_Code().setText(code);
+			}
+
 		} else if (obj == btnReturn) {
 			JOptionPane.showMessageDialog( // 메시지창 출력
 					this, "000님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
@@ -244,8 +265,8 @@ public class Rental extends JFrame implements ActionListener {
 		}
 	}
 
-	private void rentalTable() {
-		model.setNumRows(0);
+	private void rentalTable() { // 새로고침
+		model.setNumRows(0); // 테이블 전부 지우기
 
 		String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , r.RENTALDATE , r.RETURNDUEDATE, r.RENTALSTATE "
 				+ "FROM RENTAL r, UMBRELLA um, STUDENT st "
@@ -269,6 +290,44 @@ public class Rental extends JFrame implements ActionListener {
 		}
 
 		table = new JTable(model); // 테이블에 추가
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		table = (JTable) e.getComponent(); // 이벤트를 발생한 컴포넌트를 반환
+		model = (DefaultTableModel) table.getModel(); // 테이블에 추가 - 데이터모델 가져오기
+
+		if (e.getSource() == table) { // 클릭한 것이 테이블이라면
+			row = table.getSelectedRow(); // 선택한 셀의 행 번호 계산
+			TableModel data = table.getModel(); // 테이블의 모델 객체 얻어오기
+
+			rentalId = (String) data.getValueAt(row, 0);
+			umbcode = (String) data.getValueAt(row, 1);
+			code = (String) data.getValueAt(row, 2);
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
 
 	}
 }
