@@ -24,9 +24,9 @@ import javax.swing.border.LineBorder;
 
 import main.DB;
 import main.umAdmin.Admin;
-import main.umAnalysis.Stats;
 import main.umRental.Rental;
 import main.umReturn.Return;
+import main.umStats.Stats;
 
 public class UmbrellaMain extends JFrame implements ActionListener {
 
