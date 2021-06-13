@@ -2,6 +2,7 @@ package main.umAdmin;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -22,16 +23,12 @@ import main.style.BtnFont;
 
 public class AdminModify extends JFrame implements ActionListener {
 	private JButton btnOk, btnCancel;
-	private JTextField tfMajor, tfGrade, tfName, tfPhone;
+	private JTextField tfMajor, tfName, tfPhone;
 	private JPanel pTop, pCenter, pBottom, panelContainer;
 	private Admin admin;
 
 	public JTextField getTfMajor() {
 		return tfMajor;
-	}
-
-	public JTextField getTfGrade() {
-		return tfGrade;
 	}
 
 	public JTextField getTfName() {
@@ -67,7 +64,9 @@ public class AdminModify extends JFrame implements ActionListener {
 
 	private void setTop() {
 		pTop = new JPanel();
-
+		pTop.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15));
+		
+		//pTop.setPreferredSize(new Dimension(250, 40));
 		pTop.setBackground(new Color(0xB2CCFF));
 
 		JLabel lbl1 = new JLabel("수 정");
@@ -83,7 +82,7 @@ public class AdminModify extends JFrame implements ActionListener {
 		pCenter = new JPanel();
 
 		pCenter.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-		pCenter.setLayout(new GridLayout(4, 2, 0, 20));
+		pCenter.setLayout(new GridLayout(3, 2, 0, 20));
 		pCenter.setBackground(Color.WHITE);
 		
 		JLabel lblMajor = new JLabel("학과 :");
@@ -92,13 +91,6 @@ public class AdminModify extends JFrame implements ActionListener {
 
 		tfMajor = new JTextField();
 		pCenter.add(tfMajor);
-
-		JLabel lblGrade = new JLabel("학년 :");
-		lblGrade.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
-		pCenter.add(lblGrade);
-
-		tfGrade = new JTextField();
-		pCenter.add(tfGrade);
 
 		JLabel lblName = new JLabel("이름 :");
 		lblName.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
@@ -152,13 +144,11 @@ public class AdminModify extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnOk) {
 			String major = tfMajor.getText();
-			String grade = tfGrade.getText();
 			String name = tfName.getText();
 			String phone = tfPhone.getText();
 			String id = admin.getId();
 
-			String sql = "UPDATE STUDENT SET NAME = '" + name + "'," + " DEPARTMENT = '" + major + "'," + " GRADE = '"
-					+ grade + "'," + " PHONE = '" + phone + "'" + " WHERE STUDENTID = '" + id + "'";
+			String sql = "UPDATE STUDENT SET NAME = '" + name + "'," + " DEPARTMENT = '" + major + "'," + " PHONE = '" + phone + "'" + " WHERE STUDENTID = '" + id + "'";
 			DB.executeQuery(sql); // DB 내용 수정
 
 			// 새로고침

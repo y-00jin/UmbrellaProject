@@ -122,7 +122,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		panelTopBottom.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 10)); // 마진
 		
 		panelWest.setLayout(new FlowLayout(FlowLayout.LEFT));
-		panelWest.setBorder(BorderFactory.createEmptyBorder(13, 20, 0, 10)); // 마진
+		panelWest.setBorder(BorderFactory.createEmptyBorder(8, 20, 0, 10)); // 마진
 
 		panelEast.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		panelEast.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 10)); // 마진
@@ -136,7 +136,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		panelEast.setBackground(new Color(0xDEE5F3));
 		panelCenter.setBackground(Color.WHITE); // 패널 배경색 설정
 
-		Font lblFont = new Font("HY헤드라인M", Font.PLAIN, 15);
+		Font lblFont = new Font("HY헤드라인M", Font.PLAIN, 20);
 
 		JLabel lblTitle = new JLabel("관리자");
 		lblTitle.setFont(lblFont);
@@ -180,7 +180,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 	public static void main(String[] args) {
 		DB.init();
-		new Admin("관리자", 900, 700);
+		new Admin("관리자", 900, 600);
 	}
 
 	private void blockPanel() { // 블록테이블 생성
@@ -232,7 +232,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		JScrollPane sc = new JScrollPane(blockTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		sc.setPreferredSize(new Dimension(850, 520)); // 스크롤팬 크기 설정
+		sc.setPreferredSize(new Dimension(850, 410)); // 스크롤팬 크기 설정
 
 		btnCancel = new JButton("차단 취소");
 		BtnFont.BtnStyle(btnCancel);
@@ -294,7 +294,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		JScrollPane sc = new JScrollPane(umbrellaTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		sc.setPreferredSize(new Dimension(850, 520)); // 스크롤팬 크기 설정
+		sc.setPreferredSize(new Dimension(850, 410)); // 스크롤팬 크기 설정
 
 		btnAdd = new JButton("추가");
 		BtnFont.BtnStyle(btnAdd);
@@ -326,7 +326,6 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		Vector<String> column = new Vector<String>();
 		column.addElement("학번");
 		column.addElement("학과");
-		column.addElement("학년");
 		column.addElement("이름");
 		column.addElement("전화번호");
 
@@ -344,13 +343,11 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 				con = new Vector<String>();
 				studentID = rs.getString(1);
 				studentMajor = rs.getString(3);
-				studentGrade = rs.getString(4);
 				studentName = rs.getString(2);
-				studentPhone = rs.getString(5);
+				studentPhone = rs.getString(4);
 
 				con.add(studentID);
 				con.add(studentMajor);
-				con.add(studentGrade);
 				con.add(studentName);
 				con.add(studentPhone);
 				model.addRow(con); // 테이블에 내용 추가
@@ -372,7 +369,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		JScrollPane sc = new JScrollPane(studentTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		sc.setPreferredSize(new Dimension(850, 520)); // 스크롤팬 크기 설정
+		sc.setPreferredSize(new Dimension(850, 410)); // 스크롤팬 크기 설정
 
 		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 
@@ -449,14 +446,12 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 				id = (String) data.getValueAt(row, 0);
 				String major = (String) data.getValueAt(row, 1);
-				String grade = (String) data.getValueAt(row, 2);
-				String name = (String) data.getValueAt(row, 3);
-				String phone = (String) data.getValueAt(row, 4);
+				String name = (String) data.getValueAt(row, 2);
+				String phone = (String) data.getValueAt(row, 3);
 
 				modify = new AdminModify("학생수정", 250, 300, this);
 
 				modify.getTfMajor().setText(major);
-				modify.getTfGrade().setText(grade);
 				modify.getTfName().setText(name);
 				modify.getTfPhone().setText(phone);
 			}
