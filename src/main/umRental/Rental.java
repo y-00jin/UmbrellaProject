@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -32,7 +33,7 @@ import main.DB;
 import main.style.BtnFont;
 
 public class Rental extends JFrame implements ActionListener {
-	private JPanel pCenter, pBottom, pBtn, pExit;
+	private JPanel pBase, pCenter, pBottom, pBtn, pExit;
 	private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnOut, btnExit;
 	private Vector<String> vectorTitle;
 	private DefaultTableModel model;
@@ -50,7 +51,11 @@ public class Rental extends JFrame implements ActionListener {
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// 레이아웃
-		setLayout(new BorderLayout());
+		pBase = new JPanel();
+	    pBase.setLayout(new BorderLayout());
+	    pBase.setBorder(new LineBorder(Color.GRAY, 2)); // 패널 테두리
+	    add(pBase);
+	    
 		// setResizable(false); // 실행후 화면크기 변경 불가
 
 		setTop();
@@ -63,18 +68,18 @@ public class Rental extends JFrame implements ActionListener {
 	private void setTop() {
 		// 상단 패널
 		pExit = new JPanel();
-		//pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		// pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		pExit.setLayout(new BorderLayout());
-		pExit.setBackground(Color.WHITE);
+		pExit.setBackground(new Color(0xDEE5F3));
 		pExit.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 10));
-		add(pExit, BorderLayout.NORTH);
+		pBase.add(pExit, BorderLayout.NORTH);
 		// pBottom.add(pExit, BorderLayout.EAST);
 
 		// 대여 글자
 		JLabel lbl = new JLabel("대여");
 		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
 		lbl.setFont(fontBtn); // 폰트 스타일 적용
-		//lbl.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+		// lbl.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
 		pExit.add(lbl, BorderLayout.WEST);
 		// 닫기버튼
 		ImageIcon icon = new ImageIcon("libs/exit.png");
@@ -96,8 +101,8 @@ public class Rental extends JFrame implements ActionListener {
 		pCenter = new JPanel();
 		pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pCenter.setBackground(Color.WHITE);
-		pCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0)); // 패널마진
-		add(pCenter, BorderLayout.CENTER); // 프레임에 패널 가운데에 붙임
+		pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0)); // 패널마진
+		pBase.add(pCenter, BorderLayout.CENTER); // 프레임에 패널 가운데에 붙임
 
 		vectorTitle = new Vector<String>(); // 헤더 값
 
@@ -190,7 +195,7 @@ public class Rental extends JFrame implements ActionListener {
 		pBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pBottom.setBackground(Color.WHITE); // 배경색
 		pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0)); // 패널 마진
-		add(pBottom, BorderLayout.SOUTH); // 남쪽 정렬
+		pBase.add(pBottom, BorderLayout.SOUTH); // 남쪽 정렬
 
 		// 새로고침 버튼
 		btnF5 = new JButton("새로고침");
@@ -254,9 +259,9 @@ public class Rental extends JFrame implements ActionListener {
 		String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , r.RENTALDATE , r.RETURNDUEDATE, r.RENTALSTATE "
 				+ "FROM RENTAL r, UMBRELLA um, STUDENT st "
 				+ "WHERE r.UMBRELLAID = um.UMBRELLAID AND st.STUDENTID = r.STUDENTID " + "ORDER BY r.RENTALID";
-		
+
 		ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
-		
+
 		String[] rsArr = new String[7]; // 값 받아올 배열
 		try {
 			while (rs.next()) {
@@ -273,6 +278,6 @@ public class Rental extends JFrame implements ActionListener {
 		}
 
 		table = new JTable(model); // 테이블에 추가
-		
+
 	}
 }

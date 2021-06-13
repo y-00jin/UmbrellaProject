@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -18,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import main.DB;
 import main.style.BtnFont;
@@ -25,7 +25,7 @@ import main.style.BtnFont;
 public class Rentalform extends JFrame implements ActionListener {
    private JButton btn_ok, btn_cancel;
    private JTextField tf_Umbcode, tf_Code;
-   private JPanel pTop, pCenter, pBottom;
+   private JPanel pBase, pTop, pCenter, pBottom;
 
    public Rentalform(String title, int width, int height) {
       setUndecorated(true); // 타일트바 없애기
@@ -34,13 +34,15 @@ public class Rentalform extends JFrame implements ActionListener {
       setLocationRelativeTo(this);
       // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       dispose();
-
+      
+      pBase = new JPanel();
+      pBase.setLayout(new BorderLayout());
+      pBase.setBorder(new LineBorder(Color.GRAY, 2)); // 패널 테두리
+      add(pBase);
+      
       setTop();
       setCenter();
       setBottom();
-
-      // 레이아웃
-      setLayout(new BorderLayout());
    }
 
    private void setTop() {
@@ -48,7 +50,7 @@ public class Rentalform extends JFrame implements ActionListener {
       pTop = new JPanel();
       pTop.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15)); // 패널 flowlayout, vgap
       pTop.setBackground(new Color(0xB2CCFF));
-      add(pTop, BorderLayout.NORTH);
+      pBase.add(pTop, BorderLayout.NORTH);
 
       // 대여 라벨
       JLabel lbl1 = new JLabel("대 여");
@@ -63,7 +65,7 @@ public class Rentalform extends JFrame implements ActionListener {
       pCenter.setBorder(BorderFactory.createEmptyBorder(20, 10, 25, 10));
       pCenter.setBackground(Color.WHITE);
       pCenter.setLayout(new GridLayout(2, 2, 0, 40));
-      add(pCenter, BorderLayout.CENTER);
+      pBase.add(pCenter, BorderLayout.CENTER);
 
       // 학번
       JLabel lbl_Code = new JLabel("학번 :");
@@ -86,7 +88,7 @@ public class Rentalform extends JFrame implements ActionListener {
       pBottom = new JPanel();
       pBottom.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
       pBottom.setBackground(Color.WHITE);
-      add(pBottom, BorderLayout.SOUTH);
+      pBase.add(pBottom, BorderLayout.SOUTH);
 
       btn_ok = new JButton("대여");
       btn_ok.addActionListener(this);
@@ -117,13 +119,15 @@ public class Rentalform extends JFrame implements ActionListener {
 //      rentalDate = "SELECT SYSDATE FROM dual ";
 //      ResultSet rs = DB.getResultSet(rentalDate); // 쿼리 넘기기
       
-      SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd");
+      SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
       Date time = new Date();
       String timeDate = format.format(time);
-      
+      System.out.println(timeDate);
+      String datefomat = "yyyy-MM-dd"; // 데이터 형식지정
       System.out.println(timeDate);
       
       Object obj = e.getSource();
+      
       if (obj == btn_ok) {
          if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
             // 모든 항목 입력시 확인 버튼 클릭하면 저장되게
@@ -133,8 +137,7 @@ public class Rentalform extends JFrame implements ActionListener {
                
             } else {
                        
-               String sql = "INSERT INTO RENTAL "
-                     + "VALUES('015', '" + umbCode + "', " + "'" + code + "', " + "TO_DATE('" + timeDate + "', 'YYYY-MM-DD'), '21-03-23')";
+               String sql = "INSERT INTO RENTAL VALUES('016', '" + umbCode + "', '" +code + "', '이름', " + "TO_DATE('2021-05-21', 'YYYY-MM-DD'), TO_DATE('21-03-23', 'yyyy-MM-DD'))";
                      
                DB.executeQuery(sql); // DB에 sql 추가
                System.out.println(sql);
