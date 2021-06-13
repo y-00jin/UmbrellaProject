@@ -249,7 +249,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			if (row == -1) {
 				JOptionPane.showMessageDialog(null, "수정할 목록을 선택해주세요.", "경고 메시지", JOptionPane.WARNING_MESSAGE);
 			} else {
-				modify = new Rental_ModifyBtn("수정", 300, 300);
+				modify = new Rental_ModifyBtn("수정", 300, 300, this);
 				// 수정 텍스트박스에 입력한 값들 넣어주기
 				modify.getTf_Umbcode().setText(umbcode);
 				modify.getTf_Code().setText(code);
@@ -266,30 +266,10 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 	}
 
 	private void rentalTable() { // 새로고침
-		model.setNumRows(0); // 테이블 전부 지우기
-
-		String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , r.RENTALDATE , r.RETURNDUEDATE, r.RENTALSTATE "
-				+ "FROM RENTAL r, UMBRELLA um, STUDENT st "
-				+ "WHERE r.UMBRELLAID = um.UMBRELLAID AND st.STUDENTID = r.STUDENTID " + "ORDER BY r.RENTALID";
-
-		ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
-
-		String[] rsArr = new String[7]; // 값 받아올 배열
-		try {
-			while (rs.next()) {
-
-				for (int i = 0; i < rsArr.length; i++) {
-					rsArr[i] = rs.getString(i + 1); // 값 저장
-				}
-
-				model.addRow(rsArr); // 모델에 추가
-
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		table = new JTable(model); // 테이블에 추가
+		getpCenter().removeAll(); // 패널 지우기
+		setTable(); // 테이블 호출
+		getpCenter().revalidate(); // 레이아웃 변화 재확인
+		getpCenter().repaint(); // 레이아웃 다시 가져오기
 	}
 
 	@Override
@@ -305,6 +285,10 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			umbcode = (String) data.getValueAt(row, 1);
 			code = (String) data.getValueAt(row, 2);
 		}
+	}
+
+	public String getRentalId() {
+		return rentalId;
 	}
 
 	@Override

@@ -27,7 +27,8 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	private JPanel pBase, pTop, pCenter, pBottom;
 	private Rental rental;
 
-	public Rental_ModifyBtn(String title, int width, int height) {
+	public Rental_ModifyBtn(String title, int width, int height, Rental rental) {
+		this.rental = rental;
 		setUndecorated(true); // 타이틀바 없애기
 		this.setTitle(title);
 		setSize(width, height);
@@ -109,7 +110,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new Rental_ModifyBtn("수정", 300, 300);
+		//new Rental_ModifyBtn("수정", 300, 300);
 	}
 
 	@Override
@@ -118,28 +119,28 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 		if (obj == btn_ok) {
 			String code = tf_Code.getText();
 			String umcode = tf_Umbcode.getText();
+			String getId = rental.getRentalId();
 			
-//			String ableCode =
-			
+//미안하다,,, 미래의 김민솔 중복 힘내라	
 			
 			
 			if (tf_Code.getText() == "1"/* 사실 1은 아니고 만약 중복된다면 */) {
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				String sql = "UPDATE STUDENT SET UMBRELLAID = '" + umcode + "'," + "STUDENTID = '" + code + "'";
+				String sql = "UPDATE RENTAL SET UMBRELLAID = '" + umcode + "'," + "STUDENTID = '" + code + "' WHERE RENTALID = '" + getId + "'";
 				ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
 				DB.executeQuery(sql); // DB 내용 수정
 
+				dispose(); //현재 수정창 끄기
+				JOptionPane.showMessageDialog( // 메시지창 출력
+						this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+				
 				// 새로고침
 				rental.getpCenter().removeAll(); // 패널 지우기
 				rental.setTable(); // 테이블 호출
 				rental.getpCenter().revalidate(); // 레이아웃 변화 재확인
 				rental.getpCenter().repaint(); // 레이아웃 다시 가져오기
-
-				System.out.println(sql);
-				JOptionPane.showMessageDialog( // 메시지창 출력
-						this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 			}
 
 		} else if (obj == btn_cancel) {
