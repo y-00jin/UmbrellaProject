@@ -20,15 +20,18 @@ import javax.swing.border.LineBorder;
 
 import main.DB;
 import main.style.BtnFont;
+import main.umAdmin.Admin;
 
 public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	private JButton btn_ok, btn_cancel;
 	private JTextField tf_Umbcode, tf_Code;
 	private JPanel pBase, pTop, pCenter, pBottom;
 	private Rental rental;
+	private Admin admin;
 
 	public Rental_ModifyBtn(String title, int width, int height, Rental rental) {
 		this.rental = rental;
+		//this.admin = admin;
 		setUndecorated(true); // 타이틀바 없애기
 		this.setTitle(title);
 		setSize(width, height);
@@ -120,7 +123,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 			String code = tf_Code.getText();
 			String umcode = tf_Umbcode.getText();
 			String getId = rental.getRentalId();
-			
+			//String agoId 
 			//미안하다,,, 미래의 김민솔 중복 힘내라,,	
 			// 미반납자에 있는 학번, 현재 대여중인 학번, 이미 대여중인 우산아이디
 			// 대여를 하면 반납 상태가 N, 반납을 하면 Y
@@ -132,6 +135,9 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 			if (tf_Code.getText() == "1"/* 사실 1은 아니고 만약 중복된다면 */) {
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+//			} else if(admin.getumbrellaState().equals("Y")){ // 이미 대여한 우산일 경우
+//				JOptionPane.showMessageDialog( // 메시지창 출력
+//						this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 			} else {
 				String sql = "UPDATE RENTAL SET UMBRELLAID = '" + umcode + "'," + "STUDENTID = '" + code + "' WHERE RENTALID = '" + getId + "'";
 				ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
