@@ -1,4 +1,4 @@
-package main.umAnalysis;
+package main.umStats;
 
 import java.awt.*;
 import java.awt.event.*;

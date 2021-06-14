@@ -1,4 +1,4 @@
-package main.umAnalysis;
+package main.umStats;
 
 import java.awt.*;
 import javax.swing.*;
@@ -23,10 +23,11 @@ public class DrawingPanel extends JPanel {
 			g.drawLine(130, 260 - 20 * cnt, 480, 260 - 20 * cnt);
 
 		}
-
-		g.drawString("대여", 190, 280);
-		g.drawString("반납", 290, 280);
-		g.drawString("미반납", 390, 280);
+		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
+		g.setFont(fontBtn);
+		g.drawString("대여", 185, 280);
+		g.drawString("반납", 285, 280);
+		g.drawString("미반납", 383, 280);
 		g.setColor(new Color(178,204,255));
 		
 		if (umRental > 0) {

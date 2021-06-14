@@ -1,4 +1,4 @@
-package main.umAnalysis;
+package main.umStats;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -9,7 +9,11 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.text.NumberFormat.Style;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -19,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import main.DB;
 import main.style.BtnFont;
 import main.umReturn.DateLabelFormatter;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -50,6 +55,10 @@ public class Stats extends JFrame implements ActionListener {
 	private JButton btnDetail;
 	private JLabel lblRetResult;
 	private JLabel lblNoRetResult;
+	private Date SelectedDate;
+	private String rentalCount;
+	private SimpleDateFormat dateFormatter;
+	private String returnCount;
 
 	public Stats(String title, int width, int height) {
 		setTitle(title);
@@ -58,16 +67,50 @@ public class Stats extends JFrame implements ActionListener {
 		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// 탑
+		// 탑_타이틀, 검색
+		addTop();
+
+		// 센터_그래프
+		addCenter();
+
+		add(panelTop, BorderLayout.NORTH);
+		add(panelCenter, BorderLayout.CENTER);
+
+		setVisible(true);
+	}
+
+	// 탑 패널
+	private void addTop() {
+
 		panelTop = new JPanel();
-		panelTop.setBackground(Color.WHITE);
+		panelTop.setBackground(Color.WHITE); // 배경색
 		panelTop.setLayout(new BorderLayout());
 
+		// 분석 타이틀
+		addTitle();
+		
+		// 닫기 버튼
+		addClose();
+		
+		//검색 패널
+		addSearch();
+
+		panelTitle.add(panelStats, BorderLayout.WEST);
+		panelTitle.add(panelClose, BorderLayout.EAST);
+		panelTitle.add(panelSearch, BorderLayout.SOUTH);
+
+		panelTop.add(panelTitle);
+
+	}
+
+	// 타이틀 생성
+	private void addTitle() {
+
+		// 타이틀(분석) 패널
 		panelTitle = new JPanel();
 		panelTitle.setBackground(new Color(0xDEE5F3));
 		panelTitle.setLayout(new BorderLayout());
 
-		// 분석 타이틀 패널
 		panelStats = new JPanel();
 		panelStats.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panelStats.setBackground(new Color(0xDEE5F3));
@@ -78,12 +121,14 @@ public class Stats extends JFrame implements ActionListener {
 		lblTitle.setBorder(BorderFactory.createEmptyBorder(8, 10, 0, 0));
 		lblTitle.setFont(lblTitleFont);
 		panelStats.add(lblTitle);
+		
+	}
 
-		// 닫기
+	// 닫기 버튼
+	private void addClose() {
 		panelClose = new JPanel();
 
 		panelClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		// panelClose.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		panelClose.setBackground(new Color(0xDEE5F3));
 
 		ImageIcon iconExit = new ImageIcon("libs/exit.png");
@@ -92,12 +137,15 @@ public class Stats extends JFrame implements ActionListener {
 
 		btnClose = new JButton(btnIcon);
 		btnClose.setBackground(new Color(0xDEE5F3));
-		// btnClose.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 10));
 		btnClose.setBorderPainted(false);
 		btnClose.addActionListener(this);
 
 		panelClose.add(btnClose);
+		
+	}
 
+	// 검색
+	private void addSearch() {
 		// 검색
 		panelSearch = new JPanel();
 		panelSearch.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
@@ -116,15 +164,12 @@ public class Stats extends JFrame implements ActionListener {
 		// 검색 버튼
 		btnSearch = new JButton("검색");
 		BtnFont.BtnStyle(btnSearch);
-		btnSearch.addActionListener(this);
 		panelSearch.add(btnSearch);
 
-		panelTitle.add(panelStats, BorderLayout.WEST);
-		panelTitle.add(panelClose, BorderLayout.EAST);
-		panelTitle.add(panelSearch, BorderLayout.SOUTH);
-		panelTop.add(panelTitle);
-		add(panelTop, BorderLayout.NORTH);
+	}
 
+	// 그래프 그리는 센터 패널
+	private void addCenter() {
 		// 센터 그래프
 		panelCenter = new JPanel();
 		panelCenter.setLayout(new BorderLayout());
@@ -134,42 +179,50 @@ public class Stats extends JFrame implements ActionListener {
 
 		// 정보 입력 패널 만든다.
 		panelInfo = new JPanel();
+		panelInfo.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
 		panelInfo.setBackground(Color.white);
 		panelInfo.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-		lblRental = new JLabel("대여 : ");
+
+		Font fontLbl = new Font("굴림", Font.BOLD, 13);
+		lblRental = new JLabel("대여 :");
+		lblRental.setFont(fontLbl);
 		panelInfo.add(lblRental);
 
 		lblRenResult = new JLabel("");
+		lblRenResult.setFont(fontLbl);
 		panelInfo.add(lblRenResult);
 
-		lblReturn = new JLabel("반납 : ");
+		lblReturn = new JLabel("|  반납 :");
+		lblReturn.setFont(fontLbl);
 		panelInfo.add(lblReturn);
 
 		lblRetResult = new JLabel("");
+		lblRetResult.setFont(fontLbl);
 		panelInfo.add(lblRetResult);
 
-		lblNoReturn = new JLabel("미반납 : ");
+		lblNoReturn = new JLabel("|  미반납 :");
+		lblNoReturn.setFont(fontLbl);
 		panelInfo.add(lblNoReturn);
 
 		lblNoRetResult = new JLabel("");
+		lblNoRetResult.setFont(fontLbl);
 		panelInfo.add(lblNoRetResult);
 
 		btnDetail = new JButton("자세히 >>");
+
 		BtnFont.BtnStyle(btnDetail);
 		panelInfo.add(btnDetail);
-		
-		//버튼 클릭 시 그래프 그리기
+
+		// 버튼 클릭 시 그래프 그리기
 		btnSearch.addActionListener(new DrawAction(lblRenResult, lblRetResult, lblNoRetResult, drawpanel));
-		
+
 		panelCenter.add(panelInfo, BorderLayout.SOUTH);
 		panelCenter.add(drawpanel, BorderLayout.CENTER);
 
-		add(panelCenter, BorderLayout.CENTER);
-
-		setVisible(true);
 	}
 
 	public static void main(String[] args) {
+		DB.init();
 		new Stats("통계", 600, 500);
 	}
 
@@ -178,14 +231,51 @@ public class Stats extends JFrame implements ActionListener {
 		Object obj = e.getSource();
 		if (obj == btnClose) {
 			dispose();
-		} else if(obj==btnSearch) {
-			new DrawAction(lblRenResult, lblRetResult, lblNoRetResult, drawpanel);
-		} else if(obj==datePanel) {
-			lblRenResult.setText("80");
-			lblRetResult.setText("60");
+		}  else if (obj == datePanel) {
+			
+			// 특정 월에 대여한 사람 수 얻어오기
+			RentalSelect();
+			lblRenResult.setText(rentalCount);	// 총 대여한 사람 수 
+			
+			ReturnSelect();
+			lblRetResult.setText(returnCount);
 			lblNoRetResult.setText("20");
 		}
 
 	}
- 
+
+	private void RentalSelect() {
+		String datePattern = "MM"; // 데이터 포맷 형식 지정
+		dateFormatter = new SimpleDateFormat(datePattern); // 데이터 포맷 형식 지정한 객체 생성
+		
+		SelectedDate = (Date) datePicker.getModel().getValue();	//클릭된 날짜 값 가져오기
+		
+		// 대여한 사람 수 얻어오는 select 문
+		String rentalSelect = "SELECT COUNT(*) FROM RENTAL rental WHERE rental.RENTALID IN (SELECT r.RENTALID "
+				+ "FROM RENTAL r WHERE TO_CHAR(r.RENTALDATE , 'mm') = '" + dateFormatter.format(SelectedDate) + "')";
+		
+		ResultSet rs = DB.getResultSet(rentalSelect);	//select하기
+		try {
+			while(rs.next()) {
+				rentalCount= rs.getString(1);	//총 대여한 사람 수 얻어오기
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+	}
+	
+	private void ReturnSelect() {
+		String returnSelect = "SELECT COUNT(*) FROM \"RETURN\" r2 WHERE r2.RETURNID IN (SELECT r.RETURNID "
+				+ "FROM \"RETURN\" r WHERE TO_CHAR(r.RETURNDATE , 'mm') = '" + dateFormatter.format(SelectedDate) + "')";
+		ResultSet rs = DB.getResultSet(returnSelect);	//select하기
+		try {
+			while(rs.next()) {
+				returnCount= rs.getString(1);	//총 대여한 사람 수 얻어오기
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+
 }

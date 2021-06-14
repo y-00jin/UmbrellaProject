@@ -280,7 +280,6 @@ public class Return extends JFrame implements ActionListener {
 
 			SelectedDate1 = (Date) datePicker1.getModel().getValue(); // 클릭된 날짜값 가져오기
 			SelectedDate2 = (Date) datePicker2.getModel().getValue(); // 클릭된 날짜값 가져오기
-
 			String returnSelect = "SELECT return.returnid, umbrella.UMBRELLAID ,student.STUDENTID , student.NAME , TO_CHAR(rental.RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURN.RETURNDATE, 'YYYY-MM-DD') "
 					+ "FROM \"RETURN\" return , STUDENT student , UMBRELLA umbrella, RENTAL rental "
 					+ "WHERE return.RENTALID = rental.rentalid AND rental.studentid = student.studentid AND rental.umbrellaid = umbrella.umbrellaid "
