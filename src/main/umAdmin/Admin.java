@@ -54,28 +54,27 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	private DefaultTableModel model;
 	private Vector<String> con;
 	private JTable studentTable, umbrellaTable, blockTable;
-	private String blockID;
-	private String blockMajor;
-	private String blockName;
 	private String returnState;
 	private String umbrellaID;
 	private String umbrellaState;
 	private String studentID;
 	private String studentMajor;
 	private String studentName;
-	private String studentGrade;
 	private String studentPhone;
 	private String id;
 	private JButton btnDelect;
 	private JButton btnAdd;
-	private JButton btnCancel;
 	private AdminModify modify;
-	private AdminUmbrellaAdd umbrellaAdd;
 	private JTable table;
 	private String umCode;
 	private JButton btnClose;
 	private ImageIcon icon;
 	private ImageIcon btnIcon;
+	private String department;
+	private String studentId;
+	private String name;
+	private String phoneNumber;
+	private String returnDueDate;
 
 	public String getId() {
 		return id;
@@ -83,6 +82,10 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 	public JPanel getPanelCenter() {
 		return panelCenter;
+	}
+	
+	public String getumbrellaState() {
+		return umbrellaState;
 	}
 
 	public Admin(String title, int width, int height) {
@@ -185,40 +188,44 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 	private void blockPanel() { // 블록테이블 생성
 		Vector<String> column = new Vector<String>();
-		column.addElement("학과");
+		column.addElement("전공");
 		column.addElement("학번");
 		column.addElement("이름");
-		column.addElement("폰번호");
-		column.addElement("대여날짜");
+		column.addElement("전화번호");
 		column.addElement("반납예정일");
+		column.addElement("반납여부");
 
 		model = new DefaultTableModel(column, 0) {
 			public boolean isCellEditable(int r, int c) {
 				return false;
 			}
 		};
+		String sql = "SELECT * FROM BLOCKVIEW "
+					+ "ORDER BY Department"; // 차단목록 전부 조회
+		ResultSet rs = DB.getResultSet(sql);
 
-//		String sql = "SELECT * FROM BLOCKLIST"; // 차단목록 전부 조회
-//		ResultSet rs = DB.getResultSet(sql);
-//
-//		try {
-//			while (rs.next()) {
-//				con = new Vector<String>();
-//				blockID = rs.getString(1);
-//				blockMajor = rs.getString(2);
-//				blockName = rs.getString(2);
-//				returnState = rs.getString(2);
-//
-//				con.add(blockID);
-//				con.add(blockMajor);
-//				con.add(blockName);
-//				con.add(returnState);
-//				model.addRow(con); // 테이블에 내용 추가
-//			}
-//		} catch (SQLException e) {
-//			System.out.println("접속 오류 / SQL 오류");
-//			e.printStackTrace();
-//		}
+		try {
+			while (rs.next()) {
+				con = new Vector<String>();
+				department = rs.getString(1);
+				studentId = rs.getString(2);
+				name = rs.getString(3);
+				phoneNumber = rs.getString(4);
+				returnDueDate = rs.getString(6);
+				returnState = rs.getString(7);
+
+				con.add(department);
+				con.add(studentId);
+				con.add(name);
+				con.add(phoneNumber);
+				con.add(returnDueDate);
+				con.add(returnState);
+				model.addRow(con); // 테이블에 내용 추가
+			}
+		} catch (SQLException e) {
+			System.out.println("접속 오류 / SQL 오류");
+			e.printStackTrace();
+		}
 
 		blockTable = new JTable(model);
 		blockTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
@@ -234,8 +241,6 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		sc.setPreferredSize(new Dimension(850, 410)); // 스크롤팬 크기 설정
 
-		btnCancel = new JButton("차단 취소");
-		BtnFont.BtnStyle(btnCancel);
 
 		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 
@@ -248,7 +253,6 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		} // 테이블 내용 가운데 정렬
 
 		panelCenter.add(sc);
-		panelCenter.add(btnCancel);
 
 		panelContainer.add(panelCenter, new BorderLayout().CENTER);
 	}
@@ -320,6 +324,10 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		panelContainer.add(panelCenter, new BorderLayout().CENTER);
 
+	}
+
+	public String getUmbrellaState() {
+		return umbrellaState;
 	}
 
 	public void studentPanel() { // 학생테이블 생성
@@ -429,7 +437,6 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		if (obj == btnClose) {
 			dispose();
 		}
-
 	}
 
 	@Override
@@ -461,10 +468,8 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		if (e.getSource() == umbrellaTable) { // 우산테이블에서 적용되는 마우스 이벤트
 
 			umCode = (String) model.getValueAt(table.getSelectedRow(), 0);
-			System.out.println("우산코드는 " + umCode);
 
 		}
-
 	}
 
 	@Override
