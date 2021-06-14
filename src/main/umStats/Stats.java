@@ -240,6 +240,7 @@ public class Stats extends JFrame implements ActionListener {
 			ReturnSelect();
 			lblRetResult.setText(returnCount);
 			lblNoRetResult.setText("20");
+			
 		}
 
 	}

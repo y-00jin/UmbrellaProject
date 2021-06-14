@@ -10,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
 
 import javax.swing.AbstractButton;
@@ -30,6 +32,7 @@ import main.umStats.Stats;
 
 public class UmbrellaMain extends JFrame implements ActionListener {
 
+	private static boolean check;
 	private JPanel panelTitle, panelBtn;
 	private JButton btnRental, btnAdmin, btnReturn;
 	private JLabel lblTitle, lblSubTitle;
@@ -180,6 +183,31 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		DB.init();
 		new UmbrellaMain("우산 대여 프로그램", 900, 600);
+		addView();
+	}
+
+	private static void addView() {
+		check = false;
+		
+		String viewSelect = "SELECT * FROM BLOCKVIEW b ";
+		DB.getResultSet(viewSelect);
+		ResultSet rs = DB.getResultSet(viewSelect);
+		try {
+			while(rs.next()) {
+				check = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if(check == true) {
+			String viewDrop = "DROP VIEW BLOCKVIEW";
+			DB.executeQuery(viewDrop);
+		}
+		
+		String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE , r.RENTALSTATE, r.RETURNDUEDATE "
+				+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.rentalstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
+		DB.executeQuery(viewCreate);
 	}
 
 	@Override
