@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import main.DB;
 import main.style.BtnFont;
@@ -60,6 +61,7 @@ public class Stats extends JFrame implements ActionListener {
 	private SimpleDateFormat dateFormatter;
 	private String returnCount;
 	private String noReturnCount;
+	private JPanel panelAll;
 
 	public Stats(String title, int width, int height) {
 		setTitle(title);
@@ -68,15 +70,21 @@ public class Stats extends JFrame implements ActionListener {
 		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		panelAll = new JPanel();
+		panelAll.setLayout(new BorderLayout());
+		panelAll.setBorder(new LineBorder(Color.GRAY, 2)); // 테두리
+		
 		// 탑_타이틀, 검색
 		addTop();
 
 		// 센터_그래프
 		addCenter();
 
-		add(panelTop, BorderLayout.NORTH);
-		add(panelCenter, BorderLayout.CENTER);
+		panelAll.add(panelTop, BorderLayout.NORTH);
+		panelAll.add(panelCenter, BorderLayout.CENTER);
 
+		add(panelAll);
+		setUndecorated(true);
 		setVisible(true);
 	}
 

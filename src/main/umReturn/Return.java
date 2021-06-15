@@ -71,7 +71,7 @@ public class Return extends JFrame implements ActionListener {
 		// 전체 패널(테두리를 주기 위함)
 		panelAll = new JPanel();
 		panelAll.setLayout(new BorderLayout());
-		panelAll.setBorder(new LineBorder(Color.GRAY, 2)); // 테두리
+		//panelAll.setBorder(new LineBorder(Color.GRAY, 2)); // 테두리
 
 		// 탑 패널 생성 (타이틀 & 검색)
 		addTop();
@@ -83,7 +83,8 @@ public class Return extends JFrame implements ActionListener {
 		panelAll.add(panelInfo, BorderLayout.CENTER);
 		add(panelAll);
 		
-		setUndecorated(true);
+		
+		//setUndecorated(true);
 		setVisible(true);
 	}
 
@@ -240,7 +241,7 @@ public class Return extends JFrame implements ActionListener {
 
 		String returnSelect = "select return.RETURNID, um.UMBRELLAID, st.STUDENTID, st.NAME, TO_CHAR(rental.rentaldate, \'YYYY-MM-DD\'), TO_CHAR(return.returndate, \'YYYY-MM-DD\') "
 				+ " from RETURN return, RENTAL rental, STUDENT st, UMBRELLA um where return.rentalid = rental.rentalid"
-				+ "  and rental.studentid = st.studentid and rental.umbrellaid = um.umbrellaid";
+				+ "  and rental.studentid = st.studentid and rental.umbrellaid = um.umbrellaid ORDER BY RETURN.RETURNID";
 
 		ResultSet rs = DB.getResultSet(returnSelect);
 		String[] rsArr = new String[6]; // 값 받아올 배열
