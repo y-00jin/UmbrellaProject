@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+
+import javax.swing.JOptionPane;
 
 public class DB {
 
@@ -50,7 +53,8 @@ public class DB {
       try {
          stmt.executeUpdate(sql);
       } catch (SQLException e) {
-         e.printStackTrace();
+//         e.printStackTrace();
+         JOptionPane.showMessageDialog(null, "이미 존재하는 코드입니다.");
       }
    }
    

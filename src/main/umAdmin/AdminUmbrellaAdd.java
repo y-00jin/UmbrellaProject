@@ -7,14 +7,18 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import main.DB;
 import main.style.BtnFont;
@@ -24,6 +28,7 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 	private JTextField tfUmbrellaId, tfUmbrellaState;
 	private JPanel pTop, pCenter, pBottom;
 	private Admin admin;
+	private JComponent panelContainer;
 
 	public AdminUmbrellaAdd(String title, int width, int height, Admin admin) {
 		this.admin = admin;
@@ -32,13 +37,20 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 		setLocationRelativeTo(this);
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		dispose();
-
+		
+		panelContainer = new JPanel();
+		
+		panelContainer.setLayout(new BorderLayout());
+		setUndecorated(true); // 패널 타이틀바 삭제
+		panelContainer.setBorder(new LineBorder(Color.GRAY, 2)); // 패널 테두리 설정
+		
 		setTop();
 		setCenter();
 		setBottom();
-
-		// 레이아웃
-		setLayout(new BorderLayout());
+		
+		add(panelContainer);
+		
+		this.setVisible(true);
 	}
 
 	private void setTop() {
@@ -53,16 +65,16 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 
 		pTop.add(lbl1);
 
-		add(pTop, BorderLayout.NORTH);
-
+		panelContainer.add(pTop, BorderLayout.NORTH);
+		
 		this.setVisible(true);
 	}
 
 	private void setCenter() {
 		pCenter = new JPanel();
 
-		pCenter.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-		pCenter.setLayout(new GridLayout(2, 2, 0, 40));
+		pCenter.setBorder(BorderFactory.createEmptyBorder(40, 10, 40, 10));
+		pCenter.setLayout(new GridLayout(1, 2, 0, 40));
 		pCenter.setBackground(Color.WHITE);
 		
 		JLabel lblId = new JLabel("우산코드 :");
@@ -72,14 +84,14 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 		tfUmbrellaId = new JTextField();
 		pCenter.add(tfUmbrellaId);
 
-		JLabel lblState = new JLabel("대여상태 :");
-		lblState.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
-		pCenter.add(lblState);
+//		JLabel lblState = new JLabel("대여상태 :");
+//		lblState.setFont(new Font("HY헤드라인M",Font.PLAIN, 15));
+//		pCenter.add(lblState);
 
-		tfUmbrellaState = new JTextField();
-		pCenter.add(tfUmbrellaState);
+//		tfUmbrellaState = new JTextField();
+//		pCenter.add(tfUmbrellaState);
 
-		add(pCenter, BorderLayout.CENTER);
+		panelContainer.add(pCenter, BorderLayout.CENTER);
 
 		this.setVisible(true);
 	}
@@ -102,7 +114,7 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 
 		pBottom.add(btnCancel);
 
-		add(pBottom, BorderLayout.SOUTH);
+		panelContainer.add(pBottom, BorderLayout.SOUTH);
 
 		this.setVisible(true);
 	}
@@ -118,10 +130,25 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 		if (obj == btnAdd) {
 
 			String umbrellaId = tfUmbrellaId.getText();
-			String umbrellaState = tfUmbrellaState.getText();
 
-			if (umbrellaState.equals("Y") | umbrellaState.equals("N")) {
-				String sql = "INSERT INTO UMBRELLA VALUES('" + umbrellaId + "', " + "'" + umbrellaState + "')";
+			String ifUmExist =  "SELECT UMBRELLAID "
+					+ "FROM DODAM.UMBRELLA "
+					+ "WHERE UMBRELLAID IN '" + umbrellaId +"'";
+			ResultSet rsUm = DB.getResultSet(ifUmExist);
+			
+			String umExist ="";
+			
+			try {
+				rsUm.next();
+				umExist = rsUm.getString(1);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+			if (!umExist.equals("") && umExist.matches("U.*")) {
+				String sql = "INSERT INTO UMBRELLA VALUES('" + umbrellaId + "', " + "'N')";
 				DB.executeQuery(sql); // DB 내용 추가
 				System.out.println(sql);
 
@@ -132,7 +159,7 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 				admin.umbrellaPanel();
 				admin.getPanelCenter().revalidate(); // 레이아웃 변화 재확인
 				admin.getPanelCenter().repaint(); // 레이아웃 다시 가져오기
-			} else {
+			} else if (!umExist.matches("U.*")){
 				JOptionPane.showMessageDialog(null, "입력 양식이 잘못되었습니다!");
 			}
 

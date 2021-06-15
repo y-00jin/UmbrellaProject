@@ -60,6 +60,7 @@ public class AdminModify extends JFrame implements ActionListener {
 		// 레이아웃
 		
 		add(panelContainer);
+		
 	}
 
 	private void setTop() {
