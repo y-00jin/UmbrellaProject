@@ -2,7 +2,7 @@ package main.umRental;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -18,7 +18,6 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,7 +30,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
@@ -50,9 +48,11 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 	private String rentalId, umbcode, code, max;
 	private int row = -1;
 	private Rental_ModifyBtn modify;
+	private JLabel lblLogo;
+	private Container panelTitle;
+	private JPanel pTitle;
 
 	public Rental(String title, int width, int height) {
-		setUndecorated(true); // 타이틀바 없애기
 		this.setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this);
@@ -62,7 +62,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		// 레이아웃
 		pBase = new JPanel();
 		pBase.setLayout(new BorderLayout());
-		pBase.setBorder(new LineBorder(Color.GRAY, 2)); // 패널 테두리
+		pBase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
 		add(pBase);
 
 		// setResizable(false); // 실행후 화면크기 변경 불가
@@ -76,32 +76,19 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 
 	private void setTop() {
 		// 상단 패널
-		pExit = new JPanel();
+		pTitle = new JPanel();
 		// pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		pExit.setLayout(new BorderLayout());
-		pExit.setBackground(new Color(0xDEE5F3));
-		pExit.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 10));
-		pBase.add(pExit, BorderLayout.NORTH);
-		// pBottom.add(pExit, BorderLayout.EAST);
+		pTitle.setLayout(new FlowLayout(FlowLayout.LEFT));
+		pTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));  // 패널 마진
+		pTitle.setBackground(Color.white); // 패널 배경색
 
-		// 대여 글자
-		JLabel lbl = new JLabel("대여");
-		Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 20);
-		lbl.setFont(fontBtn); // 폰트 스타일 적용
-		// lbl.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
-		pExit.add(lbl, BorderLayout.WEST);
-		// 닫기버튼
-		ImageIcon icon = new ImageIcon("libs/exit.png");
-		Image changeIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		ImageIcon btnIcon = new ImageIcon(changeIcon);
+		ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg"); 
+		Image changeIcon = icontitle.getImage().getScaledInstance(450, 50, Image.SCALE_SMOOTH);
+		ImageIcon lblIcontitle = new ImageIcon(changeIcon);
 
-		btnExit = new JButton(btnIcon);
-		btnExit.setAlignmentX(JButton.RIGHT); // 오른쪽 정렬
-		btnExit.setContentAreaFilled(false); // 버튼 내용영역 채우기 x
-		btnExit.setFocusPainted(false);
-		btnExit.setBorderPainted(false); // 버튼 테두리 없애기
-		btnExit.addActionListener(this);
-		pExit.add(btnExit, BorderLayout.EAST);
+		lblLogo = new JLabel(lblIcontitle);
+		pTitle.add(lblLogo);
+		pBase.add(pTitle, BorderLayout.NORTH);
 
 	}
 
@@ -185,7 +172,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		// 스크롤팬을 사용하지 않으면 컬럼명을 볼 수 없음
 		JScrollPane sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		sp.setPreferredSize(new Dimension(860, 480)); // 테이블 크기를 줄려면 JScroollPane의 크기를 변경
+		sp.setPreferredSize(new Dimension(860, 410)); // 테이블 크기를 줄려면 JScroollPane의 크기를 변경
 		pCenter.add(sp);
 
 		// 테이블 내용 가운데정렬

@@ -7,8 +7,10 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -28,7 +30,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	private JTextField tf_Umbcode, tf_Code;
 	private JPanel pBase, pTop, pCenter, pBottom;
 	private Rental rental;
-	private Vector<String> data;
+	private static Vector<String> data;
 
 	public Rental_ModifyBtn(String title, int width, int height) {
 		setUndecorated(true); // 타이틀바 없애기
@@ -113,6 +115,24 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		new Rental_ModifyBtn("수정", 300, 300);
+		
+		
+	}
+	public void executeSelectQuery(PreparedStatement pstmt, Vector rthValue, int nRenturn) throws Exception{
+		String sqlAgoStudentId = "SELECT STUDENTID " 
+				+ "FROM RENTAL";
+		ResultSet rsStudent = DB.getResultSet(sqlAgoStudentId); // 쿼리 넘기기
+		DB.executeQuery(sqlAgoStudentId); 
+		
+		try {
+			while (rsStudent.next()) {
+				for(int i = 1; i <= nRenturn; i++)
+				data.addElement(rsStudent.getString(i));
+				System.out.println(data);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	@Override
@@ -139,35 +159,19 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 			
 			// 학번 뽑아오기 - 대여 테이블에 입력한 학번이 있는지 
 			// -> 학번이 있고 대여상태가 N이면 미반납자, 학번이 있고 대여상태가 Y이면 예전이 대여하고 반납한 사람
-			String sqlAgoStudentId = "SELECT STUDENTID " 
-					+ "FROM RENTAL";
-			
-			ResultSet rsStudent = DB.getResultSet(sqlAgoStudentId); // 쿼리 넘기기
-
+//			String sqlAgoStudentId = "SELECT STUDENTID " 
+//					+ "FROM RENTAL";
+//			
+//			ResultSet rsStudent = DB.getResultSet(sqlAgoStudentId); // 쿼리 넘기기
+//
 //			try {
 //				while (rsStudent.next()) {
 //					data = new Vector<String>();
-//					rentalID = rs.getString(1); // DB의 첫번째를 rentalID를 넣음
-//					umbreallaID = rs.getString(2);
-//					studentID = rs.getString(3);
-//					studentName = rs.getString(4);
-//
-//					rentalDATE = rs.getString(5);
-//					returndueDATE = rs.getString(6);
-//
-//					// System.out.println(rentalID + "\t" + umbreallaID + "\t" + studentID + "\t" +
-//					// rentalDATE +"\t"+ returndueDATE);
-//					data.add(0, rentalID);
-//					data.add(1, umbreallaID);
-//					data.add(2, studentID);
-//					data.add(3, studentName);
-//					data.add(4, rentalDATE);
-//					data.add(5, returndueDATE);
-//
-//					model.addRow(data);
+//					data.add(sqlAgoStudentId);
+//					System.out.println(data);
 //				}
-//			} catch (SQLException e) {
-//				e.printStackTrace();
+//			} catch (SQLException e1) {
+//				e1.printStackTrace();
 //			}
 			
 			// 미반납자에 있는 학번, 현재 대여중인 학번
