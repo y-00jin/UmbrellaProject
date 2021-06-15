@@ -2,6 +2,7 @@ package main.umRental;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -17,6 +18,7 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,6 +31,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
@@ -37,7 +40,7 @@ import main.style.BtnFont;
 
 public class Rental extends JFrame implements ActionListener, MouseListener {
 	private JPanel pBase, pCenter, pBottom, pBtn, pExit;
-	private JButton btnF5, btnRental, btnModify, btnOk, btnReturn, btnExit;
+	private JButton btnF5, btnRental, btnDelete, btnOk, btnReturn, btnExit;
 	private Vector<String> vectorTitle;
 	private DefaultTableModel model;
 	private Vector<String> data;
@@ -193,6 +196,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
 			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
 		}
+
 	}
 
 	public JPanel getpCenter() {
@@ -220,10 +224,10 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		pBottom.add(btnRental);
 
 		// 삭제버튼
-		btnModify = new JButton("삭제");
-		BtnFont.BtnStyle(btnModify);
-		btnModify.addActionListener(this);
-		pBottom.add(btnModify);
+		btnDelete = new JButton("삭제");
+		BtnFont.BtnStyle(btnDelete);
+		btnDelete.addActionListener(this);
+		pBottom.add(btnDelete);
 
 		// 반납버튼
 		btnReturn = new JButton("반납");
@@ -244,15 +248,21 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			// ---------------------------------- 대 여 --------------------------------------
 			new Rentalform("대여", 300, 300, this);
 
-		} else if (obj == btnModify) {
-			// ---------------------------------- 수 정 --------------------------------------
+		} else if (obj == btnDelete) {
+			// ---------------------------------- 삭 제 --------------------------------------
 			if (row == -1) {
-				JOptionPane.showMessageDialog(null, "수정할 목록을 선택해주세요.", "경고 메시지", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "삭제할 목록을 선택해주세요.", "경고 메시지", JOptionPane.WARNING_MESSAGE);
 			} else {
-				modify = new Rental_ModifyBtn("수정", 300, 300, this);
-				// 수정 텍스트박스에 입력한 값들 넣어주기
-				modify.getTf_Umbcode().setText(umbcode);
-				modify.getTf_Code().setText(code);
+				int result = JOptionPane.showConfirmDialog(this, "정말 삭제하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
+
+				if (result == JOptionPane.YES_OPTION) {
+					String sqlDelete = "DELETE FROM DODAM.RENTAL " + "WHERE RENTALID='" + rentalId + "'";
+					ResultSet rs = DB.getResultSet(sqlDelete); // 쿼리 넘기기
+					DB.executeQuery(sqlDelete); // DB 내용 수정
+
+					rentalTable(); // 새로고침
+				}
 			}
 
 		} else if (obj == btnReturn) {
@@ -272,8 +282,8 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 				}
 
 				// 선택한 행의 정보를 반납테이블에 현재날짜를 반납아이디로 추가
-				String sqlReturn = "INSERT INTO RETURN (RETURNID, RENTALID, RETURNDATE) " 
-								+ "VALUES('" + max + "', '"	+ rentalId + "', TO_DATE( SYSDATE, 'YYYY-MM-DD'))";
+				String sqlReturn = "INSERT INTO RETURN (RETURNID, RENTALID, RETURNDATE) " + "VALUES('" + max + "', '"
+						+ rentalId + "', TO_DATE( SYSDATE, 'YYYY-MM-DD'))";
 				DB.executeQuery(sqlReturn); // DB에 sqlReturn 추가
 
 				// 반납된 대여아이디의 반납 상태를 Y로 바꿔줌 -> 대여테이블에서 보여지지 않음
@@ -285,7 +295,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 				String sqlUmbStateModify = "UPDATE UMBRELLA " + "SET STATE='Y'" + "WHERE UMBRELLAID='" + umbcode + "'";
 				ResultSet rsUmbStateModify = DB.getResultSet(sqlUmbStateModify); // 쿼리 넘기기
 				DB.executeQuery(sqlUmbStateModify); // DB 내용 수정
-				
+
 				rentalTable(); // 테이블 새로고침
 
 				// 반납한 사람의 이름 알아오기

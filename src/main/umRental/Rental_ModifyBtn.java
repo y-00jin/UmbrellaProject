@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,9 +28,9 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	private JTextField tf_Umbcode, tf_Code;
 	private JPanel pBase, pTop, pCenter, pBottom;
 	private Rental rental;
+	private Vector<String> data;
 
-	public Rental_ModifyBtn(String title, int width, int height, Rental rental) {
-		this.rental = rental;
+	public Rental_ModifyBtn(String title, int width, int height) {
 		setUndecorated(true); // 타이틀바 없애기
 		this.setTitle(title);
 		setSize(width, height);
@@ -111,14 +112,14 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		//new Rental_ModifyBtn("수정", 300, 300);
+		new Rental_ModifyBtn("수정", 300, 300);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		if (obj == btn_ok) {
-			String code = tf_Code.getText();
+			String studentCode = tf_Code.getText();
 			String umcode = tf_Umbcode.getText();
 			String getId = rental.getRentalId();
 			
@@ -139,19 +140,35 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 			// 학번 뽑아오기 - 대여 테이블에 입력한 학번이 있는지 
 			// -> 학번이 있고 대여상태가 N이면 미반납자, 학번이 있고 대여상태가 Y이면 예전이 대여하고 반납한 사람
 			String sqlAgoStudentId = "SELECT STUDENTID " 
-					+ "FROM RENTAL "
-					+ "WHERE STUDENTID LIKE '" + code + "'";
+					+ "FROM RENTAL";
 			
-			String agoStudentId = "";
-			ResultSet rsSI = DB.getResultSet(sqlAgoStudentId); //쿼리 넘기기
-			
-			try {
-				rsSI.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-				agoStudentId = rsSI.getString(1);
-				System.out.println(agoStudentId);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+			ResultSet rsStudent = DB.getResultSet(sqlAgoStudentId); // 쿼리 넘기기
+
+//			try {
+//				while (rsStudent.next()) {
+//					data = new Vector<String>();
+//					rentalID = rs.getString(1); // DB의 첫번째를 rentalID를 넣음
+//					umbreallaID = rs.getString(2);
+//					studentID = rs.getString(3);
+//					studentName = rs.getString(4);
+//
+//					rentalDATE = rs.getString(5);
+//					returndueDATE = rs.getString(6);
+//
+//					// System.out.println(rentalID + "\t" + umbreallaID + "\t" + studentID + "\t" +
+//					// rentalDATE +"\t"+ returndueDATE);
+//					data.add(0, rentalID);
+//					data.add(1, umbreallaID);
+//					data.add(2, studentID);
+//					data.add(3, studentName);
+//					data.add(4, rentalDATE);
+//					data.add(5, returndueDATE);
+//
+//					model.addRow(data);
+//				}
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
 			
 			// 미반납자에 있는 학번, 현재 대여중인 학번
 			// 대여를 하면 반납 상태가 N, 반납을 하면 Y
@@ -166,9 +183,9 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 //			} else 
 				if (agoUmbState.equals("Y")){ // 이미 대여한 우산일 경우
 				JOptionPane.showMessageDialog( // 메시지창 출력
-						this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+						this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
 			} else {
-				String sql = "UPDATE RENTAL SET UMBRELLAID = '" + umcode + "'," + "STUDENTID = '" + code + "' WHERE RENTALID = '" + getId + "'";
+				String sql = "UPDATE RENTAL SET UMBRELLAID = '" + umcode + "'," + "STUDENTID = '" + studentCode + "' WHERE RENTALID = '" + getId + "'";
 				ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
 				DB.executeQuery(sql); // DB 내용 수정
 
