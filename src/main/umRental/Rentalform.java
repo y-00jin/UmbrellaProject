@@ -27,11 +27,10 @@ public class Rentalform extends JFrame implements ActionListener {
 	private JTextField tf_Umbcode, tf_Code;
 	private JPanel pBase, pTop, pCenter, pBottom;
 	private String max;
-	private static String sysdate;
-	private static String sysduedate;
-	private static String sqlsysduedate;
-
-	public Rentalform(String title, int width, int height) {
+	private Rental rental;
+	
+	public Rentalform(String title, int width, int height, Rental rental) {
+		this.rental = rental;
 		setUndecorated(true); // 타이틀바 없애기
 		this.setTitle(title);
 		setSize(width, height);
@@ -108,7 +107,7 @@ public class Rentalform extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		DB.init();
-		new Rentalform("대여", 300, 300);
+		//new Rentalform("대여", 300, 300);
 	}
 
 	@Override
@@ -132,7 +131,7 @@ public class Rentalform extends JFrame implements ActionListener {
 		
 		Object obj = e.getSource();
 
-		if (obj == btn_ok) {
+		if (obj == btn_ok || obj == tf_Code) {
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
 				// 모든 항목 입력시 확인 버튼 클릭하면 저장되게
 				if (tf_Code.getText().equals("1") /* 사실 1은 아니고 만약 중복된다면 */) {
@@ -140,14 +139,23 @@ public class Rentalform extends JFrame implements ActionListener {
 							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 
 				} else {
-
-					String sql = "INSERT INTO RENTAL VALUES('" + max +"', '" + umbCode + "', '" + code + "', TO_DATE( SYSDATE, 'YYYY-MM-DD'), TO_DATE( SYSDATE + 14, 'YYYY-MM-DD'), 'N')";
-
+					// 대여테이블에 입력한 내용 추가
+					String sql = "INSERT INTO RENTAL VALUES('" + max +"', '" + umbCode + "', '" + code + "', TO_DATE(SYSDATE), TO_DATE(SYSDATE + 14), 'N')";
 					DB.executeQuery(sql); // DB에 sql 추가
 					System.out.println(sql);
-					JOptionPane.showMessageDialog( // 메시지창 출력
+
+					// 대여한 우산 상태 N으로 변경
+					String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbCode + "'";
+					ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
+					DB.executeQuery(sqlStateModify); // DB 내용 수정
+					
+					// 메시지창 출력
+					JOptionPane.showMessageDialog( 
 							this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+					
 					dispose();
+					
+					rental.rentalTable(); // 새로고침
 				}
 			}
 		} else if (obj == btn_cancel) {

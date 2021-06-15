@@ -46,20 +46,6 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 		setCenter();
 		setBottom();
 		
-//		String sqlAgoStudentId = "SELECT STUDENTID " 
-//				+ "FROM DODAM.RENTAL "
-//				+ "WHERE STUDENTID LIKE '202045038'";
-//		String agoStudentId = "";
-//		ResultSet rsSI = DB.getResultSet(sqlAgoStudentId); //쿼리 넘기기
-//		
-//		try {
-//			rsSI.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-//			agoStudentId = rsSI.getString(1);
-//			System.out.println(agoStudentId);
-//		} catch (SQLException e1) {
-//			e1.printStackTrace();
-//		}
-		
 		// 레이아웃
 		setLayout(new BorderLayout());
 	}
@@ -151,10 +137,11 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 			}
 			
 			// 학번 뽑아오기 - 대여 테이블에 입력한 학번이 있는지 
-			//-> 학번이 있고 대여상태가 N이면 미반납자, 학번이 있고 대여상태가 Y이면 예전이 대여하고 반납한 사람
+			// -> 학번이 있고 대여상태가 N이면 미반납자, 학번이 있고 대여상태가 Y이면 예전이 대여하고 반납한 사람
 			String sqlAgoStudentId = "SELECT STUDENTID " 
-					+ "FROM DODAM.RENTAL "
+					+ "FROM RENTAL "
 					+ "WHERE STUDENTID LIKE '" + code + "'";
+			
 			String agoStudentId = "";
 			ResultSet rsSI = DB.getResultSet(sqlAgoStudentId); //쿼리 넘기기
 			
@@ -188,12 +175,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 				dispose(); //현재 수정창 끄기
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
-				
-				// 새로고침
-				rental.getpCenter().removeAll(); // 패널 지우기
-				rental.setTable(); // 테이블 호출
-				rental.getpCenter().revalidate(); // 레이아웃 변화 재확인
-				rental.getpCenter().repaint(); // 레이아웃 다시 가져오기
+				rental.rentalTable(); // 새로고침
 			}
 
 		} else if (obj == btn_cancel) {
