@@ -136,6 +136,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		// 대여의 우산아이디와 우산의 우산아이디 && 학생의 학생아이디와 대여의 학생아이디가 같을때
 		// 대여아이디로 정렬
 
+		System.out.println(sql);
 		ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
 
 		try {
