@@ -137,7 +137,6 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		// 대여의 우산아이디와 우산의 우산아이디 && 학생의 학생아이디와 대여의 학생아이디가 같을때
 		// 대여아이디로 정렬
 
-		System.out.println(sql);
 		ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
 
 		try {
@@ -259,33 +258,48 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 
 		} else if (obj == btnReturn) { 
 			//----------------------------------   반        납   --------------------------------------
+			
 			// 대여 아이디 자동으로 가장 큰 값 넣어주기 위해서 대여 아이디의 최대값을 구한 후 +1 증가
 			String sqlMax = "SELECT MAX(RETURNID) +1  FROM RETURN ";
 			ResultSet rsMax = DB.getResultSet(sqlMax); // 쿼리 넘기기
 			try {
 				rsMax.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
 				max = rsMax.getString(1);
-				System.out.println(max);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
 			
+			// 선택한 행의 정보를 반납테이블에 현재날짜를 반납아이디로 추가
 			String sqlReturn = "INSERT INTO RETURN (RETURNID, RENTALID, RETURNDATE) "
 								+ "VALUES('" + max + "', '" + rentalId + "', TO_DATE( SYSDATE, 'YYYY-MM-DD'))";
 			DB.executeQuery(sqlReturn); // DB에 sqlReturn 추가
 			
-			System.out.println(sqlReturn);
-			
+			// 반납된 대여아이디의 반납 상태를 Y로 바꿔줌 -> 대여테이블에서 보여지지 않음
 			String sqlStateModify = "UPDATE RENTAL " + "SET RETURNSTATE='Y'" + "WHERE RENTALID='" + rentalId +"'";
 			ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
 			DB.executeQuery(sqlStateModify); // DB 내용 수정
 			
-			rentalTable();
+			rentalTable(); //테이블 새로고침
 			
-			JOptionPane.showMessageDialog( // 메시지창 출력
-					this, "000님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+			// 반납한 사람의 이름 알아오기
+			String sqlName = "SELECT NAME " + "FROM STUDENT " +	"WHERE STUDENTID LIKE '" + code +"'";
+			String findName = "";
+			ResultSet rsFindName = DB.getResultSet(sqlName); //쿼리 넘기기
+			try {
+				rsFindName.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+				findName = rsFindName.getString(1);
+				
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			
+			// 메시지창 출력
+			JOptionPane.showMessageDialog( 
+					this, findName + "님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+			
 		} else if (obj == btnExit) {
 			dispose();
+			
 		} else if (obj == btnF5) {
 			rentalTable();
 		}
@@ -310,7 +324,6 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			rentalId = (String) data.getValueAt(row, 0);
 			umbcode = (String) data.getValueAt(row, 1);
 			code = (String) data.getValueAt(row, 2);
-			System.out.println(rentalId +", "+ umbcode + ", " + code);
 		}
 	}
 
@@ -320,25 +333,17 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 }
