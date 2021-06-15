@@ -59,6 +59,7 @@ public class Stats extends JFrame implements ActionListener {
 	private String rentalCount;
 	private SimpleDateFormat dateFormatter;
 	private String returnCount;
+	private String noReturnCount;
 
 	public Stats(String title, int width, int height) {
 		setTitle(title);
@@ -88,11 +89,11 @@ public class Stats extends JFrame implements ActionListener {
 
 		// 분석 타이틀
 		addTitle();
-		
+
 		// 닫기 버튼
 		addClose();
-		
-		//검색 패널
+
+		// 검색 패널
 		addSearch();
 
 		panelTitle.add(panelStats, BorderLayout.WEST);
@@ -121,7 +122,7 @@ public class Stats extends JFrame implements ActionListener {
 		lblTitle.setBorder(BorderFactory.createEmptyBorder(8, 10, 0, 0));
 		lblTitle.setFont(lblTitleFont);
 		panelStats.add(lblTitle);
-		
+
 	}
 
 	// 닫기 버튼
@@ -141,7 +142,7 @@ public class Stats extends JFrame implements ActionListener {
 		btnClose.addActionListener(this);
 
 		panelClose.add(btnClose);
-		
+
 	}
 
 	// 검색
@@ -231,51 +232,65 @@ public class Stats extends JFrame implements ActionListener {
 		Object obj = e.getSource();
 		if (obj == btnClose) {
 			dispose();
-		}  else if (obj == datePanel) {
-			
+		} else if (obj == datePanel) {
+
 			// 특정 월에 대여한 사람 수 얻어오기
 			RentalSelect();
-			lblRenResult.setText(rentalCount);	// 총 대여한 사람 수 
-			
+			lblRenResult.setText(rentalCount); // 총 대여한 사람 수
+
 			ReturnSelect();
 			lblRetResult.setText(returnCount);
-			lblNoRetResult.setText("20");
-			
-		}
 
+			NoReturnSelect();
+
+			lblNoRetResult.setText(noReturnCount);
+		}
 	}
 
 	private void RentalSelect() {
 		String datePattern = "MM"; // 데이터 포맷 형식 지정
 		dateFormatter = new SimpleDateFormat(datePattern); // 데이터 포맷 형식 지정한 객체 생성
-		
-		SelectedDate = (Date) datePicker.getModel().getValue();	//클릭된 날짜 값 가져오기
-		
+
+		SelectedDate = (Date) datePicker.getModel().getValue(); // 클릭된 날짜 값 가져오기
+
 		// 대여한 사람 수 얻어오는 select 문
 		String rentalSelect = "SELECT COUNT(*) FROM RENTAL rental WHERE rental.RENTALID IN (SELECT r.RENTALID "
 				+ "FROM RENTAL r WHERE TO_CHAR(r.RENTALDATE , 'mm') = '" + dateFormatter.format(SelectedDate) + "')";
-		
-		ResultSet rs = DB.getResultSet(rentalSelect);	//select하기
+
+		ResultSet rs = DB.getResultSet(rentalSelect); // select하기
 		try {
-			while(rs.next()) {
-				rentalCount= rs.getString(1);	//총 대여한 사람 수 얻어오기
+			while (rs.next()) {
+				rentalCount = rs.getString(1); // 총 대여한 사람 수 얻어오기
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		
 	}
-	
+
 	private void ReturnSelect() {
 		String returnSelect = "SELECT COUNT(*) FROM \"RETURN\" r2 WHERE r2.RETURNID IN (SELECT r.RETURNID "
-				+ "FROM \"RETURN\" r WHERE TO_CHAR(r.RETURNDATE , 'mm') = '" + dateFormatter.format(SelectedDate) + "')";
-		ResultSet rs = DB.getResultSet(returnSelect);	//select하기
+				+ "FROM \"RETURN\" r WHERE TO_CHAR(r.RETURNDATE , 'mm') = '" + dateFormatter.format(SelectedDate)
+				+ "')";
+		ResultSet rs = DB.getResultSet(returnSelect); // select하기
 		try {
-			while(rs.next()) {
-				returnCount= rs.getString(1);	//총 대여한 사람 수 얻어오기
+			while (rs.next()) {
+				returnCount = rs.getString(1); // 총 대여한 사람 수 얻어오기
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+		}
+	}
+
+	private void NoReturnSelect() {
+		String NoReturnSelect = "SELECT COUNT(*) FROM BLOCKVIEW b WHERE b.STUDENTID IN (SELECT b.STUDENTID FROM BLOCKVIEW b2 "
+				+ "WHERE TO_CHAR(b2.RENTALDATE , 'mm') = '" + dateFormatter.format(SelectedDate) + "')";
+		ResultSet rs = DB.getResultSet(NoReturnSelect);
+		try {
+			while (rs.next()) {
+				noReturnCount = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
