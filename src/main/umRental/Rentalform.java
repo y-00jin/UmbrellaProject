@@ -28,7 +28,7 @@ public class Rentalform extends JFrame implements ActionListener {
 	private JPanel pBase, pTop, pCenter, pBottom;
 	private String max;
 	private Rental rental;
-	
+
 	public Rentalform(String title, int width, int height, Rental rental) {
 		this.rental = rental;
 		setUndecorated(true); // 타이틀바 없애기
@@ -84,6 +84,7 @@ public class Rentalform extends JFrame implements ActionListener {
 		pCenter.add(lbl_UmbCode);
 
 		tf_Umbcode = new JTextField();
+		tf_Umbcode.addActionListener(this);
 		pCenter.add(tf_Umbcode);
 	}
 
@@ -107,7 +108,7 @@ public class Rentalform extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		DB.init();
-		//new Rentalform("대여", 300, 300);
+		// new Rentalform("대여", 300, 300);
 	}
 
 	@Override
@@ -117,30 +118,53 @@ public class Rentalform extends JFrame implements ActionListener {
 
 		String umbCode = new String();
 		umbCode = tf_Umbcode.getText();
-		
+
 		// 대여 아이디 자동으로 가장 큰 값 넣어주기 위해서 대여 아이디의 최대값을 구한 후 +1 증가
 		String sqlMax = "SELECT MAX(RENTALID) +1  FROM RENTAL r ";
 		ResultSet rsMax = DB.getResultSet(sqlMax); // 쿼리 넘기기
 		try {
-			rsMax.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+			rsMax.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
 			max = rsMax.getString(1);
 			System.out.println(max);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		Object obj = e.getSource();
 
-		if (obj == btn_ok || obj == tf_Code) {
+		if (obj == btn_ok || obj == tf_Umbcode) {
+			String studentcode = tf_Code.getText();
+			String umcode = tf_Umbcode.getText();
+			String getId = rental.getRentalId();
+
+			// 우산 상태 뽑아오기
+			String sqlAgoUmbId = "SELECT STATE " + "FROM DODAM.UMBRELLA " + "WHERE UMBRELLAID LIKE '" + umcode + "'";
+			String agoUmbState = "";
+			ResultSet rsUm = DB.getResultSet(sqlAgoUmbId); // 쿼리 넘기기
+
+			try {
+				rsUm.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+				agoUmbState = rsUm.getString(1);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
 				// 모든 항목 입력시 확인 버튼 클릭하면 저장되게
 				if (tf_Code.getText().equals("1") /* 사실 1은 아니고 만약 중복된다면 */) {
 					JOptionPane.showMessageDialog( // 메시지창 출력
-							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.WARNING_MESSAGE);
 
+				} else if (agoUmbState.equals("Y")) { // 이미 대여한 우산일 경우
+					JOptionPane.showMessageDialog( // 메시지창 출력
+							this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
+					tf_Umbcode.setText("");
+					tf_Umbcode.requestFocus(); // 우산코드 바로 다시 칠 수 있게 포커스 이동해줌
+					
 				} else {
 					// 대여테이블에 입력한 내용 추가
-					String sql = "INSERT INTO RENTAL VALUES('" + max +"', '" + umbCode + "', '" + code + "', TO_DATE(SYSDATE), TO_DATE(SYSDATE + 14), 'N')";
+					String sql = "INSERT INTO RENTAL VALUES('" + max + "', '" + umbCode + "', '" + code
+							+ "', TO_DATE(SYSDATE), TO_DATE(SYSDATE + 14), 'N')";
 					DB.executeQuery(sql); // DB에 sql 추가
 					System.out.println(sql);
 
@@ -148,15 +172,17 @@ public class Rentalform extends JFrame implements ActionListener {
 					String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbCode + "'";
 					ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
 					DB.executeQuery(sqlStateModify); // DB 내용 수정
-					
+
 					// 메시지창 출력
-					JOptionPane.showMessageDialog( 
-							this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
-					
+					JOptionPane.showMessageDialog(this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+
 					dispose();
-					
+
 					rental.rentalTable(); // 새로고침
 				}
+			} else {
+				JOptionPane.showMessageDialog( // 메시지창 출력
+						this, "학번과 우산코드 모두 입력해주세요.", "메시지", JOptionPane.WARNING_MESSAGE);
 			}
 		} else if (obj == btn_cancel) {
 			dispose(); // 취소 버튼 누르면 화면 종료
