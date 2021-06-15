@@ -45,7 +45,21 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 		setTop();
 		setCenter();
 		setBottom();
-
+		
+//		String sqlAgoStudentId = "SELECT STUDENTID " 
+//				+ "FROM DODAM.RENTAL "
+//				+ "WHERE STUDENTID LIKE '202045038'";
+//		String agoStudentId = "";
+//		ResultSet rsSI = DB.getResultSet(sqlAgoStudentId); //쿼리 넘기기
+//		
+//		try {
+//			rsSI.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+//			agoStudentId = rsSI.getString(1);
+//			System.out.println(agoStudentId);
+//		} catch (SQLException e1) {
+//			e1.printStackTrace();
+//		}
+		
 		// 레이아웃
 		setLayout(new BorderLayout());
 	}
@@ -136,7 +150,8 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 			
-			// 학번 뽑아오기 - 대여 테이블에 입력한 학번이 있으면 대여상태이므로 안됨
+			// 학번 뽑아오기 - 대여 테이블에 입력한 학번이 있는지 
+			//-> 학번이 있고 대여상태가 N이면 미반납자, 학번이 있고 대여상태가 Y이면 예전이 대여하고 반납한 사람
 			String sqlAgoStudentId = "SELECT STUDENTID " 
 					+ "FROM DODAM.RENTAL "
 					+ "WHERE STUDENTID LIKE '" + code + "'";
@@ -144,8 +159,9 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 			ResultSet rsSI = DB.getResultSet(sqlAgoStudentId); //쿼리 넘기기
 			
 			try {
-				rsUm.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-				agoUmbState = rsUm.getString(1);
+				rsSI.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+				agoStudentId = rsSI.getString(1);
+				System.out.println(agoStudentId);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
@@ -157,10 +173,11 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 			// 중복 처리할때 반납상태가 Y이거나 대여테이블에 학번이 없을경우로 하면 될듯
 			// while문으로 돌려야 하나,,,
 			
-			if (tf_Code.getText() == "1"/* 사실 1은 아니고 만약 중복된다면 */) {
-				JOptionPane.showMessageDialog( // 메시지창 출력
-						this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
-			} else if (agoUmbState.equals("Y")){ // 이미 대여한 우산일 경우
+//			if (!agoStudentId.equals(null))/* 사실 1은 아니고 만약 중복된다면 */) {
+//				JOptionPane.showMessageDialog( // 메시지창 출력
+//						this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+//			} else 
+				if (agoUmbState.equals("Y")){ // 이미 대여한 우산일 경우
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 			} else {

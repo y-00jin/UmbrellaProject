@@ -47,6 +47,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 	private String rentalId, umbcode, code;
 	private int row = -1;
 	private Rental_ModifyBtn modify;
+	private String max;
 
 	public Rental(String title, int width, int height) {
 		setUndecorated(true); // 타이트바 없애기
@@ -256,7 +257,31 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 				modify.getTf_Code().setText(code);
 			}
 
-		} else if (obj == btnReturn) {
+		} else if (obj == btnReturn) { 
+			//----------------------------------   반        납   --------------------------------------
+			// 대여 아이디 자동으로 가장 큰 값 넣어주기 위해서 대여 아이디의 최대값을 구한 후 +1 증가
+			String sqlMax = "SELECT MAX(RETURNID) +1  FROM RETURN ";
+			ResultSet rsMax = DB.getResultSet(sqlMax); // 쿼리 넘기기
+			try {
+				rsMax.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+				max = rsMax.getString(1);
+				System.out.println(max);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			
+			String sqlReturn = "INSERT INTO RETURN (RETURNID, RENTALID, RETURNDATE) "
+								+ "VALUES('" + max + "', '" + rentalId + "', TO_DATE( SYSDATE, 'YYYY-MM-DD'))";
+			DB.executeQuery(sqlReturn); // DB에 sqlReturn 추가
+			
+			System.out.println(sqlReturn);
+			
+			String sqlStateModify = "UPDATE RENTAL " + "SET RETURNSTATE='Y'" + "WHERE RENTALID='" + rentalId +"'";
+			ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
+			DB.executeQuery(sqlStateModify); // DB 내용 수정
+			
+			rentalTable();
+			
 			JOptionPane.showMessageDialog( // 메시지창 출력
 					this, "000님의 우산이 반납처리되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 		} else if (obj == btnExit) {
@@ -285,6 +310,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			rentalId = (String) data.getValueAt(row, 0);
 			umbcode = (String) data.getValueAt(row, 1);
 			code = (String) data.getValueAt(row, 2);
+			System.out.println(rentalId +", "+ umbcode + ", " + code);
 		}
 	}
 
