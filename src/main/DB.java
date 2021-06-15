@@ -53,8 +53,8 @@ public class DB {
       try {
          stmt.executeUpdate(sql);
       } catch (SQLException e) {
-//         e.printStackTrace();
-         JOptionPane.showMessageDialog(null, "이미 존재하는 코드입니다.");
+         e.printStackTrace();
+//         JOptionPane.showMessageDialog(null, "이미 존재하는 코드입니다.");
       }
    }
    
