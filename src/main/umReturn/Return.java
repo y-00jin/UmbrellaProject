@@ -60,6 +60,7 @@ public class Return extends JFrame implements ActionListener {
 	private JLabel lblTitle;
 	private JPanel pTitleReturn;
 	private JPanel pTitleClose;
+	private JLabel lblLogo;
 
 	public Return(String title, int width, int height) {
 		setTitle(title);
@@ -109,18 +110,25 @@ public class Return extends JFrame implements ActionListener {
 	private void addTitle() {
 		
 		panelTitle = new JPanel();
-		panelTitle.setLayout(new BorderLayout());
-		panelTitle.setBackground(new Color(0xDEE5F3));	//배경색
+		panelTitle.setLayout(new FlowLayout(FlowLayout.LEFT));
+		panelTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
+		panelTitle.setBackground(Color.white);	//배경색
 		
+		ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg");
+		Image changeIcon = icontitle.getImage().getScaledInstance(450, 50, Image.SCALE_SMOOTH);
+		ImageIcon btnIcontitle = new ImageIcon(changeIcon);
+		
+		lblLogo = new JLabel(btnIcontitle);
+		panelTitle.add(lblLogo);
 		// 반납 타이틀 생성
-		addTitleReturn();
+		//addTitleReturn();
 		
 		// 닫기 버튼
-		addTitleClose();
+		//addTitleClose();
 		
 		
-		panelTitle.add(pTitleReturn, BorderLayout.WEST);
-		panelTitle.add(pTitleClose, BorderLayout.EAST);
+		//panelTitle.add(pTitleReturn, BorderLayout.WEST);
+		//panelTitle.add(pTitleClose, BorderLayout.EAST);
 		
 	}
 
