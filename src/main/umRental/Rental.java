@@ -33,11 +33,10 @@ import javax.swing.table.TableModel;
 
 import main.DB;
 import main.style.BtnFont;
-import main.style.hint;
 
 public class Rental extends JFrame implements ActionListener, MouseListener {
    private JPanel pBase, pCenter, pBottom, pTitle;
-   private JButton btnF5, btnRental, btnDelete, btnReturn, btnExit, btnSearch;
+   private JButton btnF5, btnRental, btnDelete, btnReturn, btnExit;
    private Vector<String> vectorTitle;
    private DefaultTableModel model;
    private Vector<String> data;
@@ -46,9 +45,6 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
    private String rentalId, umbcode, code, max, count;
    private int row = -1;
    private JLabel lblLogo;
-   private hint tfSearch;
-   private Vector<String> con;
-   private String serRentalID, serUmbreallaID, serStudentID, serStudentName, serRentalDATE, serReturndueDATE;
 
    public Rental(String title, int width, int height) {
       this.setTitle(title);
@@ -63,7 +59,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
       pBase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
       add(pBase);
 
-      // setResizable(false); // 실행후 화면크기 변경 불가
+      setResizable(false); // 실행후 화면크기 변경 불가
 
       setTop();
       setTable();
@@ -118,7 +114,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
       String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , TO_CHAR(r.RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(r.RETURNDUEDATE, 'YYYY-MM-DD')"
             + "FROM RENTAL r, UMBRELLA um, STUDENT st "
             + "WHERE r.UMBRELLAID = um.UMBRELLAID AND st.STUDENTID = r.STUDENTID AND r.RETURNSTATE LIKE 'N'"
-            + "ORDER BY r.RENTALDATE";
+            + "ORDER BY r.RENTALID DESC";
       // 대여의 대여아이디, 우산의 우산 아이디, 학생의 학생아이디, 학생의 이름, 대여의 대여일, 대여의 반납예정일, 반납상태를 출력
       // 대여의 우산아이디와 우산의 우산아이디 && 학생의 학생아이디와 대여의 학생아이디가 같을때
       // 대여아이디로 정렬
@@ -195,20 +191,6 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
       pBottom.setBackground(Color.WHITE); // 배경색
       pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0)); // 패널 마진
       pBase.add(pBottom, BorderLayout.SOUTH); // 남쪽 정렬
-
-      // 검색 텍스트박스
-      tfSearch = new hint("학번을 입력하세요"); // hint
-      tfSearch.addActionListener(this);
-      pBottom.add(tfSearch);
-
-      // 검색 버튼
-      btnSearch = new JButton("검색");
-      BtnFont.BtnStyle(btnSearch);
-      btnSearch.addActionListener(this);
-      pBottom.add(btnSearch);
-
-      JLabel lblSpace = new JLabel("                                                                                                                                 ");
-      pBottom.add(lblSpace);
 
       // 새로고침 버튼
       btnF5 = new JButton("새로고침");
@@ -340,95 +322,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 
       } else if (obj == btnF5) {
          rentalTable();
-      } else if (obj == btnSearch | obj == tfSearch) {
-         // ---------------------------------- 검 색 --------------------------------------
-         String findStudentId = tfSearch.getText();
-         System.out.println(findStudentId);
-
-         String sqlfindStudentId = "SELECT RENTALID, UMBRELLAID, STUDENTID, TO_CHAR(RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURNDUEDATE, 'YYYY-MM-DD') "
-               + "FROM RENTAL " + "WHERE RETURNSTATE LIKE 'N' AND STUDENTID LIKE '" + findStudentId + "'";
-
-         ResultSet rsSt = DB.getResultSet(sqlfindStudentId);
-         String findSI = "";
-
-         try {
-            if (rsSt.next()) {
-               findSI = rsSt.getString(1); // 대여 아이디
-               System.out.println("findSI : " + findSI);
-            }
-         } catch (SQLException e1) {
-            e1.printStackTrace();
-         }
-
-
-         if (findStudentId.equals(findSI)) {
-            getpCenter().removeAll(); // 해당 패널 지워줌
-            model.setNumRows(0); // 테이블 행 다 지워줌
-
-            String sql = "SELECT RENTALID, UMBRELLAID, STUDENTID, TO_CHAR(RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURNDUEDATE, 'YYYY-MM-DD') "
-                  + "FROM RENTAL " + "WHERE RETURNSTATE LIKE 'N' AND RENTALID LIKE '" + findSI + "'";
-            ResultSet rs = DB.getResultSet(sql);
-
-            try {
-               while (rs.next()) {
-                  data = new Vector<String>();
-                  rentalID = rs.getString(1); // DB의 첫번째를 rentalID를 넣음
-                  umbreallaID = rs.getString(2);
-                  studentID = rs.getString(3);
-                  studentName = rs.getString(4);
-
-                  rentalDATE = rs.getString(5);
-                  returndueDATE = rs.getString(6);
-
-                  data.add(0, serRentalID);
-                  data.add(1, serUmbreallaID);
-                  data.add(2, serStudentID);
-                  data.add(3, serStudentName);
-                  data.add(4, serRentalDATE);
-                  data.add(5, serReturndueDATE);
-                  model.addRow(data); // 테이블에 내용 추가
-               }
-            } catch (SQLException e2) {
-               System.out.println("접속 오류 / SQL 오류");
-               e2.printStackTrace();
-            }
-
-            table = new JTable(model);
-            
-            table.getTableHeader().setReorderingAllowed(false); // 테이블 컬럼의 이동을 방지
-            // table.getTableHeader().setResizingAllowed(false); // 테이블 컬럼의 사이즈를 고정
-            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // 테이블 로우를 한개만 선택가능
-            table.setFillsViewportHeight(true); // 스크롤 팬 안에 테이블 꽉차게 표시 -> 이거 없으면 배경색 설정 안됨
-            table.setBackground(Color.white); // 테이블 배경색 지정
-
-            table.addMouseListener(this);
-            JTableHeader tableHeader = table.getTableHeader(); // 테이블 헤더 값 가져오기
-            tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블헤더 배경색 지정
-
-            // 스크롤팬을 사용하지 않으면 컬럼명을 볼 수 없음
-            JScrollPane sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                  JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            sp.setPreferredSize(new Dimension(860, 410)); // 테이블 크기를 줄려면 JScroollPane의 크기를 변경
-            pCenter.add(sp);
-
-            // 테이블 내용 가운데정렬
-            DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
-            tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-            TableColumnModel tcmSchedule = table.getColumnModel();
-
-            for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
-               tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
-            }
-
-            getpCenter().revalidate(); // 레이아웃 변화 재확인
-            getpCenter().repaint(); // 레이아웃 다시 가져오기
-            
-         } else if (findSI.equals("")) {
-            JOptionPane.showMessageDialog(null, "검색 결과가 존재하지 않습니다.", "검색 결과", JOptionPane.PLAIN_MESSAGE);
-
-            model.setNumRows(0);
-         }
-      }
+      } 
    }
 
    private void setReturn() {
