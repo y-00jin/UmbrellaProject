@@ -54,9 +54,9 @@ import main.style.hint;
 public class Admin extends JFrame implements ActionListener, MouseListener {
 
 	private JPanel panelContainer, panelTopBottom, panelTop, panelWest, panelEast, panelCenter, panelCenterWest,
-					panelCenterEast, pTop, pCenter, pBottom, panelTitle;
-	private String returnState, umbrellaID, umbrellaState, studentID, studentMajor, studentName, studentPhone,
-					id, umCode, department,studentId, name, phoneNumber, returnDueDate, major, phone, stName, result;
+			panelCenterEast, pTop, pCenter, pBottom, panelTitle;
+	private String returnState, umbrellaID, umbrellaState, studentID, studentMajor, studentName, studentPhone, id,
+			umCode, department, studentId, name, phoneNumber, returnDueDate, major, phone, stName, result;
 	private String[] strs = { "학생", "우산", "미반납자" };
 	private JComboBox<String> cbStr;
 	private DefaultTableModel model;
@@ -238,6 +238,8 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	}
 
 	public void umbrellaPanel() { // 우산테이블 생성
+		umCode = "";
+		
 		Vector<String> column = new Vector<String>();
 		column.addElement("우산코드");
 		column.addElement("대여상태");
@@ -527,13 +529,19 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
 		if (obj == btnDelect) {
 
-			String sql = "DELETE FROM UMBRELLA " + "WHERE UMBRELLAID='" + umCode + "'";
-			DB.executeQuery(sql); // DB 내용 삭제임
+			if (umCode.equals("")) {
+				JOptionPane.showMessageDialog(null, "삭제할 우산을 먼저 선택해주세요.", "우산 삭제", JOptionPane.WARNING_MESSAGE);
+			} else {
+				String sql = "DELETE FROM UMBRELLA " + "WHERE UMBRELLAID='" + umCode + "'";
+				DB.executeQuery(sql); // DB 내용 삭제임
 
-			panelCenter.removeAll();
-			umbrellaPanel();
-			panelCenter.revalidate(); // 레이아웃 변화 재확인
-			panelCenter.repaint(); // 레이아웃 다시 가져오기
+				panelCenter.removeAll();
+				umbrellaPanel();
+				panelCenter.revalidate(); // 레이아웃 변화 재확인
+				panelCenter.repaint(); // 레이아웃 다시 가져오기
+
+				umCode = "";
+			}
 
 		}
 
