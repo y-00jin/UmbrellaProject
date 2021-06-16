@@ -24,7 +24,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -56,7 +55,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
       // 레이아웃
       pBase = new JPanel(); // 전체 패널
       pBase.setLayout(new BorderLayout());
-      pBase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
+     // pBase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
       add(pBase);
 
       setResizable(false); // 실행후 화면크기 변경 불가
