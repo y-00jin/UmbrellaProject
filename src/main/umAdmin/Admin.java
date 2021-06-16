@@ -53,725 +53,730 @@ import main.style.hint;
 
 public class Admin extends JFrame implements ActionListener, MouseListener {
 
-	private JPanel panelContainer, panelTopBottom, panelTop, panelWest, panelEast, panelCenter, panelCenterWest,
-					panelCenterEast, pTop, pCenter, pBottom, panelTitle;
-	private String returnState, umbrellaID, umbrellaState, studentID, studentMajor, studentName, studentPhone,
-					id, umCode, department,studentId, name, phoneNumber, returnDueDate, major, phone, stName, result;
-	private String[] strs = { "학생", "우산", "미반납자" };
-	private JComboBox<String> cbStr;
-	private DefaultTableModel model;
-	private Vector<String> con;
-	private JTable studentTable, umbrellaTable, blockTable, table;
-	private JButton btnDelect, btnAdd, btnClose, btnSearch, btnOk, btnCancel, btnUmSearch, btnReset;
-	private ImageIcon btnIcon;
-	private JTextField tfSearch, tfMajor, tfName, tfPhone;
-	private JLabel lblLogo;
-	private JRadioButton rbY, rbN;
-	private AdminUmbrellaAdd umAdd;
+   private JPanel panelContainer, panelTopBottom, panelTop, panelWest, panelEast, panelCenter, panelCenterWest,
+               panelCenterEast, pTop, pCenter, pBottom, panelTitle;
+   private String returnState, umbrellaID, umbrellaState, studentID, studentMajor, studentName, studentPhone,
+               id, umCode, department,studentId, name, phoneNumber, returnDueDate, major, phone, stName, result;
+   private String[] strs = { "학생", "우산", "미반납자" };
+   private JComboBox<String> cbStr;
+   private DefaultTableModel model;
+   private Vector<String> con;
+   private JTable studentTable, umbrellaTable, blockTable, table;
+   private JButton btnDelect, btnAdd, btnClose, btnSearch, btnOk, btnCancel, btnUmSearch, btnReset;
+   private ImageIcon btnIcon;
+   private JTextField tfSearch, tfMajor, tfName, tfPhone;
+   private JLabel lblLogo;
+   private JRadioButton rbY, rbN;
+   private AdminUmbrellaAdd umAdd;
 
-	public String getId() {
-		return id;
-	}
+   public String getId() {
+      return id;
+   }
 
-	public JPanel getPanelCenter() {
-		return panelCenter;
-	}
+   public JPanel getPanelCenter() {
+      return panelCenter;
+   }
 
-	public Admin(String title, int width, int height) {
-		setTitle(title);
-		setSize(width, height);
-		setLocationRelativeTo(this);
-		dispose();
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+   public Admin(String title, int width, int height) {
+      setTitle(title);
+      setSize(width, height);
+      setLocationRelativeTo(this);
+      dispose();
+      // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		result = "";
-		result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
+      result = "";
+      result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
 
-		while (!result.equals("****")) {
-			result = JOptionPane.showInputDialog("비밀번호 오류!");
-		} // 관리자 확인 비밀번호 입력
+      while (!result.equals("****")) {
+         result = JOptionPane.showInputDialog("비밀번호 오류!");
+      } // 관리자 확인 비밀번호 입력
 
-		panelContainer = new JPanel();
-		panelContainer.setLayout(new BorderLayout());
+      panelContainer = new JPanel();
+      panelContainer.setLayout(new BorderLayout());
 
-		panelTop = new JPanel();
-		panelTop.setLayout(new BorderLayout());
-
-		panelTopBottom = new JPanel();
-
-		panelWest = new JPanel();
-		panelEast = new JPanel();
-
-		panelCenter = new JPanel();
-
-		panelTopBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
-		panelTopBottom.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 10)); // 마진
-
-		panelWest.setLayout(new FlowLayout(FlowLayout.LEFT));
-		panelWest.setBorder(BorderFactory.createEmptyBorder(8, 20, 0, 10)); // 마진
+      panelTop = new JPanel();
+      panelTop.setLayout(new BorderLayout());
+
+      panelTopBottom = new JPanel();
+
+      panelWest = new JPanel();
+      panelEast = new JPanel();
+
+      panelCenter = new JPanel();
+
+      panelTopBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
+      panelTopBottom.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 10)); // 마진
+
+      panelWest.setLayout(new FlowLayout(FlowLayout.LEFT));
+      panelWest.setBorder(BorderFactory.createEmptyBorder(8, 20, 0, 10)); // 마진
 
-		panelEast.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		panelEast.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 10)); // 마진
+      panelEast.setLayout(new FlowLayout(FlowLayout.RIGHT));
+      panelEast.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 10)); // 마진
 
-		panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
-		panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10)); // 마진
+      panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
+      panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10)); // 마진
 
-		panelTitle = new JPanel();
-		panelTitle.setLayout(new FlowLayout(FlowLayout.LEFT));
-		panelTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
+      panelTitle = new JPanel();
+      panelTitle.setLayout(new FlowLayout(FlowLayout.LEFT));
+      panelTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
 
-		panelTitle.setBackground(Color.white);
-		panelTopBottom.setBackground(Color.WHITE);
-		panelCenter.setBackground(Color.WHITE);// 배경색
+      panelTitle.setBackground(Color.white);
+      panelTopBottom.setBackground(Color.WHITE);
+      panelCenter.setBackground(Color.WHITE);// 배경색
 
-		ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg");
-		Image changeIcon = icontitle.getImage().getScaledInstance(450, 50, Image.SCALE_SMOOTH);
-		ImageIcon lblIcontitle = new ImageIcon(changeIcon);
+      ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg");
+      Image changeIcon = icontitle.getImage().getScaledInstance(450, 50, Image.SCALE_SMOOTH);
+      ImageIcon lblIcontitle = new ImageIcon(changeIcon);
 
-		lblLogo = new JLabel(lblIcontitle);
-		panelTitle.add(lblLogo);
+      lblLogo = new JLabel(lblIcontitle);
+      panelTitle.add(lblLogo);
 
-		cbStr = new JComboBox<String>(strs);
-		cbStr.addActionListener(this);
+      cbStr = new JComboBox<String>(strs);
+      cbStr.addActionListener(this);
 
-		btnClose = new JButton(btnIcon);
-		btnClose.setContentAreaFilled(false); // 배경 투명하게
-		btnClose.setBorderPainted(false); // 테두리 삭제
+      btnClose = new JButton(btnIcon);
+      btnClose.setContentAreaFilled(false); // 배경 투명하게
+      btnClose.setBorderPainted(false); // 테두리 삭제
 
-		btnClose.addActionListener(this);
+      btnClose.addActionListener(this);
 
-		panelTopBottom.add(cbStr);
+      panelTopBottom.add(cbStr);
 
-		panelTop.add(panelTitle, new BorderLayout().NORTH);
-		panelTop.add(panelTopBottom, new BorderLayout().SOUTH);
+      panelTop.add(panelTitle, new BorderLayout().NORTH);
+      panelTop.add(panelTopBottom, new BorderLayout().SOUTH);
 
-		panelContainer.add(panelTop, new BorderLayout().NORTH);
+      panelContainer.add(panelTop, new BorderLayout().NORTH);
 
-		add(panelContainer);
+      add(panelContainer);
 
-		studentPanel();
+      studentPanel();
 
-		setVisible(true);
-	}
+      setVisible(true);
+   }
 
-	public static void main(String[] args) {
-		DB.init();
-		new Admin("관리자", 900, 600);
-	}
+   public static void main(String[] args) {
+      DB.init();
+      new Admin("관리자", 900, 600);
+   }
 
-	public void studentPanel() { // 학생테이블 생성
-		panelCenter.setLayout(new BorderLayout());
+   public void studentPanel() { // 학생테이블 생성
+      panelCenter.setLayout(new BorderLayout());
 
-		panelCenterEast = new JPanel();
-		panelCenterEast.setBackground(Color.WHITE);
-		panelCenterEast.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-		Vector<String> column = new Vector<String>();
-		column.addElement("학번");
-		column.addElement("학과");
-		column.addElement("이름");
-		column.addElement("전화번호");
+      panelCenterEast = new JPanel();
+      panelCenterEast.setBackground(Color.WHITE);
+      panelCenterEast.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+      Vector<String> column = new Vector<String>();
+      column.addElement("학번");
+      column.addElement("학과");
+      column.addElement("이름");
+      column.addElement("전화번호");
 
-		model = new DefaultTableModel(column, 0) {
-			public boolean isCellEditable(int r, int c) {
-				return false;
-			}
-		};
+      model = new DefaultTableModel(column, 0) {
+         public boolean isCellEditable(int r, int c) {
+            return false;
+         }
+      };
 
-		String sql = "SELECT * FROM STUDENT"; // 학생목록 전부 조회
-		ResultSet rs = DB.getResultSet(sql);
-
-		try {
-			while (rs.next()) {
-				con = new Vector<String>();
-				studentID = rs.getString(1);
-				studentMajor = rs.getString(3);
-				studentName = rs.getString(2);
-				studentPhone = rs.getString(4);
-
-				con.add(studentID);
-				con.add(studentMajor);
-				con.add(studentName);
-				con.add(studentPhone);
-				model.addRow(con); // 테이블에 내용 추가
-			}
-		} catch (SQLException e) {
-			System.out.println("접속 오류 / SQL 오류");
-			e.printStackTrace();
-		}
-
-		studentTable = new JTable(model);
-		studentTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
-		studentTable.addMouseListener(this);
-
-		studentTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
-
-		JTableHeader tableHeader = studentTable.getTableHeader();
-		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블 헤더 색 설정
-
-		JScrollPane sc = new JScrollPane(studentTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-		sc.setPreferredSize(new Dimension(500, 410)); // 스크롤팬 크기 설정
-
-		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
-
-		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-
-		TableColumnModel tcmSchedule = studentTable.getColumnModel();
-
-		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
-			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
-		} // 테이블 내용 가운데 정렬
-
-		panelCenterEast.add(sc);
-
-		studentModify();
-
-		// panelCenter.add(panelCenterWest, new BorderLayout().WEST);
-		panelCenter.add(panelCenterWest);
-		panelCenter.add(panelCenterEast, new BorderLayout().EAST);
-
-		panelContainer.add(panelCenter, new BorderLayout().CENTER);
-
-		this.setVisible(true);
-	}
-
-	public void umbrellaPanel() { // 우산테이블 생성
-		Vector<String> column = new Vector<String>();
-		column.addElement("우산코드");
-		column.addElement("대여상태");
-
-		model = new DefaultTableModel(column, 0) {
-			public boolean isCellEditable(int r, int c) {
-				return false;
-			}
-		};
-
-		String sql = "SELECT * FROM UMBRELLA order by UMBRELLAID asc"; // 우산목록 전부 조회
-		ResultSet rs = DB.getResultSet(sql);
-
-		try {
-			while (rs.next()) {
-				con = new Vector<String>();
-				umbrellaID = rs.getString(1);
-				umbrellaState = rs.getString(2);
-
-				con.add(umbrellaID);
-				con.add(umbrellaState);
-				model.addRow(con); // 테이블에 내용 추가
-			}
-		} catch (SQLException e) {
-			System.out.println("접속 오류 / SQL 오류");
-			e.printStackTrace();
-		}
-
-		umbrellaTable = new JTable(model);
-
-		umTableAdd();
-
-	}
-
-	private void blockPanel() { // 블록테이블 생성
-		Vector<String> column = new Vector<String>();
-		column.addElement("전공");
-		column.addElement("학번");
-		column.addElement("이름");
-		column.addElement("전화번호");
-		column.addElement("반납예정일");
-		column.addElement("반납여부");
+      String sql = "SELECT * FROM STUDENT"; // 학생목록 전부 조회
+      ResultSet rs = DB.getResultSet(sql);
+
+      try {
+         while (rs.next()) {
+            con = new Vector<String>();
+            studentID = rs.getString(1);
+            studentMajor = rs.getString(3);
+            studentName = rs.getString(2);
+            studentPhone = rs.getString(4);
+
+            con.add(studentID);
+            con.add(studentMajor);
+            con.add(studentName);
+            con.add(studentPhone);
+            model.addRow(con); // 테이블에 내용 추가
+         }
+      } catch (SQLException e) {
+         System.out.println("접속 오류 / SQL 오류");
+         e.printStackTrace();
+      }
+
+      studentTable = new JTable(model);
+      studentTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+      studentTable.addMouseListener(this);
+
+      studentTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
+
+      JTableHeader tableHeader = studentTable.getTableHeader();
+      tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블 헤더 색 설정
+
+      JScrollPane sc = new JScrollPane(studentTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+      sc.setPreferredSize(new Dimension(500, 410)); // 스크롤팬 크기 설정
+
+      DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+
+      tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+      TableColumnModel tcmSchedule = studentTable.getColumnModel();
+
+      for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
+         tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
+      } // 테이블 내용 가운데 정렬
+
+      panelCenterEast.add(sc);
+
+      studentModify();
+
+      // panelCenter.add(panelCenterWest, new BorderLayout().WEST);
+      panelCenter.add(panelCenterWest);
+      panelCenter.add(panelCenterEast, new BorderLayout().EAST);
+
+      panelContainer.add(panelCenter, new BorderLayout().CENTER);
+
+      this.setVisible(true);
+   }
+
+   public void umbrellaPanel() { // 우산테이블 생성
+      Vector<String> column = new Vector<String>();
+      column.addElement("우산코드");
+      column.addElement("대여상태");
+
+      model = new DefaultTableModel(column, 0) {
+         public boolean isCellEditable(int r, int c) {
+            return false;
+         }
+      };
+
+      String sql = "SELECT * FROM UMBRELLA order by UMBRELLAID asc"; // 우산목록 전부 조회
+      ResultSet rs = DB.getResultSet(sql);
+
+      try {
+         while (rs.next()) {
+            con = new Vector<String>();
+            umbrellaID = rs.getString(1);
+            umbrellaState = rs.getString(2);
+
+            con.add(umbrellaID);
+            con.add(umbrellaState);
+            model.addRow(con); // 테이블에 내용 추가
+         }
+      } catch (SQLException e) {
+         System.out.println("접속 오류 / SQL 오류");
+         e.printStackTrace();
+      }
+
+      umbrellaTable = new JTable(model);
+
+      umTableAdd();
+
+   }
+
+   private void blockPanel() { // 블록테이블 생성
+      Vector<String> column = new Vector<String>();
+      column.addElement("전공");
+      column.addElement("학번");
+      column.addElement("이름");
+      column.addElement("전화번호");
+      column.addElement("반납예정일");
+      column.addElement("반납여부");
+
+      model = new DefaultTableModel(column, 0) {
+         public boolean isCellEditable(int r, int c) {
+            return false;
+         }
+      };
+      String sql = "Select s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE , r.RETURNSTATE, r.RETURNDUEDATE "
+      				+ "FROM STUDENT s , UMBRELLA u , RENTAL r "
+      				+ "WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND RETURNSTATE = 'N' AND r.RETURNDUEDATE < SYSDATE "
+      				+ "ORDER BY Department"; // 차단목록 전부 조회
+      ResultSet rs = DB.getResultSet(sql);
+
+      try {
+         while (rs.next()) {
+            con = new Vector<String>();
+            department = rs.getString(1);
+            studentId = rs.getString(2);
+            name = rs.getString(3);
+            phoneNumber = rs.getString(4);
+            returnDueDate = rs.getString(6);
+            returnState = rs.getString(5);
 
-		model = new DefaultTableModel(column, 0) {
-			public boolean isCellEditable(int r, int c) {
-				return false;
-			}
-		};
-		String sql = "SELECT * FROM BLOCKVIEW " + "ORDER BY Department"; // 차단목록 전부 조회
-		ResultSet rs = DB.getResultSet(sql);
+            con.add(department);
+            con.add(studentId);
+            con.add(name);
+            con.add(phoneNumber);
+            con.add(returnDueDate);
+            con.add(returnState);
+            model.addRow(con); // 테이블에 내용 추가
+         }
+      } catch (SQLException e) {
+         System.out.println("접속 오류 / SQL 오류");
+         e.printStackTrace();
+      }
 
-		try {
-			while (rs.next()) {
-				con = new Vector<String>();
-				department = rs.getString(1);
-				studentId = rs.getString(2);
-				name = rs.getString(3);
-				phoneNumber = rs.getString(4);
-				returnDueDate = rs.getString(6);
-				returnState = rs.getString(7);
+      blockTable = new JTable(model);
 
-				con.add(department);
-				con.add(studentId);
-				con.add(name);
-				con.add(phoneNumber);
-				con.add(returnDueDate);
-				con.add(returnState);
-				model.addRow(con); // 테이블에 내용 추가
-			}
-		} catch (SQLException e) {
-			System.out.println("접속 오류 / SQL 오류");
-			e.printStackTrace();
-		}
+      bkTableAdd();
+   }
 
-		blockTable = new JTable(model);
+   private void studentModify() {
+      panelCenterWest = new JPanel();
+      panelCenterWest.setLayout(new BorderLayout());
 
-		bkTableAdd();
-	}
+      panelCenterWest.setBorder(BorderFactory.createEmptyBorder(13, 10, 40, 10));
+      panelCenterWest.setBackground(Color.WHITE);
 
-	private void studentModify() {
-		panelCenterWest = new JPanel();
-		panelCenterWest.setLayout(new BorderLayout());
+      pTop = new JPanel();
+      pTop.setBackground(new Color(0xB2CCFF));
 
-		panelCenterWest.setBorder(BorderFactory.createEmptyBorder(13, 10, 40, 10));
-		panelCenterWest.setBackground(Color.WHITE);
+      JLabel lbl1 = new JLabel("수 정");
+      lbl1.setForeground(Color.BLACK); // JLabel글자 색 변경
+      lbl1.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
+      pTop.add(lbl1);
 
-		pTop = new JPanel();
-		pTop.setBackground(new Color(0xB2CCFF));
+      panelCenterWest.add(pTop, BorderLayout.NORTH);
 
-		JLabel lbl1 = new JLabel("수 정");
-		lbl1.setForeground(Color.BLACK); // JLabel글자 색 변경
-		lbl1.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
-		pTop.add(lbl1);
+      pCenter = new JPanel();
+      pCenter.setBackground(Color.WHITE);
 
-		panelCenterWest.add(pTop, BorderLayout.NORTH);
+      pCenter.setBorder(BorderFactory.createEmptyBorder(60, 10, 60, 10));
+      pCenter.setLayout(new GridLayout(3, 2, 0, 60));
 
-		pCenter = new JPanel();
-		pCenter.setBackground(Color.WHITE);
+      JLabel lblMajor = new JLabel("학과 :");
+      lblMajor.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
+      pCenter.add(lblMajor);
 
-		pCenter.setBorder(BorderFactory.createEmptyBorder(60, 10, 60, 10));
-		pCenter.setLayout(new GridLayout(3, 2, 0, 60));
+      tfMajor = new JTextField();
+      pCenter.add(tfMajor);
 
-		JLabel lblMajor = new JLabel("학과 :");
-		lblMajor.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
-		pCenter.add(lblMajor);
+      JLabel lblName = new JLabel("이름 :");
+      lblName.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
+      pCenter.add(lblName);
 
-		tfMajor = new JTextField();
-		pCenter.add(tfMajor);
+      tfName = new JTextField();
+      pCenter.add(tfName);
 
-		JLabel lblName = new JLabel("이름 :");
-		lblName.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
-		pCenter.add(lblName);
+      JLabel lblPhone = new JLabel("전화번호 :");
+      lblPhone.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
+      pCenter.add(lblPhone);
 
-		tfName = new JTextField();
-		pCenter.add(tfName);
+      tfPhone = new JTextField();
+      pCenter.add(tfPhone);
 
-		JLabel lblPhone = new JLabel("전화번호 :");
-		lblPhone.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
-		pCenter.add(lblPhone);
+      panelCenterWest.add(pCenter, BorderLayout.CENTER);
 
-		tfPhone = new JTextField();
-		pCenter.add(tfPhone);
+      pBottom = new JPanel();
 
-		panelCenterWest.add(pCenter, BorderLayout.CENTER);
+      pBottom.setBackground(Color.WHITE);
 
-		pBottom = new JPanel();
+      btnOk = new JButton("수정");
+      BtnFont.BtnStyle(btnOk);
+      btnOk.addActionListener(this);
 
-		pBottom.setBackground(Color.WHITE);
+      pBottom.add(btnOk);
 
-		btnOk = new JButton("수정");
-		BtnFont.BtnStyle(btnOk);
-		btnOk.addActionListener(this);
+      btnCancel = new JButton("취소");
+      BtnFont.BtnStyle(btnCancel);
+      btnCancel.addActionListener(this);
 
-		pBottom.add(btnOk);
+      pBottom.add(btnCancel);
 
-		btnCancel = new JButton("취소");
-		BtnFont.BtnStyle(btnCancel);
-		btnCancel.addActionListener(this);
+      panelCenterWest.add(pBottom, BorderLayout.SOUTH);
+   }
 
-		pBottom.add(btnCancel);
+   private void umTableAdd() {
+      panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
+      panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
-		panelCenterWest.add(pBottom, BorderLayout.SOUTH);
-	}
+      umbrellaTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+      umbrellaTable.addMouseListener(this);
 
-	private void umTableAdd() {
-		panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
-		panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+      umbrellaTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
 
-		umbrellaTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
-		umbrellaTable.addMouseListener(this);
+      JTableHeader tableHeader = umbrellaTable.getTableHeader();
+      tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블 헤더 색 설정
 
-		umbrellaTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
+      JScrollPane sc = new JScrollPane(umbrellaTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		JTableHeader tableHeader = umbrellaTable.getTableHeader();
-		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블 헤더 색 설정
+      sc.setPreferredSize(new Dimension(850, 360)); // 스크롤팬 크기 설정
 
-		JScrollPane sc = new JScrollPane(umbrellaTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+      btnAdd = new JButton("추가");
+      BtnFont.BtnStyle(btnAdd);
+      btnAdd.addActionListener(this);
 
-		sc.setPreferredSize(new Dimension(850, 360)); // 스크롤팬 크기 설정
+      btnDelect = new JButton("삭제");
+      BtnFont.BtnStyle(btnDelect);
+      btnDelect.addActionListener(this);
 
-		btnAdd = new JButton("추가");
-		BtnFont.BtnStyle(btnAdd);
-		btnAdd.addActionListener(this);
+      btnUmSearch = new JButton("검색");
+      BtnFont.BtnStyle(btnUmSearch);
+      btnUmSearch.addActionListener(this);
 
-		btnDelect = new JButton("삭제");
-		BtnFont.BtnStyle(btnDelect);
-		btnDelect.addActionListener(this);
+      DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 
-		btnUmSearch = new JButton("검색");
-		BtnFont.BtnStyle(btnUmSearch);
-		btnUmSearch.addActionListener(this);
+      tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
-		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+      TableColumnModel tcmSchedule = umbrellaTable.getColumnModel();
 
-		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+      for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
+         tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
+      } // 테이블 내용 가운데 정렬
 
-		TableColumnModel tcmSchedule = umbrellaTable.getColumnModel();
+      JLabel lblSearch = new JLabel("대여 상태 : ");
+      lblSearch.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
 
-		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
-			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
-		} // 테이블 내용 가운데 정렬
+      JLabel lblSpace = new JLabel(
+            "                                                                                                                                             ");
 
-		JLabel lblSearch = new JLabel("대여 상태 : ");
-		lblSearch.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
+      ButtonGroup bg = new ButtonGroup(); // 라디오그룹 생성
+      rbY = new JRadioButton("Y");
+      rbN = new JRadioButton("N");
 
-		JLabel lblSpace = new JLabel(
-				"                                                                                                                                             ");
+      rbY.setBackground(Color.WHITE);
+      rbN.setBackground(Color.WHITE);
 
-		ButtonGroup bg = new ButtonGroup(); // 라디오그룹 생성
-		rbY = new JRadioButton("Y");
-		rbN = new JRadioButton("N");
+      bg.add(rbY);
+      bg.add(rbN);
 
-		rbY.setBackground(Color.WHITE);
-		rbN.setBackground(Color.WHITE);
+      panelCenter.add(sc);
 
-		bg.add(rbY);
-		bg.add(rbN);
+      panelCenter.add(lblSearch);
+      panelCenter.add(rbY);
+      panelCenter.add(rbN);
+      panelCenter.add(btnUmSearch);
+      panelCenter.add(lblSpace);
 
-		panelCenter.add(sc);
+      panelCenter.add(btnAdd);
+      panelCenter.add(btnDelect);
 
-		panelCenter.add(lblSearch);
-		panelCenter.add(rbY);
-		panelCenter.add(rbN);
-		panelCenter.add(btnUmSearch);
-		panelCenter.add(lblSpace);
+      panelContainer.add(panelCenter, new BorderLayout().CENTER);
+   }
 
-		panelCenter.add(btnAdd);
-		panelCenter.add(btnDelect);
+   private void bkTableAdd() {
+      panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
+      panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
-		panelContainer.add(panelCenter, new BorderLayout().CENTER);
-	}
+      blockTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+      blockTable.addMouseListener(this);
 
-	private void bkTableAdd() {
-		panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
-		panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+      blockTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
 
-		blockTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
-		blockTable.addMouseListener(this);
+      JTableHeader tableHeader = blockTable.getTableHeader();
+      tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블 헤더 색 설정
 
-		blockTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
+      JScrollPane sc = new JScrollPane(blockTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		JTableHeader tableHeader = blockTable.getTableHeader();
-		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블 헤더 색 설정
+      sc.setPreferredSize(new Dimension(850, 360)); // 스크롤팬 크기 설정
 
-		JScrollPane sc = new JScrollPane(blockTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+      DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 
-		sc.setPreferredSize(new Dimension(850, 360)); // 스크롤팬 크기 설정
+      tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
-		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+      TableColumnModel tcmSchedule = blockTable.getColumnModel();
 
-		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+      for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
+         tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
+      } // 테이블 내용 가운데 정렬
 
-		TableColumnModel tcmSchedule = blockTable.getColumnModel();
+      tfSearch = new hint("전공을 입력하세요"); // hint
+      tfSearch.addActionListener(this);
 
-		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
-			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
-		} // 테이블 내용 가운데 정렬
+      btnSearch = new JButton("검색");
+      BtnFont.BtnStyle(btnSearch);
+      btnSearch.addActionListener(this);
 
-		tfSearch = new hint("전공을 입력하세요"); // hint
-		tfSearch.addActionListener(this);
+      btnReset = new JButton("초기화");
+      BtnFont.BtnStyle(btnReset);
+      btnReset.addActionListener(this);
 
-		btnSearch = new JButton("검색");
-		BtnFont.BtnStyle(btnSearch);
-		btnSearch.addActionListener(this);
+      panelCenter.add(sc);
+      panelCenter.add(tfSearch);
+      panelCenter.add(btnSearch);
+      panelCenter.add(btnReset);
 
-		btnReset = new JButton("초기화");
-		BtnFont.BtnStyle(btnReset);
-		btnReset.addActionListener(this);
+      panelContainer.add(panelCenter, new BorderLayout().CENTER);
 
-		panelCenter.add(sc);
-		panelCenter.add(tfSearch);
-		panelCenter.add(btnSearch);
-		panelCenter.add(btnReset);
+   }
 
-		panelContainer.add(panelCenter, new BorderLayout().CENTER);
+   @Override
+   public void actionPerformed(ActionEvent e) {
+      Object obj = e.getSource();
 
-	}
+      if (obj == cbStr) {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		Object obj = e.getSource();
+         panelCenter.removeAll(); // 패널 지우기
 
-		if (obj == cbStr) {
+         int index = cbStr.getSelectedIndex(); // 콤보박스 index 받아오기
+         if (index == 0) {
+            studentPanel();
+         } else if (index == 1) {
+            umbrellaPanel(); // index 1일때 우산 테이블
+         } else if (index == 2) {
+            blockPanel(); // index 2일때 차단 테이블
+         }
+         panelCenter.revalidate(); // 레이아웃 변화 재확인
+         panelCenter.repaint(); // 레이아웃 다시 가져오기
 
-			panelCenter.removeAll(); // 패널 지우기
+      }
 
-			int index = cbStr.getSelectedIndex(); // 콤보박스 index 받아오기
-			if (index == 0) {
-				studentPanel();
-			} else if (index == 1) {
-				umbrellaPanel(); // index 1일때 우산 테이블
-			} else if (index == 2) {
-				blockPanel(); // index 2일때 차단 테이블
-			}
-			panelCenter.revalidate(); // 레이아웃 변화 재확인
-			panelCenter.repaint(); // 레이아웃 다시 가져오기
+      if (obj == btnAdd) {
 
-		}
+         umAdd = new AdminUmbrellaAdd("우산추가", 300, 250, this);
 
-		if (obj == btnAdd) {
+      }
 
-			umAdd = new AdminUmbrellaAdd("우산추가", 300, 250, this);
+      if (obj == btnDelect) {
 
-		}
+         String sql = "DELETE FROM UMBRELLA " + "WHERE UMBRELLAID='" + umCode + "'";
+         DB.executeQuery(sql); // DB 내용 삭제임
 
-		if (obj == btnDelect) {
+         panelCenter.removeAll();
+         umbrellaPanel();
+         panelCenter.revalidate(); // 레이아웃 변화 재확인
+         panelCenter.repaint(); // 레이아웃 다시 가져오기
 
-			String sql = "DELETE FROM UMBRELLA " + "WHERE UMBRELLAID='" + umCode + "'";
-			DB.executeQuery(sql); // DB 내용 삭제임
+      }
 
-			panelCenter.removeAll();
-			umbrellaPanel();
-			panelCenter.revalidate(); // 레이아웃 변화 재확인
-			panelCenter.repaint(); // 레이아웃 다시 가져오기
+      if (obj == btnOk) {
+         String setStName = tfName.getText();
+         String setDepartment = tfMajor.getText();
+         String setPhone = tfPhone.getText();
 
-		}
+         String sql = "UPDATE STUDENT SET NAME = '" + setStName + "'," + " DEPARTMENT = '" + setDepartment + "',"
+               + " PHONE = '" + setPhone + "'" + " WHERE STUDENTID = '" + id + "'";
+         DB.executeQuery(sql); // DB 내용 수정
 
-		if (obj == btnOk) {
-			String setStName = tfName.getText();
-			String setDepartment = tfMajor.getText();
-			String setPhone = tfPhone.getText();
+         // 새로고침
+         panelCenter.removeAll();
+         studentPanel();
+         panelCenter.revalidate(); // 레이아웃 변화 재확인
+         panelCenter.repaint(); // 레이아웃 다시 가져오기
+      }
 
-			String sql = "UPDATE STUDENT SET NAME = '" + setStName + "'," + " DEPARTMENT = '" + setDepartment + "',"
-					+ " PHONE = '" + setPhone + "'" + " WHERE STUDENTID = '" + id + "'";
-			DB.executeQuery(sql); // DB 내용 수정
+      if (obj == btnClose) {
+         dispose();
+      }
 
-			// 새로고침
-			panelCenter.removeAll();
-			studentPanel();
-			panelCenter.revalidate(); // 레이아웃 변화 재확인
-			panelCenter.repaint(); // 레이아웃 다시 가져오기
-		}
+      if (obj == btnUmSearch) {
+         if (rbY.isSelected()) {
+            panelCenter.removeAll();
 
-		if (obj == btnClose) {
-			dispose();
-		}
+            Vector<String> column = new Vector<String>();
+            column.addElement("우산코드");
+            column.addElement("대여상태");
 
-		if (obj == btnUmSearch) {
-			if (rbY.isSelected()) {
-				panelCenter.removeAll();
+            model = new DefaultTableModel(column, 0) {
+               public boolean isCellEditable(int r, int c) {
+                  return false;
+               }
+            };
 
-				Vector<String> column = new Vector<String>();
-				column.addElement("우산코드");
-				column.addElement("대여상태");
+            String sql = "SELECT * FROM UMBRELLA WHERE STATE = 'Y' order by UMBRELLAID asc"; // 우산상태 Y 조회
+            ResultSet rs = DB.getResultSet(sql);
 
-				model = new DefaultTableModel(column, 0) {
-					public boolean isCellEditable(int r, int c) {
-						return false;
-					}
-				};
+            try {
+               while (rs.next()) {
+                  con = new Vector<String>();
+                  umbrellaID = rs.getString(1);
+                  umbrellaState = rs.getString(2);
 
-				String sql = "SELECT * FROM UMBRELLA WHERE STATE = 'Y' order by UMBRELLAID asc"; // 우산상태 Y 조회
-				ResultSet rs = DB.getResultSet(sql);
+                  con.add(umbrellaID);
+                  con.add(umbrellaState);
+                  model.addRow(con); // 테이블에 내용 추가
+               }
+            } catch (SQLException e1) {
+               System.out.println("접속 오류 / SQL 오류");
+               e1.printStackTrace();
+            }
 
-				try {
-					while (rs.next()) {
-						con = new Vector<String>();
-						umbrellaID = rs.getString(1);
-						umbrellaState = rs.getString(2);
+            umbrellaTable = new JTable(model);
 
-						con.add(umbrellaID);
-						con.add(umbrellaState);
-						model.addRow(con); // 테이블에 내용 추가
-					}
-				} catch (SQLException e1) {
-					System.out.println("접속 오류 / SQL 오류");
-					e1.printStackTrace();
-				}
+            umTableAdd();
 
-				umbrellaTable = new JTable(model);
+            panelCenter.revalidate(); // 레이아웃 변화 재확인
+            panelCenter.repaint(); // 레이아웃 다시 가져오기
+         }
 
-				umTableAdd();
+         else if (rbN.isSelected()) {
+            panelCenter.removeAll();
 
-				panelCenter.revalidate(); // 레이아웃 변화 재확인
-				panelCenter.repaint(); // 레이아웃 다시 가져오기
-			}
+            Vector<String> column = new Vector<String>();
+            column.addElement("우산코드");
+            column.addElement("대여상태");
 
-			else if (rbN.isSelected()) {
-				panelCenter.removeAll();
+            model = new DefaultTableModel(column, 0) {
+               public boolean isCellEditable(int r, int c) {
+                  return false;
+               }
+            };
 
-				Vector<String> column = new Vector<String>();
-				column.addElement("우산코드");
-				column.addElement("대여상태");
+            String sql = "SELECT * FROM UMBRELLA WHERE STATE = 'N' order by UMBRELLAID asc"; // 우산상태 Y 조회
+            ResultSet rs = DB.getResultSet(sql);
 
-				model = new DefaultTableModel(column, 0) {
-					public boolean isCellEditable(int r, int c) {
-						return false;
-					}
-				};
+            try {
+               while (rs.next()) {
+                  con = new Vector<String>();
+                  umbrellaID = rs.getString(1);
+                  umbrellaState = rs.getString(2);
 
-				String sql = "SELECT * FROM UMBRELLA WHERE STATE = 'N' order by UMBRELLAID asc"; // 우산상태 Y 조회
-				ResultSet rs = DB.getResultSet(sql);
+                  con.add(umbrellaID);
+                  con.add(umbrellaState);
+                  model.addRow(con); // 테이블에 내용 추가
+               }
+            } catch (SQLException e1) {
+               System.out.println("접속 오류 / SQL 오류");
+               e1.printStackTrace();
+            }
 
-				try {
-					while (rs.next()) {
-						con = new Vector<String>();
-						umbrellaID = rs.getString(1);
-						umbrellaState = rs.getString(2);
+            umbrellaTable = new JTable(model);
 
-						con.add(umbrellaID);
-						con.add(umbrellaState);
-						model.addRow(con); // 테이블에 내용 추가
-					}
-				} catch (SQLException e1) {
-					System.out.println("접속 오류 / SQL 오류");
-					e1.printStackTrace();
-				}
+            umTableAdd();
 
-				umbrellaTable = new JTable(model);
+            panelCenter.revalidate(); // 레이아웃 변화 재확인
+            panelCenter.repaint(); // 레이아웃 다시 가져오기
+         }
 
-				umTableAdd();
+         else {
+            panelCenter.removeAll();
 
-				panelCenter.revalidate(); // 레이아웃 변화 재확인
-				panelCenter.repaint(); // 레이아웃 다시 가져오기
-			}
+            umbrellaPanel();
 
-			else {
-				panelCenter.removeAll();
+            panelCenter.revalidate(); // 레이아웃 변화 재확인
+            panelCenter.repaint(); // 레이아웃 다시 가져오기
+         }
+      }
 
-				umbrellaPanel();
+      if (obj == btnSearch | obj == tfSearch) {
+         String blockDe = tfSearch.getText();
+         System.out.println(blockDe);
 
-				panelCenter.revalidate(); // 레이아웃 변화 재확인
-				panelCenter.repaint(); // 레이아웃 다시 가져오기
-			}
-		}
+         String sqlBlock = "Select s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE , r.RETURNSTATE, r.RETURNDUEDATE\r\n"
+					+ "FROM STUDENT s , UMBRELLA u , RENTAL r \r\n"
+					+ "WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND RETURNSTATE = 'N' AND r.RETURNDUEDATE < SYSDATE AND DEPARTMENT LIKE '" + blockDe + "'";
 
-		if (obj == btnSearch | obj == tfSearch) {
-			String blockDe = tfSearch.getText();
-			System.out.println(blockDe);
+         ResultSet rsBk = DB.getResultSet(sqlBlock);
+         String bkDe = "";
 
-			String sqlBlock = "SELECT * " + "FROM DODAM.BLOCKVIEW " + "WHERE DEPARTMENT LIKE '" + blockDe + "'";
+         try {
+            if (rsBk.next()) {
+               bkDe = rsBk.getString(1);
+            }
+         } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+         }
 
-			ResultSet rsBk = DB.getResultSet(sqlBlock);
-			String bkDe = "";
+         if (blockDe.equals(bkDe)) {
+            panelCenter.removeAll();
+            model.setNumRows(0);
 
-			try {
-				if (rsBk.next()) {
-					bkDe = rsBk.getString(1);
-				}
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+            String sql = "Select s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE , r.RETURNSTATE, r.RETURNDUEDATE\r\n"
+ 					+ "FROM STUDENT s , UMBRELLA u , RENTAL r \r\n"
+ 					+ "WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND RETURNSTATE = 'N' AND r.RETURNDUEDATE < SYSDATE AND DEPARTMENT LIKE '" + bkDe + "'";
+            ResultSet rs = DB.getResultSet(sql);
 
-			System.out.println(bkDe);
+            try {
+               while (rs.next()) {
+                  con = new Vector<String>();
+                  department = rs.getString(1);
+                  studentId = rs.getString(2);
+                  name = rs.getString(3);
+                  phoneNumber = rs.getString(4);
+                  returnDueDate = rs.getString(6);
+                  returnState = rs.getString(5);
 
-			if (blockDe.equals(bkDe)) {
-				panelCenter.removeAll();
-				model.setNumRows(0);
+                  con.add(department);
+                  con.add(studentId);
+                  con.add(name);
+                  con.add(phoneNumber);
+                  con.add(returnDueDate);
+                  con.add(returnState);
+                  model.addRow(con); // 테이블에 내용 추가
+               }
+            } catch (SQLException e2) {
+               System.out.println("접속 오류 / SQL 오류");
+               e2.printStackTrace();
+            }
 
-				String sql = "SELECT * " + "FROM DODAM.BLOCKVIEW " + "WHERE DEPARTMENT LIKE '" + blockDe + "'";
-				ResultSet rs = DB.getResultSet(sql);
+            blockTable = new JTable(model);
 
-				try {
-					while (rs.next()) {
-						con = new Vector<String>();
-						department = rs.getString(1);
-						studentId = rs.getString(2);
-						name = rs.getString(3);
-						phoneNumber = rs.getString(4);
-						returnDueDate = rs.getString(6);
-						returnState = rs.getString(7);
+            bkTableAdd();
 
-						con.add(department);
-						con.add(studentId);
-						con.add(name);
-						con.add(phoneNumber);
-						con.add(returnDueDate);
-						con.add(returnState);
-						model.addRow(con); // 테이블에 내용 추가
-					}
-				} catch (SQLException e2) {
-					System.out.println("접속 오류 / SQL 오류");
-					e2.printStackTrace();
-				}
+            panelCenter.revalidate(); // 레이아웃 변화 재확인
+            panelCenter.repaint(); // 레이아웃 다시 가져오기
+         } else if (bkDe.equals("")) {
+            JOptionPane.showMessageDialog(null, "검색 결과가 존재하지 않습니다.", "검색 결과", JOptionPane.PLAIN_MESSAGE);
 
-				blockTable = new JTable(model);
+            model.setNumRows(0);
+         }
+      }
 
-				bkTableAdd();
+      if (obj == btnReset) {
+         panelCenter.removeAll();
+         model.setNumRows(0);
 
-				panelCenter.revalidate(); // 레이아웃 변화 재확인
-				panelCenter.repaint(); // 레이아웃 다시 가져오기
-			} else if (bkDe.equals("")) {
-				JOptionPane.showMessageDialog(null, "검색 결과가 존재하지 않습니다.", "검색 결과", JOptionPane.PLAIN_MESSAGE);
+         blockPanel();
 
-				model.setNumRows(0);
-			}
-		}
+         panelCenter.revalidate(); // 레이아웃 변화 재확인
+         panelCenter.repaint(); // 레이아웃 다시 가져오기
+      }
+   }
 
-		if (obj == btnReset) {
-			panelCenter.removeAll();
-			model.setNumRows(0);
+   @Override
+   public void mouseClicked(MouseEvent e) {
+      table = (JTable) e.getComponent();
+      model = (DefaultTableModel) table.getModel();
 
-			blockPanel();
+      if (e.getSource() == studentTable) { // 학생테이블에서 적용되는 마우스 이벤트
 
-			panelCenter.revalidate(); // 레이아웃 변화 재확인
-			panelCenter.repaint(); // 레이아웃 다시 가져오기
-		}
-	}
+         if (e.getClickCount() == 2) {
+            int row = studentTable.getSelectedRow(); // 선택한 셀의 행 번호 계산
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		table = (JTable) e.getComponent();
-		model = (DefaultTableModel) table.getModel();
+            TableModel data = studentTable.getModel(); // 테이블의 모델 객체 얻어오기
 
-		if (e.getSource() == studentTable) { // 학생테이블에서 적용되는 마우스 이벤트
+            id = (String) data.getValueAt(row, 0);
+            major = (String) data.getValueAt(row, 1);
+            stName = (String) data.getValueAt(row, 2);
+            phone = (String) data.getValueAt(row, 3);
 
-			if (e.getClickCount() == 2) {
-				int row = studentTable.getSelectedRow(); // 선택한 셀의 행 번호 계산
+            tfMajor.setText(major);
+            tfName.setText(stName);
+            tfPhone.setText(phone);
+         }
 
-				TableModel data = studentTable.getModel(); // 테이블의 모델 객체 얻어오기
+      }
 
-				id = (String) data.getValueAt(row, 0);
-				major = (String) data.getValueAt(row, 1);
-				stName = (String) data.getValueAt(row, 2);
-				phone = (String) data.getValueAt(row, 3);
+      if (e.getSource() == umbrellaTable) { // 우산테이블에서 적용되는 마우스 이벤트
 
-				tfMajor.setText(major);
-				tfName.setText(stName);
-				tfPhone.setText(phone);
-			}
+         umCode = (String) model.getValueAt(table.getSelectedRow(), 0);
 
-		}
+      }
+   }
 
-		if (e.getSource() == umbrellaTable) { // 우산테이블에서 적용되는 마우스 이벤트
+   @Override
+   public void mousePressed(MouseEvent e) {
+      // TODO Auto-generated method stub
 
-			umCode = (String) model.getValueAt(table.getSelectedRow(), 0);
+   }
 
-		}
-	}
+   @Override
+   public void mouseReleased(MouseEvent e) {
+      // TODO Auto-generated method stub
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   @Override
+   public void mouseEntered(MouseEvent e) {
+      // TODO Auto-generated method stub
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   @Override
+   public void mouseExited(MouseEvent e) {
+      // TODO Auto-generated method stub
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+   }
 }
