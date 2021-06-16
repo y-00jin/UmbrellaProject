@@ -29,7 +29,7 @@ public class LoginForm extends JFrame implements ActionListener {
 	private JButton btn_login, btn_exit;
 
 	public LoginForm() { // 생성자
-		setUndecorated(true); // 타일트바 없애기
+		setUndecorated(true); // 타이틀바 없애기
 		setTitle("관리자 로그인");
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		dispose();
