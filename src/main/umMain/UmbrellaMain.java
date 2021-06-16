@@ -150,7 +150,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		btnAdmin = new JButton("    관       리       자    ");
 		btnAdmin.addActionListener(this);
 
-		btnStats = new JButton("   분             석   ");
+		btnStats = new JButton("   통             계   ");
 		btnStats.addActionListener(this);
 
 		// 버튼에 스타일 적용
@@ -168,20 +168,16 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 				btnArr[i].setBackground(new Color(0x7C96C9));
 			}
 			
-			//btnArr[i].setContentAreaFilled(false); // 투명한 배경색
 			btnArr[i].setBorderPainted(false); // 테두리 없애기
+			panelBtn.add(btnArr[i]);
 		}
 
-		panelBtn.add(btnRental);
-		panelBtn.add(btnReturn);
-		panelBtn.add(btnStats);
-		panelBtn.add(btnAdmin);
-		
+
 	}
 
 	public static void main(String[] args) {
 		DB.init();
-		addView();
+		addView();	//뷰 생성
 		new UmbrellaMain("Umbrella Rental Program", 900, 600);
 		
 	}
@@ -189,23 +185,24 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 	private static void addView() {
 		check = false;
 		
-		String viewSelect = "SELECT * FROM BLOCKVIEW b ";
+		String viewSelect = "SELECT * FROM BLOCKVIEW b ";	//블록뷰 셀렉트
 		DB.getResultSet(viewSelect);
 		ResultSet rs = DB.getResultSet(viewSelect);
 		try {
-			while(rs.next()) {
+			while(rs.next()) {	// 블록뷰가 있으면 ceck를 true로
 				check = true;
 			}
 		} catch (SQLException e) {
-			check = false;
+			check = false;	// 블록뷰가 없으면 false
 			e.printStackTrace();
 		}
 		
-		if(check == true) {
+		if(check == true) {	//블록뷰가 있는 상태이므로 삭제한후 다시 뷰 생성
 			String viewDrop = "DROP VIEW BLOCKVIEW";
 			DB.executeQuery(viewDrop);
 		}
 		
+		// 뷰 만드는 create문
 		String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
 				+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
 		DB.executeQuery(viewCreate);
