@@ -168,6 +168,8 @@ public class ReturnUm extends CalendarDataManager implements ActionListener {
 	int selectindex = 0; // 달력에서 첫번째 클릭 두번째 클릭 체크
 
 	private JButton btnSearch, btnReset;
+	private String StrS;
+	private String strL;
 
 	public static void main(String[] args) {
 		DB.init();
@@ -671,10 +673,21 @@ public class ReturnUm extends CalendarDataManager implements ActionListener {
 				JOptionPane.showMessageDialog(null, "검색이 완료되었습니다.", "검색 완료", JOptionPane.INFORMATION_MESSAGE);
 				model.setNumRows(0);
 
+				if(selectStr.compareTo(selectStr2) > 0) {	//1이면 selectStr이 더 큼 _ -1이면 selectStr2가 더 큼 _ 0이면 같음
+					StrS = selectStr2;
+					strL = selectStr;
+				}
+				else if(selectStr.compareTo(selectStr2) <0) {
+					StrS = selectStr;
+					strL = selectStr2;
+				}
+				else {
+					
+				}
 				String returnSelect = "SELECT return.returnid, umbrella.UMBRELLAID ,student.STUDENTID , student.NAME , TO_CHAR(rental.rentaldate, \'YYYY-MM-DD\'), TO_CHAR(return.returndate, \'YYYY-MM-DD\') "
 						+ "FROM \"RETURN\" return , STUDENT student , UMBRELLA umbrella, RENTAL rental "
 						+ "WHERE return.RENTALID = rental.rentalid AND rental.studentid = student.studentid AND rental.umbrellaid = umbrella.umbrellaid and return.RETURNDATE BETWEEN '"
-						+ selectStr + "' AND '" + selectStr2
+						+ StrS + "' AND '" + strL
 						+ "'ORDER BY RETURN.RETURNDATE DESC , RETURN.RENTALID DESC";
 				ResultSet rs = DB.getResultSet(returnSelect); // 데이터 불러오기
 				String[] rsArr = new String[6];
@@ -697,7 +710,7 @@ public class ReturnUm extends CalendarDataManager implements ActionListener {
 				tfDate1.setText("");
 				tfDate2.setText("");
 			}
-
+			
 		}
 
 		else if (obj == btnReset) {
