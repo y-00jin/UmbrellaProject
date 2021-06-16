@@ -28,6 +28,7 @@ import main.DB;
 import main.umAdmin.Admin;
 import main.umRental.Rental;
 import main.umReturn.Return;
+import main.umReturn.umReturn;
 import main.umStats.Stats;
 
 public class UmbrellaMain extends JFrame implements ActionListener {
@@ -217,7 +218,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		if (obj == btnRental) {
 			new Rental("대여", 900, 600);
 		} else if (obj == btnReturn) {
-			new Return("반납", 900, 600);
+			new umReturn();
 		} else if (obj == btnAdmin) {
 			new Admin("관리자", 900, 700);
 		} else if(obj == btnStats) {

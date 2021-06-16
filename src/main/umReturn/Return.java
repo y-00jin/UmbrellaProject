@@ -61,7 +61,6 @@ public class Return extends JFrame implements ActionListener {
 		setTitle(title);
 		setSize(width, height);
 		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치DD
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// dispose(); // 닫으면 이 프레임만 종료
 
 		// 탑 패널 생성 (타이틀 & 검색)

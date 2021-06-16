@@ -24,7 +24,6 @@ public class DB {
          conn = DriverManager.getConnection("jdbc:oracle:thin:@114.71.137.174:53994:XE", "dodam", "inhatc4");
 
          stmt = conn.createStatement();
-         System.out.println("DB 연결 성공");
          
       } catch (ClassNotFoundException e) {
          System.out.println("해당 드라이버가 없습니다.");

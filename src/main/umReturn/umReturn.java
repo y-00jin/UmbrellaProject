@@ -15,7 +15,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
@@ -24,6 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -40,6 +43,7 @@ import main.style.BtnFont;
 import main.umReturn.CalendarDataManager;
 
 class CalendarDataManager { // 6*7배열에 나타낼 달력 값을 구하는 class
+
 	static final int CAL_WIDTH = 7;
 	final static int CAL_HEIGHT = 6;
 	int calDates[][] = new int[CAL_HEIGHT][CAL_WIDTH];
@@ -114,7 +118,11 @@ class CalendarDataManager { // 6*7배열에 나타낼 달력 값을 구하는 cl
 	}
 }
 
-public class umReturn extends CalendarDataManager {
+public class umReturn extends CalendarDataManager implements ActionListener {
+
+	private String selectStr;
+	private String selectStr2;
+
 	// 창 구성요소와 배치도
 	JFrame mainFrame;
 
@@ -164,6 +172,13 @@ public class umReturn extends CalendarDataManager {
 	private JTextField tfDate2;
 	private JPanel panelTopInfo;
 	private JPanel CalendarSub;
+	int selectindex = 0;
+
+	private JButton btnSearch;
+
+	private JPanel JPanelBtn;
+
+	private JButton btnReset;
 
 	public static void main(String[] args) {
 		DB.init();
@@ -178,17 +193,9 @@ public class umReturn extends CalendarDataManager {
 
 		mainFrame = new JFrame(title);
 		mainFrame.setBackground(Color.white);
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setSize(1070, 550);
+		mainFrame.setSize(1110, 550);
 		mainFrame.setLocationRelativeTo(null);
 
-//		try {
-//			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");// LookAndFeel Windows 스타일 적용
-//			SwingUtilities.updateComponentTreeUI(mainFrame);
-//		} catch (Exception e) {
-//		}
-
-		
 		panelTop = new JPanel();
 		panelTop.setBackground(Color.white);
 		panelTop.setLayout(new BorderLayout());
@@ -196,8 +203,7 @@ public class umReturn extends CalendarDataManager {
 
 		panelTopInfo = new JPanel();
 		panelTopInfo.setLayout(new BorderLayout());
-		
-		
+
 		panelTitle = new JPanel();
 		panelTitle.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 0));
 		panelTitle.setBackground(Color.white);
@@ -207,11 +213,10 @@ public class umReturn extends CalendarDataManager {
 		ImageIcon lblIcontitle = new ImageIcon(changeIcon);
 		lblLogo = new JLabel(lblIcontitle);
 		panelTitle.add(lblLogo);
-		
-		
+
 		panelSearch = new JPanel();
 		panelSearch.setBackground(Color.white);
-		panelSearch.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
+		panelSearch.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 		// 날짜 검색 라벨
 		lblDate = new JLabel("날짜 검색");
 		lblDate.setFont(lblFont);
@@ -233,12 +238,10 @@ public class umReturn extends CalendarDataManager {
 		tfDate2.setSize(100, 40);
 		tfDate2.setLocation(240, 100);
 		panelSearch.add(tfDate2);
-		
-		panelTopInfo.add(panelTitle,BorderLayout.NORTH);
-		panelTopInfo.add(panelSearch,BorderLayout.CENTER);
-		
-		
-		
+
+		panelTopInfo.add(panelTitle, BorderLayout.NORTH);
+		panelTopInfo.add(panelSearch, BorderLayout.CENTER);
+
 		calOpPanel = new JPanel();
 		calOpPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 0));
 		calOpPanel.setBackground(Color.white);
@@ -252,7 +255,7 @@ public class umReturn extends CalendarDataManager {
 		todayLab = new JLabel(today.get(Calendar.MONTH) + 1 + "/" + today.get(Calendar.DAY_OF_MONTH) + "/"
 				+ today.get(Calendar.YEAR));
 		todayLab.setFont(lblFont);
-		
+
 		lYearBut = new JButton("<<");
 		BtnFont.BtnDateStyle(lYearBut);
 		lYearBut.setToolTipText("Previous Year");
@@ -376,14 +379,30 @@ public class umReturn extends CalendarDataManager {
 		CalendarSub.add(calOpPanel, BorderLayout.NORTH);
 		CalendarSub.add(calPanel, BorderLayout.CENTER);
 
+		JPanelBtn = new JPanel();
+		JPanelBtn.setLayout(new GridLayout(1, 2, 20, 0));
+		JPanelBtn.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
+		JPanelBtn.setBackground(Color.white);
+
+		btnSearch = new JButton("검색");
+		BtnFont.BtnStyle(btnSearch);
+		btnSearch.addActionListener(this);
+		JPanelBtn.add(btnSearch);
+
+		btnReset = new JButton("초기화");
+		BtnFont.BtnStyle(btnReset);
+		btnReset.addActionListener(this);
+		JPanelBtn.add(btnReset);
+
 		panelTop.add(panelTopInfo, BorderLayout.NORTH);
 		panelTop.add(CalendarSub, BorderLayout.CENTER);
+		panelTop.add(JPanelBtn, BorderLayout.SOUTH);
 
 		// infoPanel, 테이블을 frameSubPanelEast에 배치
 		panelInfo = new JPanel();
 		panelInfo.setBackground(new Color(0xFFFFFF));
 		panelInfo.setLayout(new FlowLayout(FlowLayout.LEFT));
-		panelInfo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+		panelInfo.setBorder(BorderFactory.createEmptyBorder(70, 10, 0, 10));
 
 		// 테이블 헤더 생성
 		returnColumn = new Vector<String>();
@@ -401,6 +420,30 @@ public class umReturn extends CalendarDataManager {
 		};
 
 		// 테이블 생성
+		returnTable();
+
+		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+		table.setFillsViewportHeight(true); // 테이블 배경색
+		JTableHeader tableHeader = table.getTableHeader(); // 테이블 헤더 값 가져오기
+		tableHeader.setBackground(new Color(0xB2CCFF)); // 가져온 테이블 헤더의 색 지정
+
+		// 스크롤 팬
+		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		sc.setPreferredSize(new Dimension(600, 420));
+		panelInfo.add(sc);
+
+		// frame에 전부 배치
+		mainFrame.setLayout(new BorderLayout());
+		mainFrame.add(panelTop, BorderLayout.WEST);
+		mainFrame.add(panelInfo, BorderLayout.CENTER);
+		mainFrame.setVisible(true);
+
+		focusToday(); // 현재 날짜에 focus를 줌 (mainFrame.setVisible(true) 이후에 배치해야함)
+
+	}
+
+	private void returnTable() {
 		model.setNumRows(0);
 
 		String returnSelect = "select return.RETURNID, um.UMBRELLAID, st.STUDENTID, st.NAME, TO_CHAR(rental.rentaldate, \'YYYY-MM-DD\'), TO_CHAR(return.returndate, \'YYYY-MM-DD\') "
@@ -424,33 +467,6 @@ public class umReturn extends CalendarDataManager {
 		}
 
 		table = new JTable(model); // 테이블에 추가
-
-		table.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
-		table.setFillsViewportHeight(true); // 테이블 배경색
-		JTableHeader tableHeader = table.getTableHeader(); // 테이블 헤더 값 가져오기
-		tableHeader.setBackground(new Color(0xB2CCFF)); // 가져온 테이블 헤더의 색 지정
-
-		// 스크롤 팬
-		JScrollPane sc = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sc.setPreferredSize(new Dimension(600, 470));
-		panelInfo.add(sc);
-
-//		JPanel frameSubPanelEast = new JPanel();
-//		frameSubPanelEast.setLayout(new BorderLayout());
-//
-//		Dimension frameSubPanelWestSize = frameSubPanelWest.getPreferredSize();
-//		frameSubPanelWestSize.width = 410;
-//		frameSubPanelWest.setPreferredSize(frameSubPanelWestSize);
-//		
-
-		// frame에 전부 배치
-		mainFrame.setLayout(new BorderLayout());
-		mainFrame.add(panelTop, BorderLayout.WEST);
-		mainFrame.add(panelInfo, BorderLayout.CENTER);
-		mainFrame.setVisible(true);
-
-		focusToday(); // 현재 날짜에 focus를 줌 (mainFrame.setVisible(true) 이후에 배치해야함)
 
 	}
 
@@ -515,7 +531,9 @@ public class umReturn extends CalendarDataManager {
 		}
 	}
 
+	// 달력 선택 시 액션
 	private class listenForDateButs implements ActionListener {
+
 		public void actionPerformed(ActionEvent e) {
 			int k = 0, l = 0;
 			for (int i = 0; i < CAL_HEIGHT; i++) {
@@ -523,14 +541,34 @@ public class umReturn extends CalendarDataManager {
 					if (e.getSource() == dateButs[i][j]) {
 						k = i;
 						l = j;
+
+					}
+				}
+			}
+			if (!(k == 0 && l == 0))
+				calDayOfMon = calDates[k][l]; // today버튼을 눌렀을때도 이 actionPerformed함수가 실행되기 때문에 넣은 부분
+
+			for (int i = 0; i < CAL_HEIGHT; i++) {
+				for (int j = 0; j < CAL_WIDTH; j++) {
+					if (e.getSource() == dateButs[i][j]) {
+						k = i;
+						l = j;
+						if (selectindex == 0) {
+							selectStr = calYear + "-" + (calMonth + 1) + "-" + calDayOfMon;
+							tfDate1.setText(selectStr);
+							selectindex++;
+						} else if (selectindex == 1) {
+							selectStr2 = calYear + "-" + (calMonth + 1) + "-" + calDayOfMon;
+							tfDate2.setText(selectStr2);
+							selectindex--;
+						}
+
 					}
 				}
 			}
 
-			if (!(k == 0 && l == 0))
-				calDayOfMon = calDates[k][l]; // today버튼을 눌렀을때도 이 actionPerformed함수가 실행되기 때문에 넣은 부분
-
 			cal = new GregorianCalendar(calYear, calMonth, calDayOfMon);
+
 			String dDayString = new String();
 			int dDay = ((int) ((cal.getTimeInMillis() - today.getTimeInMillis()) / 1000 / 60 / 60 / 24));
 			if (dDay == 0 && (cal.get(Calendar.YEAR) == today.get(Calendar.YEAR))
@@ -543,6 +581,54 @@ public class umReturn extends CalendarDataManager {
 				dDayString = "D+" + (dDay) * (-1);
 
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object obj = e.getSource();
+		if (obj == btnSearch) {
+
+			if (tfDate1.getText().equals("") | tfDate2.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "날짜를 입력해주세요.", "오류 메시지", JOptionPane.WARNING_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "검색이 완료되었습니다.", "검색 완료", JOptionPane.INFORMATION_MESSAGE);
+				model.setNumRows(0);
+
+				String returnSelect = "SELECT return.returnid, umbrella.UMBRELLAID ,student.STUDENTID , student.NAME , TO_CHAR(rental.rentaldate, \'YYYY-MM-DD\'), TO_CHAR(return.returndate, \'YYYY-MM-DD\') "
+						+ "FROM \"RETURN\" return , STUDENT student , UMBRELLA umbrella, RENTAL rental "
+						+ "WHERE return.RENTALID = rental.rentalid AND rental.studentid = student.studentid AND rental.umbrellaid = umbrella.umbrellaid and return.RETURNDATE BETWEEN '"
+						+ selectStr + "' AND '" + selectStr2 + "'ORDER BY RETURN.RETURNID DESC";
+				ResultSet rs = DB.getResultSet(returnSelect); // 데이터 불러오기
+				String[] rsArr = new String[6];
+				try {
+					while (rs.next()) {
+
+						for (int i = 0; i < rsArr.length; i++) {
+							rsArr[i] = rs.getString(i + 1);
+						}
+
+						model.addRow(rsArr); // 테이블에 추가
+
+					}
+				} catch (SQLException exception) {
+					// TODO Auto-generated catch block
+					exception.printStackTrace();
+				}
+
+				table = new JTable(model);
+				tfDate1.setText("");
+				tfDate2.setText("");
+			}
+
+		}
+
+		else if (obj == btnReset) {
+			selectindex = 0;
+			tfDate1.setText("");
+			tfDate2.setText("");
+			returnTable();
+		}
+
 	}
 
 }
