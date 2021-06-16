@@ -221,7 +221,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		} else if (obj == btnAdmin) {
 			new Admin("관리자", 900, 700);
 		} else if(obj == btnStats) {
-			new Stats("통계", 600, 500);
+			new Stats("통계", 800, 600);
 		} else if(obj == btnExit) {
 			System.exit(0);
 		} 
