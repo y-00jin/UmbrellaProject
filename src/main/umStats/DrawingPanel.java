@@ -49,6 +49,7 @@ public class DrawingPanel extends JPanel {
 		this.umRental = umRental;	
 		this.umReturn = umReturn;
 		this.umNoReturn = umNoReturn;
+
 	}
 
 }

@@ -118,7 +118,6 @@ public class Stats extends JFrame implements ActionListener {
 
 	}
 
-
 	// 검색
 	private void addSearch() {
 		// 검색
@@ -198,7 +197,7 @@ public class Stats extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		DB.init();
-		//new Stats("통계", 800, 600);
+		new Stats("통계", 800, 600);
 	}
 
 	@Override
