@@ -33,6 +33,7 @@ import main.umStats.Stats;
 public class UmbrellaMain extends JFrame implements ActionListener {
 
 	private static boolean check;
+	private static String count;
 	private JPanel panelTitle, panelBtn;
 	private JButton btnRental, btnAdmin, btnReturn;
 	private JLabel lblTitle, lblSubTitle;
@@ -185,27 +186,37 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 	private static void addView() {
 		check = false;
 		
-		String viewSelect = "SELECT * FROM BLOCKVIEW b ";	//블록뷰 셀렉트
-		DB.getResultSet(viewSelect);
+		String viewSelect = "SELECT count(*) FROM BLOCKVIEW b ";	//블록뷰 셀렉트
+		
 		ResultSet rs = DB.getResultSet(viewSelect);
 		try {
 			while(rs.next()) {	// 블록뷰가 있으면 ceck를 true로
-				check = true;
+				count = rs.getString(1);
+				if(count.equals("0")) {
+					check = true;	// 블록뷰가 없으면 false
+				}
+				else {
+					check = false;
+				}
 			}
 		} catch (SQLException e) {
-			check = false;	// 블록뷰가 없으면 false
 			e.printStackTrace();
 		}
 		
 		if(check == true) {	//블록뷰가 있는 상태이므로 삭제한후 다시 뷰 생성
+			String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
+					+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
+			DB.executeQuery(viewCreate);
+		}
+		else {
 			String viewDrop = "DROP VIEW BLOCKVIEW";
 			DB.executeQuery(viewDrop);
+			String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
+					+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
+			DB.executeQuery(viewCreate);
 		}
 		
-		// 뷰 만드는 create문
-		String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
-				+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
-		DB.executeQuery(viewCreate);
+		
 	}
 
 	@Override
