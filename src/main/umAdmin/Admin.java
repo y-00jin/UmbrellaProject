@@ -524,6 +524,8 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		if (obj == btnAdd) {
 
 			umAdd = new AdminUmbrellaAdd("우산추가", 300, 250, this);
+			
+			JOptionPane.showMessageDialog(null, "수정 완료", "수정", JOptionPane.INFORMATION_MESSAGE);
 
 		}
 
