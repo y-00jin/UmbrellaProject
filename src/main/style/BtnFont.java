@@ -13,4 +13,11 @@ public class BtnFont {
       btnFont.setBackground(new Color(0xD9E5FF));
       //btnFont.setBorderPainted(false); // 테두리 없애기
    }
+    
+    public static void BtnDateStyle(JButton btn) {
+    	Font fontBtn = new Font("HY헤드라인M", Font.PLAIN, 15);
+    	btn.setFont(fontBtn); // 폰트 스타일 적용
+    	btn.setForeground(Color.white); // 글자색
+    	btn.setBackground(new Color(0x123478));
+    }
 }

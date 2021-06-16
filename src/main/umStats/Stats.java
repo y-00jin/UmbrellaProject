@@ -128,7 +128,7 @@ public class Stats extends JFrame implements ActionListener {
 		// 검색
 		panelSearch = new JPanel();
 		panelSearch.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-		panelSearch.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+		panelSearch.setBorder(BorderFactory.createEmptyBorder(60, 0, 0, 0));
 		panelSearch.setBackground(Color.WHITE);
 
 		// 날짜 데이터피커
