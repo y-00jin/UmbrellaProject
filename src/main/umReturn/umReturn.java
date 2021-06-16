@@ -526,7 +526,7 @@ public class umReturn extends CalendarDataManager implements ActionListener {
 
 		String returnSelect = "select return.RETURNID, um.UMBRELLAID, st.STUDENTID, st.NAME, TO_CHAR(rental.rentaldate, \'YYYY-MM-DD\'), TO_CHAR(return.returndate, \'YYYY-MM-DD\') "
 				+ " from RETURN return, RENTAL rental, STUDENT st, UMBRELLA um where return.rentalid = rental.rentalid"
-				+ "  and rental.studentid = st.studentid and rental.umbrellaid = um.umbrellaid ORDER BY RETURN.RETURNID";
+				+ "  and rental.studentid = st.studentid and rental.umbrellaid = um.umbrellaid ORDER BY RETURN.RETURNDATE DESC , RETURN.RENTALID DESC";
 
 		ResultSet rs = DB.getResultSet(returnSelect);
 		String[] rsArr = new String[6]; // 값 받아올 배열
@@ -679,7 +679,7 @@ public class umReturn extends CalendarDataManager implements ActionListener {
 				String returnSelect = "SELECT return.returnid, umbrella.UMBRELLAID ,student.STUDENTID , student.NAME , TO_CHAR(rental.rentaldate, \'YYYY-MM-DD\'), TO_CHAR(return.returndate, \'YYYY-MM-DD\') "
 						+ "FROM \"RETURN\" return , STUDENT student , UMBRELLA umbrella, RENTAL rental "
 						+ "WHERE return.RENTALID = rental.rentalid AND rental.studentid = student.studentid AND rental.umbrellaid = umbrella.umbrellaid and return.RETURNDATE BETWEEN '"
-						+ selectStr + "' AND '" + selectStr2 + "'ORDER BY RETURN.RETURNID DESC";
+						+ selectStr + "' AND '" + selectStr2 + "'ORDER BY RETURN.RETURNDATE DESC , RETURN.RENTALID DESC";
 				ResultSet rs = DB.getResultSet(returnSelect); // 데이터 불러오기
 				String[] rsArr = new String[6];
 				try {

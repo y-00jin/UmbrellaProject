@@ -261,8 +261,7 @@ public class Stats extends JFrame implements ActionListener {
 
 	// 달력에서 클릭한 날과 같은 달이고 아직 반납하지 않은 사람만 count
 	private void NoReturnSelect() {
-		String NoReturnSelect = "SELECT COUNT(*) FROM BLOCKVIEW b WHERE b.STUDENTID IN (SELECT b.STUDENTID FROM BLOCKVIEW b2 "
-				+ "WHERE TO_CHAR(b2.RENTALDATE , 'mm') = '" + dateFormatter.format(SelectedDate) + "')";
+		String NoReturnSelect = "SELECT COUNT(*) FROM rental WHERE returnstate ='N' AND (SELECT SYSDATE FROM dual) > RETURNDUEDATE";
 		ResultSet rs = DB.getResultSet(NoReturnSelect);
 		try {
 			while (rs.next()) {

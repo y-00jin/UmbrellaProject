@@ -193,9 +193,6 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 			new Stats("통계", 800, 600);
 		} else if (obj == btnExit) {
 
-			String viewDrop = "DROP VIEW BLOCKVIEW";
-			DB.executeQuery(viewDrop);
-
 			System.exit(0);
 		}
 
