@@ -51,15 +51,10 @@ public class Return extends JFrame implements ActionListener {
 	private JDatePanelImpl datePanel1, datePanel2;
 	private JDatePickerImpl datePicker1, datePicker2;
 	private Date SelectedDate1, SelectedDate2;
-	private JPanel panelClose;
 	private JButton btnClose;
 	private JPanel panelTop;
-	private JPanel panelAll;
 	private JPanel panelTitle;
 	private Font lblFont = new Font("HY헤드라인M", Font.PLAIN, 15);
-	private JLabel lblTitle;
-	private JPanel pTitleReturn;
-	private JPanel pTitleClose;
 	private JLabel lblLogo;
 
 	public Return(String title, int width, int height) {
@@ -69,23 +64,15 @@ public class Return extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// dispose(); // 닫으면 이 프레임만 종료
 
-		// 전체 패널(테두리를 주기 위함)
-		panelAll = new JPanel();
-		panelAll.setLayout(new BorderLayout());
-		//panelAll.setBorder(new LineBorder(Color.GRAY, 2)); // 테두리
-
 		// 탑 패널 생성 (타이틀 & 검색)
 		addTop();
 
 		// 테이블 생성
 		addTable();
 
-		panelAll.add(panelTop, BorderLayout.NORTH);
-		panelAll.add(panelInfo, BorderLayout.CENTER);
-		add(panelAll);
+		add(panelTop, BorderLayout.NORTH);
+		add(panelInfo, BorderLayout.CENTER);
 		
-		
-		//setUndecorated(true);
 		setVisible(true);
 	}
 
@@ -96,7 +83,7 @@ public class Return extends JFrame implements ActionListener {
 		panelTop.setLayout(new BorderLayout());
 		panelTop.setBackground(Color.white);
 
-		// 타이틀 & 닫기 패널 생성
+		// 타이틀 패널 생성
 		addTitle();
 		
 		// 검색 패널 생성
@@ -116,52 +103,10 @@ public class Return extends JFrame implements ActionListener {
 		
 		ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg");
 		Image changeIcon = icontitle.getImage().getScaledInstance(450, 50, Image.SCALE_SMOOTH);
-		ImageIcon btnIcontitle = new ImageIcon(changeIcon);
+		ImageIcon lblIcontitle = new ImageIcon(changeIcon);
 		
-		lblLogo = new JLabel(btnIcontitle);
+		lblLogo = new JLabel(lblIcontitle);
 		panelTitle.add(lblLogo);
-		// 반납 타이틀 생성
-		//addTitleReturn();
-		
-		// 닫기 버튼
-		//addTitleClose();
-		
-		
-		//panelTitle.add(pTitleReturn, BorderLayout.WEST);
-		//panelTitle.add(pTitleClose, BorderLayout.EAST);
-		
-	}
-
-	// 반납 타이틀
-	private void addTitleReturn() {
-		
-		pTitleReturn = new JPanel();
-		pTitleReturn.setBorder(BorderFactory.createEmptyBorder(9, 10, 0, 0));
-		pTitleReturn.setBackground(new Color(0xDEE5F3));	// 패널 배경 설정
-		
-		lblTitle = new JLabel("반납 ");
-		Font lbltitleFont = new Font("HY헤드라인M", Font.PLAIN, 20);	//라벨 폰트
-		lblTitle.setFont(lbltitleFont);	//폰트 적용
-		pTitleReturn.add(lblTitle);
-	}
-
-	// 닫기 버튼
-	private void addTitleClose() {
-		
-		pTitleClose = new JPanel();
-		pTitleClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		pTitleClose.setBackground(new Color(0xDEE5F3));	//패널 배경색
-
-		ImageIcon iconExit = new ImageIcon("libs/exit.png");	//이미지
-		Image changeIcon = iconExit.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);	//이미지 크기 설정
-		ImageIcon btnIcon = new ImageIcon(changeIcon);
-
-		btnClose = new JButton(btnIcon);	//닫기 버튼 생성
-		btnClose.addActionListener(this);
-		btnClose.setBackground(new Color(0xDEE5F3));	//버튼 배경색
-
-		btnClose.setBorderPainted(false);	//버튼 테두리 없애기
-		pTitleClose.add(btnClose);
 		
 	}
 

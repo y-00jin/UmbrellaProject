@@ -62,6 +62,8 @@ public class Stats extends JFrame implements ActionListener {
 	private String returnCount;
 	private String noReturnCount;
 	private JPanel panelAll;
+	private JLabel lblLogo;
+	private JPanel panelLogo;
 
 	public Stats(String title, int width, int height) {
 		setTitle(title);
@@ -69,10 +71,6 @@ public class Stats extends JFrame implements ActionListener {
 		// setLocation(800, 300); 직접 자리 배치
 		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		panelAll = new JPanel();
-		panelAll.setLayout(new BorderLayout());
-		panelAll.setBorder(new LineBorder(Color.GRAY, 2)); // 테두리
 		
 		// 탑_타이틀, 검색
 		addTop();
@@ -80,11 +78,9 @@ public class Stats extends JFrame implements ActionListener {
 		// 센터_그래프
 		addCenter();
 
-		panelAll.add(panelTop, BorderLayout.NORTH);
-		panelAll.add(panelCenter, BorderLayout.CENTER);
+		add(panelTop, BorderLayout.NORTH);
+		add(panelCenter, BorderLayout.CENTER);
 
-		add(panelAll);
-		setUndecorated(true);
 		setVisible(true);
 	}
 
@@ -96,62 +92,36 @@ public class Stats extends JFrame implements ActionListener {
 		panelTop.setLayout(new BorderLayout());
 
 		// 분석 타이틀
-		addTitle();
+		addLogo();
 
-		// 닫기 버튼
-		addClose();
 
 		// 검색 패널
 		addSearch();
 
-		panelTitle.add(panelStats, BorderLayout.WEST);
-		panelTitle.add(panelClose, BorderLayout.EAST);
-		panelTitle.add(panelSearch, BorderLayout.SOUTH);
 
-		panelTop.add(panelTitle);
+		panelTop.add(panelLogo, BorderLayout.NORTH);
+		panelTop.add(panelSearch, BorderLayout.SOUTH);
 
 	}
 
 	// 타이틀 생성
-	private void addTitle() {
+	private void addLogo() {
 
-		// 타이틀(분석) 패널
-		panelTitle = new JPanel();
-		panelTitle.setBackground(new Color(0xDEE5F3));
-		panelTitle.setLayout(new BorderLayout());
+		panelLogo = new JPanel();
+		panelLogo.setLayout(new FlowLayout(FlowLayout.LEFT));
+		panelLogo.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
+		panelLogo.setBackground(Color.white);	//배경색
+		
+		ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg");
+		Image changeIcon = icontitle.getImage().getScaledInstance(450, 50, Image.SCALE_SMOOTH);
+		ImageIcon lblIcontitle = new ImageIcon(changeIcon);
+		
+		lblLogo = new JLabel(lblIcontitle);
+		panelLogo.add(lblLogo);
 
-		panelStats = new JPanel();
-		panelStats.setLayout(new FlowLayout(FlowLayout.LEFT));
-		panelStats.setBackground(new Color(0xDEE5F3));
-
-		// 분석 타이틀
-		Font lblTitleFont = new Font("HY헤드라인M", Font.PLAIN, 20);
-		lblTitle = new JLabel("통계");
-		lblTitle.setBorder(BorderFactory.createEmptyBorder(8, 10, 0, 0));
-		lblTitle.setFont(lblTitleFont);
-		panelStats.add(lblTitle);
 
 	}
 
-	// 닫기 버튼
-	private void addClose() {
-		panelClose = new JPanel();
-
-		panelClose.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		panelClose.setBackground(new Color(0xDEE5F3));
-
-		ImageIcon iconExit = new ImageIcon("libs/exit.png");
-		Image changeIcon = iconExit.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		ImageIcon btnIcon = new ImageIcon(changeIcon);
-
-		btnClose = new JButton(btnIcon);
-		btnClose.setBackground(new Color(0xDEE5F3));
-		btnClose.setBorderPainted(false);
-		btnClose.addActionListener(this);
-
-		panelClose.add(btnClose);
-
-	}
 
 	// 검색
 	private void addSearch() {
@@ -190,7 +160,7 @@ public class Stats extends JFrame implements ActionListener {
 		panelInfo = new JPanel();
 		panelInfo.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
 		panelInfo.setBackground(Color.white);
-		panelInfo.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+		panelInfo.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
 
 		Font fontLbl = new Font("굴림", Font.BOLD, 13);
 		lblRental = new JLabel("대여 :");
@@ -232,7 +202,7 @@ public class Stats extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		DB.init();
-		new Stats("통계", 600, 500);
+		new Stats("통계", 800, 600);
 	}
 
 	@Override

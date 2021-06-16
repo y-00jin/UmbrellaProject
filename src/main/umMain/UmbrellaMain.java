@@ -111,32 +111,15 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 	// 타이틀
 	private void addTitle() {
 		panelTitle = new JPanel();
-		//panelTitle.setLayout(new GridLayout(1, 2, 0, 0));
 		panelTitle.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelTitle.setBackground(new Color(0xFFFFFF)); // Color rgb 값 가져와 배경색 설정
-		panelTitle.setBorder(BorderFactory.createEmptyBorder(40, 0, 20, 50)); // 마진 설정
-
-		ImageIcon icontitle = new ImageIcon("libs/rain.png");
-		Image changeIcon = icontitle.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-		ImageIcon btnIcontitle = new ImageIcon(changeIcon);
+		panelTitle.setBorder(BorderFactory.createEmptyBorder(40, 0, 20, 0)); // 마진 설정
 		
-		btnTitle = new JButton(btnIcontitle);
-		btnTitle.setContentAreaFilled(false); // 투명한 배경색
-		btnTitle.setBorderPainted(false); // 테두리 없애기
+		ImageIcon icontitle1 = new ImageIcon("libs/메인로고.jpg");
+		Image changeIcon1 = icontitle1.getImage().getScaledInstance(750, 80, Image.SCALE_SMOOTH);
+		ImageIcon lblIcontitle1 = new ImageIcon(changeIcon1);
 		
-		panelTitle.add(btnTitle);
-		
-//		Font fontTitle = new Font("휴먼둥근헤드라인", Font.ITALIC, 35); // 타이틀에 들어갈 폰트 설정
-//		lblTitle = new JLabel("Umbrella Rental Program"); // label 생성
-		
-		ImageIcon icontitle1 = new ImageIcon("libs/폰트.png");
-		Image changeIcon1 = icontitle1.getImage().getScaledInstance(570, 50, Image.SCALE_SMOOTH);
-		ImageIcon btnIcontitle1 = new ImageIcon(changeIcon1);
-		
-		lblTitle = new JLabel(btnIcontitle1); // label 생성
-//		lblTitle.setHorizontalAlignment(JLabel.LEFT); // 가운데 정렬
-//		lblTitle.setForeground(new Color(0x123478)); // label 색상 설정
-//		lblTitle.setFont(fontTitle); // 설정한 font 적용
+		lblTitle = new JLabel(lblIcontitle1); // label 생성
 
 		panelTitle.add(lblTitle);
 	}
@@ -199,7 +182,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		DB.init();
 		addView();
-		new UmbrellaMain("우산 대여 프로그램", 900, 600);
+		new UmbrellaMain("Umbrella Rental Program", 900, 600);
 		
 	}
 
