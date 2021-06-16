@@ -144,7 +144,6 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
          try {
             if (rsUm.next()) {
             	umExist = rsUm.getString(1);
-            	System.out.println(umExist + "123");
             }
          } catch (SQLException e1) {
             // TODO Auto-generated catch block
@@ -156,7 +155,8 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
 			if (!rsUm.next()) {
 			    String sql = "INSERT INTO UMBRELLA VALUES('" + umbrellaId + "', " + "'N')";
 			    DB.executeQueryP(sql); // DB 내용 추가
-			    System.out.println(sql);
+
+			    JOptionPane.showMessageDialog(null, "추가 되었습니다.", "우산 추가", JOptionPane.PLAIN_MESSAGE);
 
 			    dispose();
 

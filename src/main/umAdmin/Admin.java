@@ -532,7 +532,9 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
          String sql = "DELETE FROM UMBRELLA " + "WHERE UMBRELLAID='" + umCode + "'";
          DB.executeQuery(sql); // DB 내용 삭제임
-
+         
+         JOptionPane.showMessageDialog(null, "삭제 되었습니다.", "우산 삭제", JOptionPane.PLAIN_MESSAGE);
+         
          panelCenter.removeAll();
          umbrellaPanel();
          panelCenter.revalidate(); // 레이아웃 변화 재확인
@@ -651,7 +653,6 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 
       if (obj == btnSearch | obj == tfSearch) {
          String blockDe = tfSearch.getText();
-         System.out.println(blockDe);
 
          String sqlBlock = "Select s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE , r.RETURNSTATE, r.RETURNDUEDATE\r\n"
 					+ "FROM STUDENT s , UMBRELLA u , RENTAL r \r\n"
