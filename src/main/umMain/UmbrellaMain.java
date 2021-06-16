@@ -27,12 +27,13 @@ import javax.swing.border.LineBorder;
 import main.DB;
 import main.umAdmin.Admin;
 import main.umRental.Rental;
-import main.umReturn.Return;
+import main.umReturn.umReturn;
 import main.umStats.Stats;
 
 public class UmbrellaMain extends JFrame implements ActionListener {
 
 	private static boolean check;
+	private static String count;
 	private JPanel panelTitle, panelBtn;
 	private JButton btnRental, btnAdmin, btnReturn;
 	private JLabel lblTitle, lblSubTitle;
@@ -46,7 +47,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 	public UmbrellaMain(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
-		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치dddd
+		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// 전체 패널(테두리를 주기 위함)
@@ -150,7 +151,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		btnAdmin = new JButton("    관       리       자    ");
 		btnAdmin.addActionListener(this);
 
-		btnStats = new JButton("   분             석   ");
+		btnStats = new JButton("   통             계   ");
 		btnStats.addActionListener(this);
 
 		// 버튼에 스타일 적용
@@ -168,20 +169,16 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 				btnArr[i].setBackground(new Color(0x7C96C9));
 			}
 			
-			//btnArr[i].setContentAreaFilled(false); // 투명한 배경색
 			btnArr[i].setBorderPainted(false); // 테두리 없애기
+			panelBtn.add(btnArr[i]);
 		}
 
-		panelBtn.add(btnRental);
-		panelBtn.add(btnReturn);
-		panelBtn.add(btnStats);
-		panelBtn.add(btnAdmin);
-		
+
 	}
 
 	public static void main(String[] args) {
 		DB.init();
-		addView();
+		addView();	//뷰 생성
 		new UmbrellaMain("Umbrella Rental Program", 900, 600);
 		
 	}
@@ -189,26 +186,37 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 	private static void addView() {
 		check = false;
 		
-		String viewSelect = "SELECT * FROM BLOCKVIEW b ";
-		DB.getResultSet(viewSelect);
+		String viewSelect = "SELECT count(*) FROM BLOCKVIEW b ";	//블록뷰 셀렉트
+		
 		ResultSet rs = DB.getResultSet(viewSelect);
 		try {
-			while(rs.next()) {
-				check = true;
+			while(rs.next()) {	// 블록뷰가 있으면 ceck를 true로
+				count = rs.getString(1);
+				if(count.equals("0")) {
+					check = true;	// 블록뷰가 없으면 false
+				}
+				else {
+					check = false;
+				}
 			}
 		} catch (SQLException e) {
-			check = false;
 			e.printStackTrace();
 		}
 		
-		if(check == true) {
+		if(check == true) {	//블록뷰가 있는 상태이므로 삭제한후 다시 뷰 생성
+			String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
+					+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
+			DB.executeQuery(viewCreate);
+		}
+		else {
 			String viewDrop = "DROP VIEW BLOCKVIEW";
 			DB.executeQuery(viewDrop);
+			String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
+					+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
+			DB.executeQuery(viewCreate);
 		}
 		
-		String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
-				+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
-		DB.executeQuery(viewCreate);
+		
 	}
 
 	@Override
@@ -217,7 +225,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		if (obj == btnRental) {
 			new Rental("대여", 900, 600);
 		} else if (obj == btnReturn) {
-			new Return("반납", 900, 600);
+			new umReturn();
 		} else if (obj == btnAdmin) {
 			new Admin("관리자", 900, 700);
 		} else if(obj == btnStats) {

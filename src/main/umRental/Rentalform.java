@@ -116,9 +116,17 @@ public class Rentalform extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Boolean check = false;		
+		Boolean check = false;
 
-		// 대여 아이디 값 - 자동으로 현재 값보다 1 증가한 값 넣어주기 위해서 대여 아이디의 최대값을 구한 후 +1 증가
+		// 입력한 학번 code에 저장
+		String code = new String();
+		code = tf_Code.getText();
+
+		// 입력한 우산코드 umbCode에 저장
+		String umbCode = new String();
+		umbCode = tf_Umbcode.getText();
+
+		// 대여 아이디 자동으로 가장 큰 값 넣어주기 위해서 대여 아이디의 최대값을 구한 후 +1 증가
 		String sqlMax = "SELECT MAX(RENTALID) +1  FROM RENTAL r ";
 		ResultSet rsMax = DB.getResultSet(sqlMax); // 쿼리 넘기기
 		try {
@@ -131,8 +139,9 @@ public class Rentalform extends JFrame implements ActionListener {
 		Object obj = e.getSource();
 
 		if (obj == btn_ok || obj == tf_Umbcode) {
-			String code = tf_Code.getText();
-			String umbCode = tf_Umbcode.getText();
+
+			String studentcode = tf_Code.getText();
+			String umcode = tf_Umbcode.getText();
 			String getId = rental.getRentalId();
 
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
@@ -140,13 +149,11 @@ public class Rentalform extends JFrame implements ActionListener {
 				// 우산 대여상태 검색
 				for (int i = 0; i < rental.getTable().getRowCount(); i++) {
 					System.out.println(rental.getTable().getValueAt(i, 1));
-					if (umbCode.equals(rental.getTable().getValueAt(i, 1))) { 
-						// 테이블에서 우산 코드 검색 
+					if (umcode.equals(rental.getTable().getValueAt(i, 1))) {
 						JOptionPane.showMessageDialog( // 메시지창 출력
 								this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
 						tf_Umbcode.setText("");
-					} else if (code.equals(rental.getTable().getValueAt(i, 2))) {
-						// 테이블에서 학번 검색
+					} else if (studentcode.equals(rental.getTable().getValueAt(i, 2))) {
 						JOptionPane.showMessageDialog( // 메시지창 출력
 								this, "이미 대여중인 학번입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
 					} else {
