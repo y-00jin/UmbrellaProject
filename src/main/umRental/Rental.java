@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,22 +34,20 @@ import javax.swing.table.TableModel;
 
 import main.DB;
 import main.style.BtnFont;
+import main.style.hint;
 
 public class Rental extends JFrame implements ActionListener, MouseListener {
-	private JPanel pBase, pCenter, pBottom, pBtn, pExit;
-	private JButton btnF5, btnRental, btnDelete, btnOk, btnReturn, btnExit;
+	private JPanel pBase, pCenter, pBottom, pTitle;
+	private JButton btnF5, btnRental, btnDelete, btnReturn, btnExit, btnSearch;
 	private Vector<String> vectorTitle;
 	private DefaultTableModel model;
 	private Vector<String> data;
-	private String[] tmp, value;
 	private JTable table;
-	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE, rentalState;
+	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE;
 	private String rentalId, umbcode, code, max;
 	private int row = -1;
-	private Rental_ModifyBtn modify;
 	private JLabel lblLogo;
-	private Container panelTitle;
-	private JPanel pTitle;
+	private hint tfSearch;
 
 	public Rental(String title, int width, int height) {
 		this.setTitle(title);
@@ -60,7 +57,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// 레이아웃
-		pBase = new JPanel();
+		pBase = new JPanel(); //전체 패널
 		pBase.setLayout(new BorderLayout());
 		pBase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
 		add(pBase);
@@ -97,7 +94,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		pCenter = new JPanel();
 		pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pCenter.setBackground(Color.WHITE);
-		pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0)); // 패널마진
+		pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0)); // 패널 마진
 		pBase.add(pCenter, BorderLayout.CENTER); // 프레임에 패널 가운데에 붙임
 
 		vectorTitle = new Vector<String>(); // 헤더 값
@@ -197,7 +194,20 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		pBottom.setBackground(Color.WHITE); // 배경색
 		pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0)); // 패널 마진
 		pBase.add(pBottom, BorderLayout.SOUTH); // 남쪽 정렬
-
+		
+		//검색 텍스트박스
+		tfSearch = new hint("학번을 입력하세요"); // hint
+		pBottom.add(tfSearch);
+		
+		//검색 버튼
+		btnSearch = new JButton("검색");
+		BtnFont.BtnStyle(btnSearch);		
+		btnSearch.addActionListener(this);
+		pBottom.add(btnSearch);
+		
+		JLabel lblSpace = new JLabel("                                                                                                                   ");
+		pBottom.add(lblSpace);
+		
 		// 새로고침 버튼
 		btnF5 = new JButton("새로고침");
 		BtnFont.BtnStyle(btnF5);
@@ -247,8 +257,16 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 					String sqlDelete = "DELETE FROM DODAM.RENTAL " + "WHERE RENTALID='" + rentalId + "'";
 					ResultSet rs = DB.getResultSet(sqlDelete); // 쿼리 넘기기
 					DB.executeQuery(sqlDelete); // DB 내용 수정
+					
+					// 삭제한 우산 상태 N로 변경
+					String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbcode + "'";
+					ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
+					DB.executeQuery(sqlStateModify); // DB 내용 수정
 
 					rentalTable(); // 새로고침
+					// 메시지창 출력
+					JOptionPane.showMessageDialog(this,"삭제가 완료되었습니다.",
+							"메시지", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 
@@ -278,8 +296,8 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 				ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
 				DB.executeQuery(sqlStateModify); // DB 내용 수정
 
-				// 반납된 우산상태를 Y로 바꿔줌 -> 다시 대여 가능하게
-				String sqlUmbStateModify = "UPDATE UMBRELLA " + "SET STATE='Y'" + "WHERE UMBRELLAID='" + umbcode + "'";
+				// 반납된 우산상태를 N으로 바꿔줌 -> 다시 대여 가능하게
+				String sqlUmbStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbcode + "'";
 				ResultSet rsUmbStateModify = DB.getResultSet(sqlUmbStateModify); // 쿼리 넘기기
 				DB.executeQuery(sqlUmbStateModify); // DB 내용 수정
 
@@ -306,6 +324,9 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 
 		} else if (obj == btnF5) {
 			rentalTable();
+		} else if (obj == btnSearch) {
+			// ---------------------------------- 검 색 --------------------------------------
+			
 		}
 	}
 

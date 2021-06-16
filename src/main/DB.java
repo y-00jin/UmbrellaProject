@@ -54,8 +54,15 @@ public class DB {
          stmt.executeUpdate(sql);
       } catch (SQLException e) {
          e.printStackTrace();
-//         JOptionPane.showMessageDialog(null, "이미 존재하는 코드입니다.");
       }
    }
+   
+   public static void executeQueryP(String sql) {
+	      try {
+			stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "이미 존재하는 코드입니다.");
+		}
+	   }
    
 }

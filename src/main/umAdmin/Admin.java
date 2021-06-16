@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,53 +54,20 @@ import main.style.hint;
 public class Admin extends JFrame implements ActionListener, MouseListener {
 
 	private JPanel panelContainer, panelTopBottom, panelTop, panelWest, panelEast, panelCenter, panelCenterWest,
-			panelCenterEast;
-	private String result;
+					panelCenterEast, pTop, pCenter, pBottom, panelTitle;
+	private String returnState, umbrellaID, umbrellaState, studentID, studentMajor, studentName, studentPhone,
+					id, umCode, department,studentId, name, phoneNumber, returnDueDate, major, phone, stName;
 	private String[] strs = { "학생", "우산", "미반납자" };
 	private JComboBox<String> cbStr;
 	private DefaultTableModel model;
 	private Vector<String> con;
-	private JTable studentTable, umbrellaTable, blockTable;
-	private String returnState;
-	private String umbrellaID;
-	private String umbrellaState;
-	private String studentID;
-	private String studentMajor;
-	private String studentName;
-	private String studentPhone;
-	private String id;
-	private JButton btnDelect;
-	private JButton btnAdd;
-	private AdminModify modify;
-	private JTable table;
-	private String umCode;
-	private JButton btnClose;
-	private ImageIcon icon;
+	private JTable studentTable, umbrellaTable, blockTable, table;
+	private JButton btnDelect, btnAdd, btnClose, btnSearch, btnOk, btnCancel, btnUmSearch, btnReset;
 	private ImageIcon btnIcon;
-	private String department;
-	private String studentId;
-	private String name;
-	private String phoneNumber;
-	private String returnDueDate;
-	private JTextField tfSearch;
-	private JButton btnSearch;
-	private AdminUmbrellaAdd umAdd;
-	private JPanel pTop;
-	private JPanel pCenter;
-	private JTextField tfMajor;
-	private JTextField tfName;
-	private JTextField tfPhone;
-	private JPanel pBottom;
-	private JButton btnOk;
-	private JButton btnCancel;
-	private String major;
-	private String phone;
-	private String stName;
-	private JPanel panelTitle;
+	private JTextField tfSearch, tfMajor, tfName, tfPhone;
 	private JLabel lblLogo;
-	private JRadioButton rbY;
-	private JRadioButton rbN;
-	private JButton btnUmSearch;
+	private JRadioButton rbY, rbN;
+	private AdminUmbrellaAdd umAdd;
 
 	public String getId() {
 		return id;
@@ -305,9 +273,6 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	}
 
 	private void blockPanel() { // 블록테이블 생성
-		panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
-		panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-
 		Vector<String> column = new Vector<String>();
 		column.addElement("전공");
 		column.addElement("학번");
@@ -348,39 +313,8 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		}
 
 		blockTable = new JTable(model);
-		blockTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
-		blockTable.addMouseListener(this);
 
-		blockTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
-
-		JTableHeader tableHeader = blockTable.getTableHeader();
-		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블 헤더 색 설정
-
-		JScrollPane sc = new JScrollPane(blockTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-		sc.setPreferredSize(new Dimension(850, 360)); // 스크롤팬 크기 설정
-
-		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
-
-		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-
-		TableColumnModel tcmSchedule = blockTable.getColumnModel();
-
-		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
-			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
-		} // 테이블 내용 가운데 정렬
-
-		tfSearch = new hint("전공을 입력하세요"); // hint
-
-		btnSearch = new JButton("검색");
-		BtnFont.BtnStyle(btnSearch);
-
-		panelCenter.add(sc);
-		panelCenter.add(tfSearch);
-		panelCenter.add(btnSearch);
-
-		panelContainer.add(panelCenter, new BorderLayout().CENTER);
+		bkTableAdd();
 	}
 
 	private void studentModify() {
@@ -490,7 +424,8 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		JLabel lblSearch = new JLabel("대여 상태 : ");
 		lblSearch.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
 
-		JLabel lblSpace = new JLabel("                                                                                                                                             ");
+		JLabel lblSpace = new JLabel(
+				"                                                                                                                                             ");
 
 		ButtonGroup bg = new ButtonGroup(); // 라디오그룹 생성
 		rbY = new JRadioButton("Y");
@@ -514,6 +449,53 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		panelCenter.add(btnDelect);
 
 		panelContainer.add(panelCenter, new BorderLayout().CENTER);
+	}
+
+	private void bkTableAdd() {
+		panelCenter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
+		panelCenter.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+
+		blockTable.getTableHeader().setReorderingAllowed(false); // 테이블 편집X
+		blockTable.addMouseListener(this);
+
+		blockTable.setFillsViewportHeight(true); // 컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정 -> 테이블 색이 컨테이너 색으로 덮힘
+
+		JTableHeader tableHeader = blockTable.getTableHeader();
+		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블 헤더 색 설정
+
+		JScrollPane sc = new JScrollPane(blockTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		sc.setPreferredSize(new Dimension(850, 360)); // 스크롤팬 크기 설정
+
+		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+
+		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+		TableColumnModel tcmSchedule = blockTable.getColumnModel();
+
+		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
+			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
+		} // 테이블 내용 가운데 정렬
+
+		tfSearch = new hint("전공을 입력하세요"); // hint
+		tfSearch.addActionListener(this);
+
+		btnSearch = new JButton("검색");
+		BtnFont.BtnStyle(btnSearch);
+		btnSearch.addActionListener(this);
+
+		btnReset = new JButton("초기화");
+		BtnFont.BtnStyle(btnReset);
+		btnReset.addActionListener(this);
+
+		panelCenter.add(sc);
+		panelCenter.add(tfSearch);
+		panelCenter.add(btnSearch);
+		panelCenter.add(btnReset);
+
+		panelContainer.add(panelCenter, new BorderLayout().CENTER);
+
 	}
 
 	@Override
@@ -662,6 +644,79 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 				panelCenter.revalidate(); // 레이아웃 변화 재확인
 				panelCenter.repaint(); // 레이아웃 다시 가져오기
 			}
+		}
+
+		if (obj == btnSearch | obj == tfSearch) {
+			String blockDe = tfSearch.getText();
+			System.out.println(blockDe);
+
+			String sqlBlock = "SELECT * " + "FROM DODAM.BLOCKVIEW " + "WHERE DEPARTMENT LIKE '" + blockDe + "'";
+
+			ResultSet rsBk = DB.getResultSet(sqlBlock);
+			String bkDe = "";
+
+			try {
+				if (rsBk.next()) {
+					bkDe = rsBk.getString(1);
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			System.out.println(bkDe);
+
+			if (blockDe.equals(bkDe)) {
+				panelCenter.removeAll();
+				model.setNumRows(0);
+
+				String sql = "SELECT * " + "FROM DODAM.BLOCKVIEW " + "WHERE DEPARTMENT LIKE '" + blockDe + "'";
+				ResultSet rs = DB.getResultSet(sql);
+
+				try {
+					while (rs.next()) {
+						con = new Vector<String>();
+						department = rs.getString(1);
+						studentId = rs.getString(2);
+						name = rs.getString(3);
+						phoneNumber = rs.getString(4);
+						returnDueDate = rs.getString(6);
+						returnState = rs.getString(7);
+
+						con.add(department);
+						con.add(studentId);
+						con.add(name);
+						con.add(phoneNumber);
+						con.add(returnDueDate);
+						con.add(returnState);
+						model.addRow(con); // 테이블에 내용 추가
+					}
+				} catch (SQLException e2) {
+					System.out.println("접속 오류 / SQL 오류");
+					e2.printStackTrace();
+				}
+
+				blockTable = new JTable(model);
+
+				bkTableAdd();
+
+				panelCenter.revalidate(); // 레이아웃 변화 재확인
+				panelCenter.repaint(); // 레이아웃 다시 가져오기
+			} else if (bkDe.equals("")) {
+				JOptionPane.showMessageDialog(null, "검색 결과가 존재하지 않습니다.", "검색 결과", JOptionPane.PLAIN_MESSAGE);
+
+				model.setNumRows(0);
+			}
+		}
+
+		if (obj == btnReset) {
+			panelCenter.removeAll();
+			model.setNumRows(0);
+
+			blockPanel();
+
+			panelCenter.revalidate(); // 레이아웃 변화 재확인
+			panelCenter.repaint(); // 레이아웃 다시 가져오기
 		}
 	}
 

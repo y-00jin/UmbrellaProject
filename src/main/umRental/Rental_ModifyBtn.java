@@ -48,7 +48,7 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 		setTop();
 		setCenter();
 		setBottom();
-		
+
 		// 레이아웃
 		setLayout(new BorderLayout());
 	}
@@ -115,19 +115,47 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		new Rental_ModifyBtn("수정", 300, 300);
-		
-		
+		DB.init();
+		String returnSelect = "SELECT STUDENTID FROM RENTAL";
+		System.out.println(returnSelect);
+
+		ResultSet rs = DB.getResultSet(returnSelect);
+		try {
+			while (rs.next()) {
+				data = new Vector<String>();				
+
+				//System.out.println(data.get(0));//0번째 index 출력
+								
+				for(String i : data) { //for문을 통한 전체출력
+					data.addElement(rs.getString(i));
+				    System.out.println(i);
+				}
+
+				Iterator<String> iter = data.iterator(); //Iterator 선언 
+				while(iter.hasNext()){//다음값이 있는지 체크
+				    System.out.println(iter.next()); //값 출력
+					System.out.println("data 크기 : " + data.size());
+					System.out.println("data 값 : " + data);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	finally {
+			
+		}
 	}
-	public void executeSelectQuery(PreparedStatement pstmt, Vector rthValue, int nRenturn) throws Exception{
-		String sqlAgoStudentId = "SELECT STUDENTID " 
-				+ "FROM RENTAL";
+	
+
+	public void executeSelectQuery(PreparedStatement pstmt, Vector rthValue, int nRenturn) throws Exception {
+		String sqlAgoStudentId = "SELECT STUDENTID " + "FROM RENTAL";
 		ResultSet rsStudent = DB.getResultSet(sqlAgoStudentId); // 쿼리 넘기기
-		DB.executeQuery(sqlAgoStudentId); 
-		
+		DB.executeQuery(sqlAgoStudentId);
+
 		try {
 			while (rsStudent.next()) {
-				for(int i = 1; i <= nRenturn; i++)
-				data.addElement(rsStudent.getString(i));
+				for (int i = 1; i <= nRenturn; i++)
+					data.addElement(rsStudent.getString(i));
 				System.out.println(data);
 			}
 		} catch (SQLException e1) {
@@ -142,22 +170,20 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 			String studentCode = tf_Code.getText();
 			String umcode = tf_Umbcode.getText();
 			String getId = rental.getRentalId();
-			
+
 			// 우산 상태 뽑아오기
-			String sqlAgoUmbId =  "SELECT STATE "
-					+ "FROM DODAM.UMBRELLA "
-					+ "WHERE UMBRELLAID LIKE '" + umcode +"'";
+			String sqlAgoUmbId = "SELECT STATE " + "FROM DODAM.UMBRELLA " + "WHERE UMBRELLAID LIKE '" + umcode + "'";
 			String agoUmbState = "";
-			ResultSet rsUm = DB.getResultSet(sqlAgoUmbId); //쿼리 넘기기
-			
+			ResultSet rsUm = DB.getResultSet(sqlAgoUmbId); // 쿼리 넘기기
+
 			try {
-				rsUm.next(); //getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+				rsUm.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
 				agoUmbState = rsUm.getString(1);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			
-			// 학번 뽑아오기 - 대여 테이블에 입력한 학번이 있는지 
+
+			// 학번 뽑아오기 - 대여 테이블에 입력한 학번이 있는지
 			// -> 학번이 있고 대여상태가 N이면 미반납자, 학번이 있고 대여상태가 Y이면 예전이 대여하고 반납한 사람
 //			String sqlAgoStudentId = "SELECT STUDENTID " 
 //					+ "FROM RENTAL";
@@ -173,27 +199,28 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 //			} catch (SQLException e1) {
 //				e1.printStackTrace();
 //			}
-			
+
 			// 미반납자에 있는 학번, 현재 대여중인 학번
 			// 대여를 하면 반납 상태가 N, 반납을 하면 Y
 			// 이미 반납한 학생은 반납상태가 Y,
 			// 현재 대여중(+미반납자)이면 지금 대여 테이블에 학번이 있으니까
 			// 중복 처리할때 반납상태가 Y이거나 대여테이블에 학번이 없을경우로 하면 될듯
 			// while문으로 돌려야 하나,,,
-			
+
 //			if (!agoStudentId.equals(null))/* 사실 1은 아니고 만약 중복된다면 */) {
 //				JOptionPane.showMessageDialog( // 메시지창 출력
 //						this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 //			} else 
-				if (agoUmbState.equals("Y")){ // 이미 대여한 우산일 경우
+			if (agoUmbState.equals("Y")) { // 이미 대여한 우산일 경우
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
 			} else {
-				String sql = "UPDATE RENTAL SET UMBRELLAID = '" + umcode + "'," + "STUDENTID = '" + studentCode + "' WHERE RENTALID = '" + getId + "'";
+				String sql = "UPDATE RENTAL SET UMBRELLAID = '" + umcode + "'," + "STUDENTID = '" + studentCode
+						+ "' WHERE RENTALID = '" + getId + "'";
 				ResultSet rs = DB.getResultSet(sql); // 쿼리 넘기기
 				DB.executeQuery(sql); // DB 내용 수정
 
-				dispose(); //현재 수정창 끄기
+				dispose(); // 현재 수정창 끄기
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 				rental.rentalTable(); // 새로고침
