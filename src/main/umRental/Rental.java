@@ -2,7 +2,6 @@ package main.umRental;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
@@ -44,7 +43,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 	private Vector<String> data;
 	private JTable table;
 	private String rentalID, umbreallaID, studentID, studentName, rentalDATE, returndueDATE;
-	private String rentalId, umbcode, code, max;
+	private String rentalId, umbcode, code, max, count;
 	private int row = -1;
 	private JLabel lblLogo;
 	private hint tfSearch;
@@ -57,7 +56,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// 레이아웃
-		pBase = new JPanel(); //전체 패널
+		pBase = new JPanel(); // 전체 패널
 		pBase.setLayout(new BorderLayout());
 		pBase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
 		add(pBase);
@@ -76,10 +75,10 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		pTitle = new JPanel();
 		// pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		pTitle.setLayout(new FlowLayout(FlowLayout.LEFT));
-		pTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));  // 패널 마진
+		pTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0)); // 패널 마진
 		pTitle.setBackground(Color.white); // 패널 배경색
 
-		ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg"); 
+		ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg");
 		Image changeIcon = icontitle.getImage().getScaledInstance(450, 50, Image.SCALE_SMOOTH);
 		ImageIcon lblIcontitle = new ImageIcon(changeIcon);
 
@@ -117,7 +116,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		String sql = "SELECT r.RENTALID , um.UMBRELLAID , st.STUDENTID, st.NAME , TO_CHAR(r.RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(r.RETURNDUEDATE, 'YYYY-MM-DD')"
 				+ "FROM RENTAL r, UMBRELLA um, STUDENT st "
 				+ "WHERE r.UMBRELLAID = um.UMBRELLAID AND st.STUDENTID = r.STUDENTID AND r.RETURNSTATE LIKE 'N'"
-				+ "ORDER BY r.RENTALID DESC";
+				+ "ORDER BY r.RENTALDATE";
 		// 대여의 대여아이디, 우산의 우산 아이디, 학생의 학생아이디, 학생의 이름, 대여의 대여일, 대여의 반납예정일, 반납상태를 출력
 		// 대여의 우산아이디와 우산의 우산아이디 && 학생의 학생아이디와 대여의 학생아이디가 같을때
 		// 대여아이디로 정렬
@@ -151,7 +150,6 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			e.printStackTrace();
 		}
 
-		System.out.println("DB연결 성공");
 
 		// 테이블
 		table = new JTable(model); // 테이터 변경 시 테이블에 직접 접근하지 않고 변경
@@ -162,7 +160,6 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		table.setBackground(Color.white); // 테이블 배경색 지정
 
 		table.addMouseListener(this);
-
 		JTableHeader tableHeader = table.getTableHeader(); // 테이블 헤더 값 가져오기
 		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블헤더 배경색 지정
 
@@ -183,6 +180,10 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 
 	}
 
+	public JTable getTable() {
+		return table;
+	}
+
 	public JPanel getpCenter() {
 		return pCenter;
 	}
@@ -194,20 +195,21 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		pBottom.setBackground(Color.WHITE); // 배경색
 		pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0)); // 패널 마진
 		pBase.add(pBottom, BorderLayout.SOUTH); // 남쪽 정렬
-		
-		//검색 텍스트박스
+
+		// 검색 텍스트박스
 		tfSearch = new hint("학번을 입력하세요"); // hint
 		pBottom.add(tfSearch);
-		
-		//검색 버튼
+
+		// 검색 버튼
 		btnSearch = new JButton("검색");
-		BtnFont.BtnStyle(btnSearch);		
+		BtnFont.BtnStyle(btnSearch);
 		btnSearch.addActionListener(this);
 		pBottom.add(btnSearch);
-		
-		JLabel lblSpace = new JLabel("                                                                                                                   ");
+
+		JLabel lblSpace = new JLabel(
+				"                                                                                                                   ");
 		pBottom.add(lblSpace);
-		
+
 		// 새로고침 버튼
 		btnF5 = new JButton("새로고침");
 		BtnFont.BtnStyle(btnF5);
@@ -257,7 +259,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 					String sqlDelete = "DELETE FROM DODAM.RENTAL " + "WHERE RENTALID='" + rentalId + "'";
 					ResultSet rs = DB.getResultSet(sqlDelete); // 쿼리 넘기기
 					DB.executeQuery(sqlDelete); // DB 내용 수정
-					
+
 					// 삭제한 우산 상태 N로 변경
 					String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbcode + "'";
 					ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
@@ -265,8 +267,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 
 					rentalTable(); // 새로고침
 					// 메시지창 출력
-					JOptionPane.showMessageDialog(this,"삭제가 완료되었습니다.",
-							"메시지", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(this, "삭제가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 
@@ -275,50 +276,64 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			if (row == -1) {
 				JOptionPane.showMessageDialog(null, "반납할 목록을 선택해주세요.", "경고 메시지", JOptionPane.WARNING_MESSAGE);
 			} else {
+				
 
+				String sqlCount = "SELECT count(*) from return";
+				ResultSet rsCount = DB.getResultSet(sqlCount);
+				try {
+					rsCount.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+					count = rsCount.getString(1);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				if(count.equals("0")) {
+					String sqlReturn = "INSERT INTO RETURN (RETURNID, RENTALID, RETURNDATE) " 
+							+ "VALUES('1', '" + rentalId + "', TO_DATE( SYSDATE))";
+					DB.executeQuery(sqlReturn); // DB에 sqlReturn 추가
+
+					// 반납된 대여아이디의 반납 상태를 Y로 바꿔줌 -> 대여테이블에서 보여지지 않음
+					String sqlStateModify = "UPDATE RENTAL " + "SET RETURNSTATE='Y'" + "WHERE RENTALID='" + rentalId + "'";
+					ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
+					DB.executeQuery(sqlStateModify); // DB 내용 수정
+
+					// 반납된 우산상태를 N으로 바꿔줌 -> 다시 대여 가능하게
+					String sqlUmbStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbcode + "'";
+					ResultSet rsUmbStateModify = DB.getResultSet(sqlUmbStateModify); // 쿼리 넘기기
+					DB.executeQuery(sqlUmbStateModify); // DB 내용 수정
+
+					rentalTable(); // 테이블 새로고침
+
+					// 반납한 사람의 이름 알아오기
+					String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
+					String findName = "";
+					ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
+					try {
+						rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+						findName = rsFindName.getString(1);
+
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+
+					// 메시지창 출력
+					JOptionPane.showMessageDialog(this, findName + "님의 우산이 반납처리되었습니다.", "메시지",
+							JOptionPane.INFORMATION_MESSAGE);
+					
+				}
 				// 대여 아이디 자동으로 가장 큰 값 넣어주기 위해서 대여 아이디의 최대값을 구한 후 +1 증가
 				String sqlMax = "SELECT MAX(RETURNID) +1  FROM RETURN ";
 				ResultSet rsMax = DB.getResultSet(sqlMax); // 쿼리 넘기기
 				try {
-					rsMax.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-					max = rsMax.getString(1);
+					if (rsMax.next()) {// getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+						max = rsMax.getString(1);
+					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
 
-				// 선택한 행의 정보를 반납테이블에 현재날짜를 반납아이디로 추가
-				String sqlReturn = "INSERT INTO RETURN (RETURNID, RENTALID, RETURNDATE) " + "VALUES('" + max + "', '"
-						+ rentalId + "', TO_DATE( SYSDATE, 'YYYY-MM-DD'))";
-				DB.executeQuery(sqlReturn); // DB에 sqlReturn 추가
-
-				// 반납된 대여아이디의 반납 상태를 Y로 바꿔줌 -> 대여테이블에서 보여지지 않음
-				String sqlStateModify = "UPDATE RENTAL " + "SET RETURNSTATE='N'" + "WHERE RENTALID='" + rentalId + "'";
-				ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
-				DB.executeQuery(sqlStateModify); // DB 내용 수정
-
-				// 반납된 우산상태를 N으로 바꿔줌 -> 다시 대여 가능하게
-				String sqlUmbStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbcode + "'";
-				ResultSet rsUmbStateModify = DB.getResultSet(sqlUmbStateModify); // 쿼리 넘기기
-				DB.executeQuery(sqlUmbStateModify); // DB 내용 수정
-
-				rentalTable(); // 테이블 새로고침
-
-				// 반납한 사람의 이름 알아오기
-				String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
-				String findName = "";
-				ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
-				try {
-					rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-					findName = rsFindName.getString(1);
-
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-
-				// 메시지창 출력
-				JOptionPane.showMessageDialog(this, findName + "님의 우산이 반납처리되었습니다.", "메시지",
-						JOptionPane.INFORMATION_MESSAGE);
-			}
+				setReturn();
+				
+							}
 		} else if (obj == btnExit) {
 			dispose();
 
@@ -326,9 +341,46 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			rentalTable();
 		} else if (obj == btnSearch) {
 			// ---------------------------------- 검 색 --------------------------------------
-			
+
 		}
 	}
+
+	private void setReturn() {
+		// 선택한 행의 정보를 반납테이블에 현재날짜를 반납아이디로 추가
+		String sqlReturn = "INSERT INTO RETURN (RETURNID, RENTALID, RETURNDATE) " + "VALUES('" + max + "', '"
+				+ rentalId + "', TO_DATE(SYSDATE))";
+		DB.executeQuery(sqlReturn); // DB에 sqlReturn 추가
+
+		// 반납된 대여아이디의 반납 상태를 Y로 바꿔줌 -> 대여테이블에서 보여지지 않음
+		String sqlStateModify = "UPDATE RENTAL " + "SET RETURNSTATE='Y'" + "WHERE RENTALID='" + rentalId + "'";
+		ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
+		DB.executeQuery(sqlStateModify); // DB 내용 수정
+
+		// 반납된 우산상태를 N으로 바꿔줌 -> 다시 대여 가능하게
+		String sqlUmbStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbcode + "'";
+		ResultSet rsUmbStateModify = DB.getResultSet(sqlUmbStateModify); // 쿼리 넘기기
+		DB.executeQuery(sqlUmbStateModify); // DB 내용 수정
+
+		rentalTable(); // 테이블 새로고침
+
+		// 반납한 사람의 이름 알아오기
+		String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
+		String findName = "";
+		ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
+		try {
+			rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+			findName = rsFindName.getString(1);
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		// 메시지창 출력
+		JOptionPane.showMessageDialog(this, findName + "님의 우산이 반납처리되었습니다.", "메시지",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+		
+	
 
 	public int setRow(int i) {
 		row = i;

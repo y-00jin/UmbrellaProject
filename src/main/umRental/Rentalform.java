@@ -139,6 +139,7 @@ public class Rentalform extends JFrame implements ActionListener {
 		Object obj = e.getSource();
 
 		if (obj == btn_ok || obj == tf_Umbcode) {
+
 			String studentcode = tf_Code.getText();
 			String umcode = tf_Umbcode.getText();
 			String getId = rental.getRentalId();
@@ -146,142 +147,59 @@ public class Rentalform extends JFrame implements ActionListener {
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
 				// 모든 항목 입력시 확인 버튼 클릭하면 저장되게
 				// 우산 대여상태 검색
-				String sqlAgoUmbId = "SELECT STATE " + "FROM DODAM.UMBRELLA " + "WHERE UMBRELLAID LIKE '" + umcode
-						+ "'";
-				String agoUmbState = "";
-				ResultSet rsUm = DB.getResultSet(sqlAgoUmbId); // 쿼리 넘기기
+				for (int i = 0; i < rental.getTable().getRowCount(); i++) {
+					System.out.println(rental.getTable().getValueAt(i, 1));
+					if (umcode.equals(rental.getTable().getValueAt(i, 1))) {
+						JOptionPane.showMessageDialog( // 메시지창 출력
+								this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
+						tf_Umbcode.setText("");
+					} else if (studentcode.equals(rental.getTable().getValueAt(i, 2))) {
+						JOptionPane.showMessageDialog( // 메시지창 출력
+								this, "이미 대여중인 학번입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
+					} else {
+						// 대여테이블에 입력한 내용 추가
+						String sql = "INSERT INTO RENTAL VALUES('" + max + "', '" + umbCode + "', '" + code
+								+ "', TO_DATE(SYSDATE), TO_DATE(SYSDATE + 14), 'N')";
+						DB.executeQuery(sql); // DB에 sql 추가
 
-				try {
-					rsUm.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-					agoUmbState = rsUm.getString(1);
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+						// 대여한 우산 상태 Y로 변경
+						String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='Y'" + "WHERE UMBRELLAID='" + umbCode
+								+ "'";
+						ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
+						DB.executeQuery(sqlStateModify); // DB 내용 수정
 
-				// 대여폼에 있는 학번 추출
-				String returnSelect = "SELECT STUDENTID FROM RENTAL";
-				System.out.println(returnSelect);
-				data = new Vector<String>();
-				ResultSet rs = DB.getResultSet(returnSelect);
-				try {
-					while (rs.next()) {
+						// 대여한 사람의 이름 알아오기
+						String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
+						String findName = "";
+						ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
+						try {
+							rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+							findName = rsFindName.getString(1);
 
-						data.add(rs.getString(1));
-					}
-
-					Iterator<String> iter = data.iterator(); // Iterator 선언
-					while (iter.hasNext()) { // 다음값이 있는지 체크
-						System.out.println(iter.next()); // 값 출력
-//						System.out.println("data 크기 : " + data.size());
-//						System.out.println("data 값 : " + data);
-					}
-
-					for (int i = 0; i < data.size(); i++) {
-						String studentId = new String();
-						studentId = data.get(i);
-						System.out.println(studentId);
-
-						if (studentId.equals(code)) {
-							String sqlReturnState = "SELECT RETURNSTATE " + "FROM RENTAL " + "WHERE STUDENTID= '"
-									+ studentId + "'";
-							String ReturnState = "";
-							ResultSet rsReturnState = DB.getResultSet(sqlReturnState); // 쿼리 넘기기
-							try {
-								rsReturnState.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-								ReturnState = rsReturnState.getString(1);
-								System.out.println(ReturnState);
-
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}
-
-							if (ReturnState.equals("N")) {
-								check = true;
-								JOptionPane.showMessageDialog( // 메시지창 출력
-										this, "이미 대여중인 학번입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
-								tf_Code.setText("");
-								tf_Code.requestFocus(); // 우산코드 바로 다시 칠 수 있게 포커스 이동해줌
-								break;
-
-							} else if (ReturnState.equals("Y")) {
-								break;
-							}
-
+						} catch (SQLException e1) {
+							e1.printStackTrace();
 						}
+
+						// 반납예정일 구하기
+						String sqlDuedate = "SELECT TO_CHAR(SYSDATE + 14, 'YYYY. MM. DD') FROM dual";
+						String dueDate = "";
+						ResultSet rsDueDate = DB.getResultSet(sqlDuedate); // 쿼리 넘기기
+						try {
+							rsDueDate.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+							dueDate = rsDueDate.getString(1);
+
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+
+						// 메시지창 출력
+						JOptionPane.showMessageDialog(this, findName + "님, 우산 대여가 완료되었습니다. \n" + dueDate + "까지 반납해주세요.",
+								"메시지", JOptionPane.INFORMATION_MESSAGE);
+
+						dispose();
+
+						rental.rentalTable(); // 새로고침
 					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-
-				// 우산테이블의 우산코드 검색
-				String sqlUmbId = "SELECT UMBRELLAID FROM UMBRELLA";
-				String UmbId = "";
-				ResultSet rsUmbId = DB.getResultSet(sqlUmbId); // 쿼리 넘기기
-				try {
-					rsUmbId.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-					UmbId = rsUmbId.getString(1);
-
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-
-				if (!UmbId.equals(umbCode)) {
-					JOptionPane.showMessageDialog( // 메시지창 출력
-							this, "존재하지 않은 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
-					tf_Umbcode.setText("");
-					tf_Umbcode.requestFocus(); // 우산코드 바로 다시 칠 수 있게 포커스 이동해줌
-
-				} else if (agoUmbState.equals("Y")) { // 이미 대여한 우산일 경우
-					JOptionPane.showMessageDialog( // 메시지창 출력
-							this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
-					tf_Umbcode.setText("");
-					tf_Umbcode.requestFocus(); // 우산코드 바로 다시 칠 수 있게 포커스 이동해줌
-
-				} else if (check == true) {
-
-				} else {
-					// 대여테이블에 입력한 내용 추가
-					String sql = "INSERT INTO RENTAL VALUES('" + max + "', '" + umbCode + "', '" + code
-							+ "', TO_DATE(SYSDATE), TO_DATE(SYSDATE + 14), 'N')";
-					DB.executeQuery(sql); // DB에 sql 추가
-					System.out.println(sql);
-
-					// 대여한 우산 상태 Y로 변경
-					String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='Y'" + "WHERE UMBRELLAID='" + umbCode + "'";
-					ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
-					DB.executeQuery(sqlStateModify); // DB 내용 수정
-
-					// 대여한 사람의 이름 알아오기
-					String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
-					String findName = "";
-					ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
-					try {
-						rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-						findName = rsFindName.getString(1);
-
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-
-					// 반납예정일 구하기
-					String sqlDuedate = "SELECT TO_CHAR(SYSDATE + 14, 'YYYY. MM. DD') FROM dual";
-					String dueDate = "";
-					ResultSet rsDueDate = DB.getResultSet(sqlDuedate); // 쿼리 넘기기
-					try {
-						rsDueDate.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-						dueDate = rsDueDate.getString(1);
-
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-					
-					// 메시지창 출력
-					JOptionPane.showMessageDialog(this, findName + "님, 우산 대여가 완료되었습니다. \n" + dueDate + "까지 반납해주세요.",
-							"메시지", JOptionPane.INFORMATION_MESSAGE);
-
-					dispose();
-
-					rental.rentalTable(); // 새로고침
 				}
 
 			} else {
