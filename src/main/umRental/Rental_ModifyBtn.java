@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -115,6 +114,23 @@ public class Rental_ModifyBtn extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		new Rental_ModifyBtn("수정", 300, 300);
+		String returnSelect = "SELECT STUDENTID FROM RENTAL";
+
+		ResultSet rs = DB.getResultSet(returnSelect);
+		String[] rsArr = new String[6]; // 값 받아올 배열
+		try {
+			while (rs.next()) {
+
+				for (int i = 0; i < rsArr.length; i++) {
+					rsArr[i] = rs.getString(i + 1); // 값 저장
+					System.out.println(rsArr.length);
+					System.out.println(rsArr[i]);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		
 		
 	}

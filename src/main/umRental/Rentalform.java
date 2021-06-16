@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -28,6 +29,7 @@ public class Rentalform extends JFrame implements ActionListener {
 	private JPanel pBase, pTop, pCenter, pBottom;
 	private String max;
 	private Rental rental;
+	private static Vector<String> data;
 
 	public Rentalform(String title, int width, int height, Rental rental) {
 		this.rental = rental;
@@ -109,6 +111,24 @@ public class Rentalform extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		DB.init();
 		// new Rentalform("대여", 300, 300);
+		
+		String returnSelect = "SELECT STUDENTID FROM RENTAL";
+		System.out.println(returnSelect);
+
+		ResultSet rs = DB.getResultSet(returnSelect);
+		try {
+			while (rs.next()) {
+				data = new Vector<String>();
+				
+				for(int i = 0; i < data.size(); i++) {
+					data.addElement(rs.getString(i));
+					System.out.println("data 크기 : " + data.size());
+					System.out.println("data 값 : " + data);
+				}
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	@Override
@@ -137,7 +157,7 @@ public class Rentalform extends JFrame implements ActionListener {
 			String umcode = tf_Umbcode.getText();
 			String getId = rental.getRentalId();
 
-			// 우산 상태 뽑아오기
+			// 우산 대여상태 검색
 			String sqlAgoUmbId = "SELECT STATE " + "FROM DODAM.UMBRELLA " + "WHERE UMBRELLAID LIKE '" + umcode + "'";
 			String agoUmbState = "";
 			ResultSet rsUm = DB.getResultSet(sqlAgoUmbId); // 쿼리 넘기기
@@ -148,9 +168,53 @@ public class Rentalform extends JFrame implements ActionListener {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
+			
+			// 학생 벡터에 저장
+//			String returnSelect = "SELECT STUDENTID FROM RENTAL";
+//			System.out.println(returnSelect);
+//
+//			ResultSet rs = DB.getResultSet(returnSelect);
+//			try {
+//				while (rs.next()) {
+//					data = new Vector<String>();
+//					
+//					for(int i = 0; i < data.size(); i++) {
+//						data.addElement(rs.getString(i));
+//						System.out.println("data 크기 : " + data.size());
+//						System.out.println("data 값 : " + data);
+//					}
+//				}
+//			} catch (SQLException e1) {
+//				e1.printStackTrace();
+//			}
 
+			// 반납한 사람의 이름 알아오기
+			String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
+			String findName = "";
+			ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
+			try {
+				rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+				findName = rsFindName.getString(1);
+
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			
+			// 반납예정일 구하기
+			String sqlDuedate = "SELECT TO_CHAR(SYSDATE + 14, 'YYYY. MM. DD') FROM dual";
+			String dueDate = "";
+			ResultSet rsDueDate = DB.getResultSet(sqlDuedate); // 쿼리 넘기기
+			try {
+				rsDueDate.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+				dueDate = rsDueDate.getString(1);
+
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
 				// 모든 항목 입력시 확인 버튼 클릭하면 저장되게
+				
 				if (tf_Code.getText().equals("1") /* 사실 1은 아니고 만약 중복된다면 */) {
 					JOptionPane.showMessageDialog( // 메시지창 출력
 							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.WARNING_MESSAGE);
@@ -168,22 +232,24 @@ public class Rentalform extends JFrame implements ActionListener {
 					DB.executeQuery(sql); // DB에 sql 추가
 					System.out.println(sql);
 
-					// 대여한 우산 상태 N으로 변경
-					String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbCode + "'";
+					// 대여한 우산 상태 Y로 변경
+					String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='Y'" + "WHERE UMBRELLAID='" + umbCode + "'";
 					ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
 					DB.executeQuery(sqlStateModify); // DB 내용 수정
 
 					// 메시지창 출력
-					JOptionPane.showMessageDialog(this, "처리가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(this, findName + "님, 우산 대여가 완료되었습니다. \n" + dueDate + "까지 반납해주세요.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 
 					dispose();
 
 					rental.rentalTable(); // 새로고침
 				}
+				
 			} else {
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "학번과 우산코드 모두 입력해주세요.", "메시지", JOptionPane.WARNING_MESSAGE);
 			}
+			
 		} else if (obj == btn_cancel) {
 			dispose(); // 취소 버튼 누르면 화면 종료
 		}
