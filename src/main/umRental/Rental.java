@@ -57,7 +57,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// 레이아웃
-		pBase = new JPanel(); //전체 패널
+		pBase = new JPanel(); // 전체 패널
 		pBase.setLayout(new BorderLayout());
 		pBase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
 		add(pBase);
@@ -76,10 +76,10 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		pTitle = new JPanel();
 		// pExit.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		pTitle.setLayout(new FlowLayout(FlowLayout.LEFT));
-		pTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));  // 패널 마진
+		pTitle.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0)); // 패널 마진
 		pTitle.setBackground(Color.white); // 패널 배경색
 
-		ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg"); 
+		ImageIcon icontitle = new ImageIcon("libs/폼로고.jpg");
 		Image changeIcon = icontitle.getImage().getScaledInstance(450, 50, Image.SCALE_SMOOTH);
 		ImageIcon lblIcontitle = new ImageIcon(changeIcon);
 
@@ -162,7 +162,6 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		table.setBackground(Color.white); // 테이블 배경색 지정
 
 		table.addMouseListener(this);
-
 		JTableHeader tableHeader = table.getTableHeader(); // 테이블 헤더 값 가져오기
 		tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블헤더 배경색 지정
 
@@ -183,6 +182,10 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 
 	}
 
+	public JTable getTable() {
+		return table;
+	}
+
 	public JPanel getpCenter() {
 		return pCenter;
 	}
@@ -194,20 +197,21 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		pBottom.setBackground(Color.WHITE); // 배경색
 		pBottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 20, 0)); // 패널 마진
 		pBase.add(pBottom, BorderLayout.SOUTH); // 남쪽 정렬
-		
-		//검색 텍스트박스
+
+		// 검색 텍스트박스
 		tfSearch = new hint("학번을 입력하세요"); // hint
 		pBottom.add(tfSearch);
-		
-		//검색 버튼
+
+		// 검색 버튼
 		btnSearch = new JButton("검색");
-		BtnFont.BtnStyle(btnSearch);		
+		BtnFont.BtnStyle(btnSearch);
 		btnSearch.addActionListener(this);
 		pBottom.add(btnSearch);
-		
-		JLabel lblSpace = new JLabel("                                                                                                                   ");
+
+		JLabel lblSpace = new JLabel(
+				"                                                                                                                   ");
 		pBottom.add(lblSpace);
-		
+
 		// 새로고침 버튼
 		btnF5 = new JButton("새로고침");
 		BtnFont.BtnStyle(btnF5);
@@ -257,7 +261,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 					String sqlDelete = "DELETE FROM DODAM.RENTAL " + "WHERE RENTALID='" + rentalId + "'";
 					ResultSet rs = DB.getResultSet(sqlDelete); // 쿼리 넘기기
 					DB.executeQuery(sqlDelete); // DB 내용 수정
-					
+
 					// 삭제한 우산 상태 N로 변경
 					String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='N'" + "WHERE UMBRELLAID='" + umbcode + "'";
 					ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
@@ -265,8 +269,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 
 					rentalTable(); // 새로고침
 					// 메시지창 출력
-					JOptionPane.showMessageDialog(this,"삭제가 완료되었습니다.",
-							"메시지", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(this, "삭제가 완료되었습니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 
@@ -326,7 +329,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			rentalTable();
 		} else if (obj == btnSearch) {
 			// ---------------------------------- 검 색 --------------------------------------
-			
+
 		}
 	}
 
