@@ -53,7 +53,6 @@ public class Stats extends JFrame implements ActionListener {
 	private JButton btnDraw;
 	private DrawingPanel drawpanel;
 	private JPanel panelTitle;
-	private JButton btnDetail;
 	private JLabel lblRetResult;
 	private JLabel lblNoRetResult;
 	private Date SelectedDate;
@@ -186,11 +185,6 @@ public class Stats extends JFrame implements ActionListener {
 		lblNoRetResult = new JLabel("");
 		lblNoRetResult.setFont(fontLbl);
 		panelInfo.add(lblNoRetResult);
-
-		btnDetail = new JButton("자세히 >>");
-
-		BtnFont.BtnStyle(btnDetail);
-		panelInfo.add(btnDetail);
 
 		// 버튼 클릭 시 그래프 그리기
 		btnSearch.addActionListener(new DrawAction(lblRenResult, lblRetResult, lblNoRetResult, drawpanel));

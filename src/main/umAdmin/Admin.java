@@ -56,7 +56,7 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 	private JPanel panelContainer, panelTopBottom, panelTop, panelWest, panelEast, panelCenter, panelCenterWest,
 					panelCenterEast, pTop, pCenter, pBottom, panelTitle;
 	private String returnState, umbrellaID, umbrellaState, studentID, studentMajor, studentName, studentPhone,
-					id, umCode, department,studentId, name, phoneNumber, returnDueDate, major, phone, stName;
+					id, umCode, department,studentId, name, phoneNumber, returnDueDate, major, phone, stName, result;
 	private String[] strs = { "학생", "우산", "미반납자" };
 	private JComboBox<String> cbStr;
 	private DefaultTableModel model;
@@ -84,12 +84,12 @@ public class Admin extends JFrame implements ActionListener, MouseListener {
 		dispose();
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-//		result = "";
-//		result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
-//
-//		while (!result.equals("****")) {
-//			result = JOptionPane.showInputDialog("비밀번호 오류!");
-//		} // 관리자 확인 비밀번호 입력
+		result = "";
+		result = JOptionPane.showInputDialog("관리자 확인을 위해 \n" + "비밀번호 네자리를 입력해주세요");
+
+		while (!result.equals("****")) {
+			result = JOptionPane.showInputDialog("비밀번호 오류!");
+		} // 관리자 확인 비밀번호 입력
 
 		panelContainer = new JPanel();
 		panelContainer.setLayout(new BorderLayout());
