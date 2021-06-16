@@ -53,8 +53,8 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		// 전체 패널(테두리를 주기 위함)
 		panelAll = new JPanel();
 		panelAll.setLayout(new BorderLayout());
-		panelAll.setBorder(new LineBorder(Color.darkGray, 1));	//테두리
-		
+		panelAll.setBorder(new LineBorder(Color.darkGray, 1)); // 테두리
+
 		// 탑 패널 생성
 		addPanelTop();
 
@@ -64,8 +64,8 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		panelAll.add(panelTop, BorderLayout.NORTH);
 		panelAll.add(panelBtn, BorderLayout.CENTER);
 		add(panelAll);
-		
-		setUndecorated(true); //타이틀 없애기
+
+		setUndecorated(true); // 타이틀 없애기
 		setVisible(true);
 	}
 
@@ -79,8 +79,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 
 		// 타이틀
 		addTitle();
-	
-		
+
 		panelTop.add(panelExit, BorderLayout.NORTH);
 		panelTop.add(panelTitle, BorderLayout.CENTER);
 	}
@@ -108,18 +107,18 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		panelExit.add(btnExit);
 
 	}
-	
+
 	// 타이틀
 	private void addTitle() {
 		panelTitle = new JPanel();
 		panelTitle.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelTitle.setBackground(new Color(0xFFFFFF)); // Color rgb 값 가져와 배경색 설정
 		panelTitle.setBorder(BorderFactory.createEmptyBorder(40, 0, 20, 0)); // 마진 설정
-		
+
 		ImageIcon icontitle1 = new ImageIcon("libs/메인로고.jpg");
 		Image changeIcon1 = icontitle1.getImage().getScaledInstance(750, 80, Image.SCALE_SMOOTH);
 		ImageIcon lblIcontitle1 = new ImageIcon(changeIcon1);
-		
+
 		lblTitle = new JLabel(lblIcontitle1); // label 생성
 
 		panelTitle.add(lblTitle);
@@ -155,68 +154,57 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 		btnStats.addActionListener(this);
 
 		// 버튼에 스타일 적용
-		JButton[] btnArr = { btnRental, btnReturn, btnStats ,btnAdmin};
+		JButton[] btnArr = { btnRental, btnReturn, btnStats, btnAdmin };
 
 		for (int i = 0; i < btnArr.length; i++) {
 
 			btnArr[i].setFont(fontBtn); // 폰트 스타일 적용
 			btnArr[i].setForeground(Color.white); // 글자색
 			btnArr[i].setVerticalTextPosition(SwingConstants.BOTTOM); // 글자 그림 아래쪽
-			if(i%2 ==0) {
+			if (i % 2 == 0) {
 				btnArr[i].setBackground(new Color(0x5872A5));
-			}
-			else {
+			} else {
 				btnArr[i].setBackground(new Color(0x7C96C9));
 			}
-			
+
 			btnArr[i].setBorderPainted(false); // 테두리 없애기
 			panelBtn.add(btnArr[i]);
 		}
-
 
 	}
 
 	public static void main(String[] args) {
 		DB.init();
-		addView();	//뷰 생성
+		addView(); // 뷰 생성
 		new UmbrellaMain("Umbrella Rental Program", 900, 600);
-		
+
 	}
 
 	private static void addView() {
 		check = false;
-		
-		String viewSelect = "SELECT count(*) FROM BLOCKVIEW b ";	//블록뷰 셀렉트
-		
+
+		String viewSelect = "SELECT count(*) FROM BLOCKVIEW b "; // 블록뷰 셀렉트
+
 		ResultSet rs = DB.getResultSet(viewSelect);
 		try {
-			while(rs.next()) {	// 블록뷰가 있으면 ceck를 true로
+			while (rs.next()) { // 블록뷰가 있으면 ceck를 true로
 				count = rs.getString(1);
-				if(count.equals("0")) {
-					check = true;	// 블록뷰가 없으면 false
-				}
-				else {
-					check = false;
-				}
+				int a = Integer.parseInt(count);
+				if (a >= 0) {
+					String viewDrop = "DROP VIEW BLOCKVIEW";
+					DB.executeQuery(viewDrop);
+				} 
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			
+//			e.printStackTrace();
+		} 
+
 		
-		if(check == true) {	//블록뷰가 있는 상태이므로 삭제한후 다시 뷰 생성
-			String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
-					+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
-			DB.executeQuery(viewCreate);
-		}
-		else {
-			String viewDrop = "DROP VIEW BLOCKVIEW";
-			DB.executeQuery(viewDrop);
-			String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
-					+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
-			DB.executeQuery(viewCreate);
-		}
-		
-		
+		String viewCreate = "CREATE VIEW blockView AS SELECT s.DEPARTMENT , s.STUDENTID , s.NAME , s.PHONE ,r.RENTALDATE, r.RETURNDUEDATE, r.RETURNSTATE "
+				+ "FROM STUDENT s , UMBRELLA u , RENTAL r WHERE s.STUDENTID = r.STUDENTID AND r.umbrellaid = u.umbrellaid AND r.returnstate = 'N' AND  (SELECT SYSDATE FROM dual) > r.RETURNDUEDATE";
+		DB.executeQuery(viewCreate);
+
 	}
 
 	@Override
@@ -228,11 +216,11 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 			new umReturn();
 		} else if (obj == btnAdmin) {
 			new Admin("관리자", 900, 700);
-		} else if(obj == btnStats) {
+		} else if (obj == btnStats) {
 			new Stats("통계", 800, 600);
-		} else if(obj == btnExit) {
+		} else if (obj == btnExit) {
 			System.exit(0);
-		} 
+		}
 
 	}
 }
