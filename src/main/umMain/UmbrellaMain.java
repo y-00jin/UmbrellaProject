@@ -47,7 +47,7 @@ public class UmbrellaMain extends JFrame implements ActionListener {
 	public UmbrellaMain(String title, int width, int height) {
 		setTitle(title);
 		setSize(width, height);
-		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
+		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치dddd
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// 전체 패널(테두리를 주기 위함)
