@@ -28,13 +28,7 @@ public class Rentalform extends JFrame implements ActionListener {
 	private JPanel pBase, pTop, pCenter, pBottom;
 	private String max;
 	private Rental rental;
-	private String code;
-	private String umbCode;
-	private int countUmb;
-	private int countUmbb;
-	private String maxplus;
-	private String getId;
-	private JTextField tf_ID;
+	private String code, umbCode, getId;
 
 	public Rentalform(String title, int width, int height, Rental rental) {
 		this.rental = rental;
@@ -142,16 +136,6 @@ public class Rentalform extends JFrame implements ActionListener {
 			code = tf_Code.getText();
 			umbCode = tf_Umbcode.getText();
 			getId = rental.getRentalId();
-
-			String sqlCountUmb = "SELECT COUNT(*) FROM UMBRELLA";
-			ResultSet rsCountUmb = DB.getResultSet(sqlCountUmb);
-			try {
-				rsCountUmb.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-				countUmb = Integer.parseInt(rsCountUmb.getString(1));
-				System.out.println(countUmb);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
 				// 모든 항목 입력시 확인 버튼 클릭하면 저장되게

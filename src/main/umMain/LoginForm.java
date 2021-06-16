@@ -40,8 +40,8 @@ public class LoginForm extends JFrame implements ActionListener {
 		pbase = new JPanel();
 		pbase.setLayout(new BorderLayout());
 		pbase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
-	    add(pbase);
-		
+		add(pbase);
+
 		// 이미지 레이블 생성
 		p0 = new JPanel();
 		p0.setLayout(new GridLayout(1, 1, 0, 0));
@@ -111,7 +111,13 @@ public class LoginForm extends JFrame implements ActionListener {
 
 					new UmbrellaMain("우산 대여 프로그램", 900, 600); // 메인 프로그램 불려옴
 					dispose();
-				} 
+				} else {
+					JOptionPane.showMessageDialog( // 메시지창 출력
+							this, "아이디 또는 비밀번호를 확인하세요.", "메시지", JOptionPane.ERROR_MESSAGE);
+					tf_ID.setText(""); // 실패했으니까 빈칸으로 만들어줌
+					tf_PW.setText("");
+					tf_ID.requestFocus(); // ID 바로 다시 칠 수 있게 포커스 이동해줌
+				}
 			}
 
 			else {
