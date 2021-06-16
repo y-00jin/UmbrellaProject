@@ -125,7 +125,7 @@ public class Rentalform extends JFrame implements ActionListener {
 		try {
 			rsMax.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
 			max = rsMax.getString(1);
-			System.out.println(max);
+			//System.out.println(max);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}

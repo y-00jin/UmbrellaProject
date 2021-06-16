@@ -132,8 +132,6 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
             rentalDATE = rs.getString(5);
             returndueDATE = rs.getString(6);
 
-            // System.out.println(rentalID + "\t" + umbreallaID + "\t" + studentID + "\t" +
-            // rentalDATE +"\t"+ returndueDATE);
             data.add(0, rentalID);
             data.add(1, umbreallaID);
             data.add(2, studentID);
