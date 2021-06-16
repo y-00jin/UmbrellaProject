@@ -345,69 +345,92 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			rentalTable();
 		} else if (obj == btnSearch | obj == tfSearch) {
 			// ---------------------------------- 검 색 --------------------------------------
-//			String findStudentId = tfSearch.getText();
-//			System.out.println(findStudentId);
-//
-//			String sqlfindStudentId = "SELECT RENTALID, UMBRELLAID, STUDENTID, TO_CHAR(RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURNDUEDATE, 'YYYY-MM-DD') "
-//					+ "FROM RENTAL " + "WHERE STUDENTID LIKE '" + findStudentId + "'";
-//
-//			ResultSet rsSt = DB.getResultSet(sqlfindStudentId);
-//			String findSI = "";
-//
-//			try {
-//				if (rsSt.next()) {
-//					findSI = rsSt.getString(1);
-//				}
-//			} catch (SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//
-//			System.out.println(rsSt);
-//
-//			if (findStudentId.equals(findSI)) {
-//				getpCenter().removeAll();
-//				model.setNumRows(0);
-//
-//				String sql = "SELECT RENTALID, UMBRELLAID, STUDENTID, TO_CHAR(RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURNDUEDATE, 'YYYY-MM-DD') "
-//						+ "FROM RENTAL " + "WHERE STUDENTID LIKE '" + findStudentId + "'";
-//				ResultSet rs = DB.getResultSet(sql);
-//
-//				try {
-//					while (rs.next()) {
-//						con = new Vector<String>();
-//						serRentalID = rs.getString(1); // DB의 첫번째를 rentalID를 넣음
-//						serUmbreallaID = rs.getString(2);
-//						serStudentID = rs.getString(3);
-//						serStudentName = rs.getString(4);
-//
-//						serRentalDATE = rs.getString(5);
-//						serReturndueDATE = rs.getString(6);
-//
-//						// System.out.println(rentalID + "\t" + umbreallaID + "\t" + studentID + "\t" +
-//						// rentalDATE +"\t"+ returndueDATE);
-//						con.add(0, serRentalID);
-//						con.add(1, serUmbreallaID);
-//						con.add(2, serStudentID);
-//						con.add(3, serStudentName);
-//						con.add(4, serRentalDATE);
-//						con.add(5, serReturndueDATE);
-//						model.addRow(con); // 테이블에 내용 추가
-//					}
-//				} catch (SQLException e2) {
-//					System.out.println("접속 오류 / SQL 오류");
-//					e2.printStackTrace();
-//				}
-//
-//				studentTable = new JTable(model);
-//
-//				getpCenter().revalidate(); // 레이아웃 변화 재확인
-//				getpCenter().repaint(); // 레이아웃 다시 가져오기
-//			} else if (findSI.equals("")) {
-//				JOptionPane.showMessageDialog(null, "검색 결과가 존재하지 않습니다.", "검색 결과", JOptionPane.PLAIN_MESSAGE);
-//
-//				model.setNumRows(0);
-//			}
+			String findStudentId = tfSearch.getText();
+			System.out.println(findStudentId);
 
+			String sqlfindStudentId = "SELECT RENTALID, UMBRELLAID, STUDENTID, TO_CHAR(RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURNDUEDATE, 'YYYY-MM-DD') "
+					+ "FROM RENTAL " + "WHERE STUDENTID LIKE '" + findStudentId + "'";
+
+			ResultSet rsSt = DB.getResultSet(sqlfindStudentId);
+			String findSI = "";
+
+			try {
+				if (rsSt.next()) {
+					findSI = rsSt.getString(1);
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+
+			System.out.println(rsSt);
+
+			if (findStudentId.equals(findSI)) {
+				getpCenter().removeAll();
+				model.setNumRows(0);
+
+				String sql = "SELECT RENTALID, UMBRELLAID, STUDENTID, TO_CHAR(RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURNDUEDATE, 'YYYY-MM-DD') "
+						+ "FROM RENTAL " + "WHERE STUDENTID LIKE '" + findStudentId + "'";
+				ResultSet rs = DB.getResultSet(sql);
+
+				try {
+					while (rs.next()) {
+						con = new Vector<String>();
+						serRentalID = rs.getString(1); // DB의 첫번째를 rentalID를 넣음
+						serUmbreallaID = rs.getString(2);
+						serStudentID = rs.getString(3);
+						serStudentName = rs.getString(4);
+
+						serRentalDATE = rs.getString(5);
+						serReturndueDATE = rs.getString(6);
+
+						con.add(0, serRentalID);
+						con.add(1, serUmbreallaID);
+						con.add(2, serStudentID);
+						con.add(3, serStudentName);
+						con.add(4, serRentalDATE);
+						con.add(5, serReturndueDATE);
+						model.addRow(con); // 테이블에 내용 추가
+					}
+				} catch (SQLException e2) {
+					System.out.println("접속 오류 / SQL 오류");
+					e2.printStackTrace();
+				}
+
+				table = new JTable(model);
+				
+				table.getTableHeader().setReorderingAllowed(false); // 테이블 컬럼의 이동을 방지
+				// table.getTableHeader().setResizingAllowed(false); // 테이블 컬럼의 사이즈를 고정
+				table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // 테이블 로우를 한개만 선택가능
+				table.setFillsViewportHeight(true); // 스크롤 팬 안에 테이블 꽉차게 표시 -> 이거 없으면 배경색 설정 안됨
+				table.setBackground(Color.white); // 테이블 배경색 지정
+
+				table.addMouseListener(this);
+				JTableHeader tableHeader = table.getTableHeader(); // 테이블 헤더 값 가져오기
+				tableHeader.setBackground(new Color(0xB2CCFF)); // 테이블헤더 배경색 지정
+
+				// 스크롤팬을 사용하지 않으면 컬럼명을 볼 수 없음
+				JScrollPane sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+						JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				sp.setPreferredSize(new Dimension(860, 410)); // 테이블 크기를 줄려면 JScroollPane의 크기를 변경
+				pCenter.add(sp);
+
+				// 테이블 내용 가운데정렬
+				DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
+				tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+				TableColumnModel tcmSchedule = table.getColumnModel();
+
+				for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
+					tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
+				}
+
+				getpCenter().revalidate(); // 레이아웃 변화 재확인
+				getpCenter().repaint(); // 레이아웃 다시 가져오기
+				
+			} else if (findSI.equals("")) {
+				JOptionPane.showMessageDialog(null, "검색 결과가 존재하지 않습니다.", "검색 결과", JOptionPane.PLAIN_MESSAGE);
+
+				model.setNumRows(0);
+			}
 		}
 	}
 
