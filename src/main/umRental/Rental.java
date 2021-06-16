@@ -48,9 +48,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 	private JLabel lblLogo;
 	private hint tfSearch;
 	private Vector<String> con;
-	private String serRentalID, serUmbreallaID, serStudentID, serStudentName, serrentalDATE, serRentalDATE,
-			serReturndueDATE;
-	private JTable studentTable;
+	private String serRentalID, serUmbreallaID, serStudentID, serStudentName, serRentalDATE, serReturndueDATE;
 
 	public Rental(String title, int width, int height) {
 		this.setTitle(title);
@@ -180,7 +178,6 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
 			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
 		}
-
 	}
 
 	public JTable getTable() {
@@ -349,47 +346,47 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 			System.out.println(findStudentId);
 
 			String sqlfindStudentId = "SELECT RENTALID, UMBRELLAID, STUDENTID, TO_CHAR(RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURNDUEDATE, 'YYYY-MM-DD') "
-					+ "FROM RENTAL " + "WHERE STUDENTID LIKE '" + findStudentId + "'";
+					+ "FROM RENTAL " + "WHERE RETURNSTATE LIKE 'N' AND STUDENTID LIKE '" + findStudentId + "'";
 
 			ResultSet rsSt = DB.getResultSet(sqlfindStudentId);
 			String findSI = "";
 
 			try {
 				if (rsSt.next()) {
-					findSI = rsSt.getString(1);
+					findSI = rsSt.getString(1); // 대여 아이디
+					System.out.println("findSI : " + findSI);
 				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
 
-			System.out.println(rsSt);
 
 			if (findStudentId.equals(findSI)) {
-				getpCenter().removeAll();
-				model.setNumRows(0);
+				getpCenter().removeAll(); // 해당 패널 지워줌
+				model.setNumRows(0); // 테이블 행 다 지워줌
 
 				String sql = "SELECT RENTALID, UMBRELLAID, STUDENTID, TO_CHAR(RENTALDATE, 'YYYY-MM-DD'), TO_CHAR(RETURNDUEDATE, 'YYYY-MM-DD') "
-						+ "FROM RENTAL " + "WHERE STUDENTID LIKE '" + findStudentId + "'";
+						+ "FROM RENTAL " + "WHERE RETURNSTATE LIKE 'N' AND RENTALID LIKE '" + findSI + "'";
 				ResultSet rs = DB.getResultSet(sql);
 
 				try {
 					while (rs.next()) {
-						con = new Vector<String>();
-						serRentalID = rs.getString(1); // DB의 첫번째를 rentalID를 넣음
-						serUmbreallaID = rs.getString(2);
-						serStudentID = rs.getString(3);
-						serStudentName = rs.getString(4);
+						data = new Vector<String>();
+						rentalID = rs.getString(1); // DB의 첫번째를 rentalID를 넣음
+						umbreallaID = rs.getString(2);
+						studentID = rs.getString(3);
+						studentName = rs.getString(4);
 
-						serRentalDATE = rs.getString(5);
-						serReturndueDATE = rs.getString(6);
+						rentalDATE = rs.getString(5);
+						returndueDATE = rs.getString(6);
 
-						con.add(0, serRentalID);
-						con.add(1, serUmbreallaID);
-						con.add(2, serStudentID);
-						con.add(3, serStudentName);
-						con.add(4, serRentalDATE);
-						con.add(5, serReturndueDATE);
-						model.addRow(con); // 테이블에 내용 추가
+						data.add(0, serRentalID);
+						data.add(1, serUmbreallaID);
+						data.add(2, serStudentID);
+						data.add(3, serStudentName);
+						data.add(4, serRentalDATE);
+						data.add(5, serReturndueDATE);
+						model.addRow(data); // 테이블에 내용 추가
 					}
 				} catch (SQLException e2) {
 					System.out.println("접속 오류 / SQL 오류");

@@ -30,7 +30,12 @@ public class Rentalform extends JFrame implements ActionListener {
 	private JPanel pBase, pTop, pCenter, pBottom;
 	private String max;
 	private Rental rental;
+	private String code;
+	private String umbCode;
+	private String getId;
 	private static Vector<String> data;
+	private String countUmb;
+	private int countUmbb;
 
 	public Rentalform(String title, int width, int height, Rental rental) {
 		this.rental = rental;
@@ -116,7 +121,11 @@ public class Rentalform extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Boolean check = false;		
+		Boolean check = false;
+		Boolean studentId = false;
+		Boolean umbId = false;
+		Boolean umb = false;
+	
 
 		// 대여 아이디 값 - 자동으로 현재 값보다 1 증가한 값 넣어주기 위해서 대여 아이디의 최대값을 구한 후 +1 증가
 		String sqlMax = "SELECT MAX(RENTALID) +1  FROM RENTAL r ";
@@ -131,77 +140,111 @@ public class Rentalform extends JFrame implements ActionListener {
 		Object obj = e.getSource();
 
 		if (obj == btn_ok || obj == tf_Umbcode) {
-			String code = tf_Code.getText();
-			String umbCode = tf_Umbcode.getText();
-			String getId = rental.getRentalId();
+			code = tf_Code.getText();
+			umbCode = tf_Umbcode.getText();
+			getId = rental.getRentalId();
+			
+			String sqlCountUmb = "SELECT COUNT(*) FROM UMBRELLA";
+			ResultSet rsCountUmb = DB.getResultSet(sqlCountUmb);
+			try {
+				rsCountUmb.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+				countUmb = rsCountUmb.getString(1); // 우산테이블에 있는 우산의 갯수 -> 문자형
+				System.out.println(countUmb);
+				
+				countUmbb = Integer.parseInt(countUmb); // 우산 갯수를 숫자형으로 변환
+				
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			for(int i =0; i < countUmbb; i++) {
+				
+			}
+			if (countUmb.equals("0")) {
+				
+			}
 
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
 				// 모든 항목 입력시 확인 버튼 클릭하면 저장되게
 				// 우산 대여상태 검색
 				for (int i = 0; i < rental.getTable().getRowCount(); i++) {
-					System.out.println(rental.getTable().getValueAt(i, 1));
-					if (umbCode.equals(rental.getTable().getValueAt(i, 1))) { 
-						// 테이블에서 우산 코드 검색 
+					if (umbCode.equals(rental.getTable().getValueAt(i, 1))) {
+						// 테이블에서 우산 코드 검색
+						studentId = true;
+
 						JOptionPane.showMessageDialog( // 메시지창 출력
 								this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
 						tf_Umbcode.setText("");
-					} else if (code.equals(rental.getTable().getValueAt(i, 2))) {
-						// 테이블에서 학번 검색
-						JOptionPane.showMessageDialog( // 메시지창 출력
-								this, "이미 대여중인 학번입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
-					} else {
-						// 대여테이블에 입력한 내용 추가
-						String sql = "INSERT INTO RENTAL VALUES('" + max + "', '" + umbCode + "', '" + code
-								+ "', TO_DATE(SYSDATE), TO_DATE(SYSDATE + 14), 'N')";
-						DB.executeQuery(sql); // DB에 sql 추가
-
-						// 대여한 우산 상태 Y로 변경
-						String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='Y'" + "WHERE UMBRELLAID='" + umbCode
-								+ "'";
-						ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
-						DB.executeQuery(sqlStateModify); // DB 내용 수정
-
-						// 대여한 사람의 이름 알아오기
-						String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
-						String findName = "";
-						ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
-						try {
-							rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-							findName = rsFindName.getString(1);
-
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
-
-						// 반납예정일 구하기
-						String sqlDuedate = "SELECT TO_CHAR(SYSDATE + 14, 'YYYY. MM. DD') FROM dual";
-						String dueDate = "";
-						ResultSet rsDueDate = DB.getResultSet(sqlDuedate); // 쿼리 넘기기
-						try {
-							rsDueDate.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-							dueDate = rsDueDate.getString(1);
-
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
-
-						// 메시지창 출력
-						JOptionPane.showMessageDialog(this, findName + "님, 우산 대여가 완료되었습니다. \n" + dueDate + "까지 반납해주세요.",
-								"메시지", JOptionPane.INFORMATION_MESSAGE);
-
-						dispose();
-
-						rental.rentalTable(); // 새로고침
+						tf_Umbcode.requestFocus(); // 포커스 이동
 					}
 				}
+				for (int i = 0; i < rental.getTable().getRowCount(); i++) {
+					if (code.equals(rental.getTable().getValueAt(i, 2))) {
+						// 테이블에서 학번 검색
+						umbId = true;
+						JOptionPane.showMessageDialog( // 메시지창 출력
+								this, "이미 대여중인 학번입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
 
+						tf_Code.setText("");
+						tf_Code.requestFocus(); // 포커스 이동
+					}
+
+				}
+				if (studentId == false && umbId == false) {
+					setReturn();
+				}
 			} else {
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "학번과 우산코드 모두 입력해주세요.", "메시지", JOptionPane.WARNING_MESSAGE);
 			}
+		} else if (obj == btn_cancel)
 
-		} else if (obj == btn_cancel) {
+		{
 			dispose(); // 취소 버튼 누르면 화면 종료
 		}
+	}
+
+	private void setReturn() {
+		// 대여테이블에 입력한 내용 추가
+		String sql = "INSERT INTO RENTAL VALUES('" + max + "', '" + umbCode + "', '" + code
+				+ "', TO_DATE(SYSDATE), TO_DATE(SYSDATE + 14), 'N')";
+		DB.executeQuery(sql); // DB에 sql 추가
+
+		// 대여한 우산 상태 Y로 변경
+		String sqlStateModify = "UPDATE UMBRELLA " + "SET STATE='Y'" + "WHERE UMBRELLAID='" + umbCode + "'";
+		ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
+		DB.executeQuery(sqlStateModify); // DB 내용 수정
+
+		// 대여한 사람의 이름 알아오기
+		String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
+		String findName = "";
+		ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
+		try {
+			rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+			findName = rsFindName.getString(1);
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		// 반납예정일 구하기
+		String sqlDuedate = "SELECT TO_CHAR(SYSDATE + 14, 'YYYY. MM. DD') FROM dual";
+		String dueDate = "";
+		ResultSet rsDueDate = DB.getResultSet(sqlDuedate); // 쿼리 넘기기
+		try {
+			rsDueDate.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+			dueDate = rsDueDate.getString(1);
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		// 메시지창 출력
+		JOptionPane.showMessageDialog(this, findName + "님, 우산 대여가 완료되었습니다. \n" + dueDate + "까지 반납해주세요.", "메시지",
+				JOptionPane.INFORMATION_MESSAGE);
+
+		dispose();
+
+		rental.rentalTable(); // 새로고침
+
 	}
 }
