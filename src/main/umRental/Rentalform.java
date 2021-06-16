@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -111,31 +112,17 @@ public class Rentalform extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		DB.init();
 		// new Rentalform("대여", 300, 300);
-		
-		String returnSelect = "SELECT STUDENTID FROM RENTAL";
-		System.out.println(returnSelect);
-
-		ResultSet rs = DB.getResultSet(returnSelect);
-		try {
-			while (rs.next()) {
-				data = new Vector<String>();
-				
-				for(int i = 0; i < data.size(); i++) {
-					data.addElement(rs.getString(i));
-					System.out.println("data 크기 : " + data.size());
-					System.out.println("data 값 : " + data);
-				}
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Boolean check = false;
+
+		// 입력한 학번 code에 저장
 		String code = new String();
 		code = tf_Code.getText();
 
+		// 입력한 우산코드 umbCode에 저장
 		String umbCode = new String();
 		umbCode = tf_Umbcode.getText();
 
@@ -145,7 +132,6 @@ public class Rentalform extends JFrame implements ActionListener {
 		try {
 			rsMax.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
 			max = rsMax.getString(1);
-			System.out.println(max);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
@@ -157,74 +143,102 @@ public class Rentalform extends JFrame implements ActionListener {
 			String umcode = tf_Umbcode.getText();
 			String getId = rental.getRentalId();
 
-			// 우산 대여상태 검색
-			String sqlAgoUmbId = "SELECT STATE " + "FROM DODAM.UMBRELLA " + "WHERE UMBRELLAID LIKE '" + umcode + "'";
-			String agoUmbState = "";
-			ResultSet rsUm = DB.getResultSet(sqlAgoUmbId); // 쿼리 넘기기
-
-			try {
-				rsUm.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-				agoUmbState = rsUm.getString(1);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			
-			// 학생 벡터에 저장
-//			String returnSelect = "SELECT STUDENTID FROM RENTAL";
-//			System.out.println(returnSelect);
-//
-//			ResultSet rs = DB.getResultSet(returnSelect);
-//			try {
-//				while (rs.next()) {
-//					data = new Vector<String>();
-//					
-//					for(int i = 0; i < data.size(); i++) {
-//						data.addElement(rs.getString(i));
-//						System.out.println("data 크기 : " + data.size());
-//						System.out.println("data 값 : " + data);
-//					}
-//				}
-//			} catch (SQLException e1) {
-//				e1.printStackTrace();
-//			}
-
-			// 반납한 사람의 이름 알아오기
-			String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
-			String findName = "";
-			ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
-			try {
-				rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-				findName = rsFindName.getString(1);
-
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			
-			// 반납예정일 구하기
-			String sqlDuedate = "SELECT TO_CHAR(SYSDATE + 14, 'YYYY. MM. DD') FROM dual";
-			String dueDate = "";
-			ResultSet rsDueDate = DB.getResultSet(sqlDuedate); // 쿼리 넘기기
-			try {
-				rsDueDate.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
-				dueDate = rsDueDate.getString(1);
-
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			
 			if (!tf_Umbcode.getText().equals("") && !tf_Code.getText().equals("")) {
 				// 모든 항목 입력시 확인 버튼 클릭하면 저장되게
-				
-				if (tf_Code.getText().equals("1") /* 사실 1은 아니고 만약 중복된다면 */) {
+				// 우산 대여상태 검색
+				String sqlAgoUmbId = "SELECT STATE " + "FROM DODAM.UMBRELLA " + "WHERE UMBRELLAID LIKE '" + umcode
+						+ "'";
+				String agoUmbState = "";
+				ResultSet rsUm = DB.getResultSet(sqlAgoUmbId); // 쿼리 넘기기
+
+				try {
+					rsUm.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+					agoUmbState = rsUm.getString(1);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+				// 대여폼에 있는 학번 추출
+				String returnSelect = "SELECT STUDENTID FROM RENTAL";
+				System.out.println(returnSelect);
+				data = new Vector<String>();
+				ResultSet rs = DB.getResultSet(returnSelect);
+				try {
+					while (rs.next()) {
+
+						data.add(rs.getString(1));
+					}
+
+					Iterator<String> iter = data.iterator(); // Iterator 선언
+					while (iter.hasNext()) { // 다음값이 있는지 체크
+						System.out.println(iter.next()); // 값 출력
+//						System.out.println("data 크기 : " + data.size());
+//						System.out.println("data 값 : " + data);
+					}
+
+					for (int i = 0; i < data.size(); i++) {
+						String studentId = new String();
+						studentId = data.get(i);
+						System.out.println(studentId);
+
+						if (studentId.equals(code)) {
+							String sqlReturnState = "SELECT RETURNSTATE " + "FROM RENTAL " + "WHERE STUDENTID= '"
+									+ studentId + "'";
+							String ReturnState = "";
+							ResultSet rsReturnState = DB.getResultSet(sqlReturnState); // 쿼리 넘기기
+							try {
+								rsReturnState.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+								ReturnState = rsReturnState.getString(1);
+								System.out.println(ReturnState);
+
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+
+							if (ReturnState.equals("N")) {
+								check = true;
+								JOptionPane.showMessageDialog( // 메시지창 출력
+										this, "이미 대여중인 학번입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
+								tf_Code.setText("");
+								tf_Code.requestFocus(); // 우산코드 바로 다시 칠 수 있게 포커스 이동해줌
+								break;
+
+							} else if (ReturnState.equals("Y")) {
+								break;
+							}
+
+						}
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+				// 우산테이블의 우산코드 검색
+				String sqlUmbId = "SELECT UMBRELLAID FROM UMBRELLA";
+				String UmbId = "";
+				ResultSet rsUmbId = DB.getResultSet(sqlUmbId); // 쿼리 넘기기
+				try {
+					rsUmbId.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+					UmbId = rsUmbId.getString(1);
+
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+				if (!UmbId.equals(umbCode)) {
 					JOptionPane.showMessageDialog( // 메시지창 출력
-							this, "중복된 아이디가 있습니다.", "메시지", JOptionPane.WARNING_MESSAGE);
+							this, "존재하지 않은 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
+					tf_Umbcode.setText("");
+					tf_Umbcode.requestFocus(); // 우산코드 바로 다시 칠 수 있게 포커스 이동해줌
 
 				} else if (agoUmbState.equals("Y")) { // 이미 대여한 우산일 경우
 					JOptionPane.showMessageDialog( // 메시지창 출력
 							this, "이미 대여중인 우산입니다.", "메시지", JOptionPane.WARNING_MESSAGE);
 					tf_Umbcode.setText("");
 					tf_Umbcode.requestFocus(); // 우산코드 바로 다시 칠 수 있게 포커스 이동해줌
-					
+
+				} else if (check == true) {
+
 				} else {
 					// 대여테이블에 입력한 내용 추가
 					String sql = "INSERT INTO RENTAL VALUES('" + max + "', '" + umbCode + "', '" + code
@@ -237,19 +251,44 @@ public class Rentalform extends JFrame implements ActionListener {
 					ResultSet rsStateModify = DB.getResultSet(sqlStateModify); // 쿼리 넘기기
 					DB.executeQuery(sqlStateModify); // DB 내용 수정
 
+					// 대여한 사람의 이름 알아오기
+					String sqlName = "SELECT NAME " + "FROM STUDENT " + "WHERE STUDENTID LIKE '" + code + "'";
+					String findName = "";
+					ResultSet rsFindName = DB.getResultSet(sqlName); // 쿼리 넘기기
+					try {
+						rsFindName.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+						findName = rsFindName.getString(1);
+
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+
+					// 반납예정일 구하기
+					String sqlDuedate = "SELECT TO_CHAR(SYSDATE + 14, 'YYYY. MM. DD') FROM dual";
+					String dueDate = "";
+					ResultSet rsDueDate = DB.getResultSet(sqlDuedate); // 쿼리 넘기기
+					try {
+						rsDueDate.next(); // getString이전에 이것을 써야 ResultSet.next호출되지 않았다고 오류가 안뜸
+						dueDate = rsDueDate.getString(1);
+
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					
 					// 메시지창 출력
-					JOptionPane.showMessageDialog(this, findName + "님, 우산 대여가 완료되었습니다. \n" + dueDate + "까지 반납해주세요.", "메시지", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(this, findName + "님, 우산 대여가 완료되었습니다. \n" + dueDate + "까지 반납해주세요.",
+							"메시지", JOptionPane.INFORMATION_MESSAGE);
 
 					dispose();
 
 					rental.rentalTable(); // 새로고침
 				}
-				
+
 			} else {
 				JOptionPane.showMessageDialog( // 메시지창 출력
 						this, "학번과 우산코드 모두 입력해주세요.", "메시지", JOptionPane.WARNING_MESSAGE);
 			}
-			
+
 		} else if (obj == btn_cancel) {
 			dispose(); // 취소 버튼 누르면 화면 종료
 		}

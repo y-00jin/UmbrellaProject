@@ -94,7 +94,7 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 		pCenter = new JPanel();
 		pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pCenter.setBackground(Color.WHITE);
-		pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0)); // 패널마진
+		pCenter.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0)); // 패널 마진
 		pBase.add(pCenter, BorderLayout.CENTER); // 프레임에 패널 가운데에 붙임
 
 		vectorTitle = new Vector<String>(); // 헤더 값
@@ -264,6 +264,9 @@ public class Rental extends JFrame implements ActionListener, MouseListener {
 					DB.executeQuery(sqlStateModify); // DB 내용 수정
 
 					rentalTable(); // 새로고침
+					// 메시지창 출력
+					JOptionPane.showMessageDialog(this,"삭제가 완료되었습니다.",
+							"메시지", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 
