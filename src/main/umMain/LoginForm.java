@@ -16,12 +16,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import main.DB;
 
 public class LoginForm extends JFrame implements ActionListener {
 
-	private JPanel p0, p1, p3;
+	private JPanel p0, p1, p3, pbase;
 	private JLabel lbl_ID, lbl_PW;
 	private JTextField tf_ID;
 	private JPasswordField tf_PW;
@@ -36,12 +37,17 @@ public class LoginForm extends JFrame implements ActionListener {
 		setLocationRelativeTo(this);
 		// setResizable(false); // 프레임 창 사이즈 고정
 
+		pbase = new JPanel();
+		pbase.setLayout(new BorderLayout());
+		pbase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
+	    add(pbase);
+		
 		// 이미지 레이블 생성
 		p0 = new JPanel();
 		p0.setLayout(new GridLayout(1, 1, 0, 0));
 		p0.setBackground(Color.WHITE);
 		p0.setBorder(BorderFactory.createEmptyBorder(50, 300, 0, 300));
-		add(p0, BorderLayout.NORTH);
+		pbase.add(p0, BorderLayout.NORTH);
 
 		ImageIcon icon = new ImageIcon("libs/loginImg.png");
 		JLabel imageLabel = new JLabel(icon);
@@ -53,7 +59,7 @@ public class LoginForm extends JFrame implements ActionListener {
 		p1.setLayout(new GridLayout(6, 1, 0, 20));
 
 		p1.setBorder(BorderFactory.createEmptyBorder(100, 300, 100, 300));
-		add(p1, BorderLayout.CENTER);
+		pbase.add(p1, BorderLayout.CENTER);
 
 		lbl_ID = new JLabel("ID ");
 		lbl_ID.setFont(new Font("HY헤드라인M", Font.BOLD, 20));
