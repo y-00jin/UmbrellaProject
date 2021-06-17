@@ -35,7 +35,7 @@ public class AdminUmbrellaAdd extends JFrame implements ActionListener {
       this.admin = admin;
       this.setTitle(title);
       setSize(width, height);
-      setLocationRelativeTo(this);
+      setLocationRelativeTo(admin);
       // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       dispose();
       
