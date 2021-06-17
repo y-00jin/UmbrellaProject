@@ -29,7 +29,7 @@ public class LoginForm extends JFrame implements ActionListener {
 	private JButton btn_login, btn_exit;
 
 	public LoginForm() { // 생성자
-		setUndecorated(true); // 타이틀바 없애기
+		//setUndecorated(true); // 타이틀바 없애기
 		setTitle("관리자 로그인");
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		dispose();
@@ -39,7 +39,7 @@ public class LoginForm extends JFrame implements ActionListener {
 
 		pbase = new JPanel();
 		pbase.setLayout(new BorderLayout());
-		pbase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
+		//pbase.setBorder(new LineBorder(Color.GRAY, 1)); // 패널 테두리
 		add(pbase);
 
 		// 이미지 레이블 생성
