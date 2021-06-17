@@ -109,7 +109,7 @@ public class LoginForm extends JFrame implements ActionListener {
 					JOptionPane.showMessageDialog( // 메시지창 출력
 							this, "환영합니다.", "메시지", JOptionPane.INFORMATION_MESSAGE);
 
-					new UmbMain("우산 대여 프로그램", 900, 600); // 메인 프로그램 불려옴
+					new UmbMain("우산 대여 프로그램", 900, 600, this); // 메인 프로그램 불려옴
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog( // 메시지창 출력

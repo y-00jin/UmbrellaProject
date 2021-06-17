@@ -44,10 +44,11 @@ public class UmbMain extends JFrame implements ActionListener {
 	private JPanel panelAll;
 	private JButton btnTitle;
 
-	public UmbMain(String title, int width, int height) {
+	public UmbMain(String title, int width, int height, LoginForm lf) {
+		
 		setTitle(title);
 		setSize(width, height);
-		setLocationRelativeTo(this); // 현재 클래스에 대해서 상대적인 위치
+		setLocationRelativeTo(lf); // 현재 클래스에 대해서 상대적인 위치
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// 전체 패널(테두리를 주기 위함)
@@ -175,7 +176,7 @@ public class UmbMain extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		DB.init();
-		new UmbMain("Umbrella Rental Program", 900, 600);
+		//new UmbMain("Umbrella Rental Program", 900, 600);
 
 	}
 
