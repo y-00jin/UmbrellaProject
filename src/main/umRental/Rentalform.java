@@ -35,7 +35,7 @@ public class Rentalform extends JFrame implements ActionListener {
 		setUndecorated(true); // 타이틀바 없애기
 		this.setTitle(title);
 		setSize(width, height);
-		setLocationRelativeTo(this);
+		setLocationRelativeTo(rental);
 		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		dispose();
 
